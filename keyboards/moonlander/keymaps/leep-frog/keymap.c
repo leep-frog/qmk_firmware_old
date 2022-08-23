@@ -39,9 +39,21 @@ DEFINE_SONG(song_startup, STARTUP_SOUND)
 DEFINE_SONG(song_goodbye, GOODBYE_SOUND)
 DEFINE_SONG(song_qwerty, QWERTY_SOUND)
 
+#define FE_1(M, X) M(X)
+#define FE_2(M, X, ...) M(X), FE_1(M, __VA_ARGS__)
+#define FE_3(M, X, ...) M(X), FE_2(M, __VA_ARGS__)
+#define FE_4(M, X, ...) M(X), FE_3(M, __VA_ARGS__)
+#define FE_5(M, X, ...) M(X), FE_4(M, __VA_ARGS__)
+#define FE_6(M, X, ...) M(X), FE_5(M, __VA_ARGS__)
+#define FE_7(M, X, ...) M(X), FE_6(M, __VA_ARGS__)
+#define FE_8(M, X, ...) M(X), FE_7(M, __VA_ARGS__)
+#define FE_9(M, X, ...) M(X), FE_8(M, __VA_ARGS__)
+#define FE_10(M, X, ...) M(X), FE_9(M, __VA_ARGS__)
+#define FE_11(M, X, ...) M(X), FE_10(M, __VA_ARGS__)
+
 // https://www.ninsheetmusic.org/download/pdf/3544
-#define LINK_SOUND H__NOTE(_G7), H__NOTE(_F7), H__NOTE(_DS7), H__NOTE(_A6), H__NOTE(_GS6), H__NOTE(_E7), H__NOTE(_GS7), H__NOTE(_C8)
-#define ITEM_OBTAINED H__NOTE(_FS6), H__NOTE(_AS6), H__NOTE(_CS7), H__NOTE(_B6), H__NOTE(_DS7), H__NOTE(_FS7), H__NOTE(_CS8)
+#define LINK_SOUND FE_8(H__NOTE, _G7, _F7, _DS7, _A6, _GS6, _E7, _GS7, _C8)
+#define ITEM_OBTAINED FE_7(H__NOTE, _FS6, _AS6, _CS7, _B6, _DS7, _FS7, _CS8)
 
 DEFINE_SONG(song_link, LINK_SOUND)
 DEFINE_SONG(song_item, ITEM_OBTAINED)
