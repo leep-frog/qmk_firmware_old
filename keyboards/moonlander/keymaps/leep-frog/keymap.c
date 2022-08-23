@@ -26,12 +26,35 @@ void on_layer_change(uint8_t layer) {
   }
 }
 
+// See below link for more sounds. Also pretty easy to make sounds if need be
+// Do the link sound!
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md#songs
+#define DEFINE_SONG(var_name, sound) float var_name[][2] = SONG(sound);
+// Note, some of these are declared elsewhere, but was hopping between duplicate
+// definition and undefined errors. I assume the music_on_song is declared
+// after this file is processed.
+DEFINE_SONG(song_music_on, MUSIC_ON_SOUND)
+DEFINE_SONG(song_music_off, MUSIC_ON_SOUND)
+DEFINE_SONG(song_startup, STARTUP_SOUND)
+DEFINE_SONG(song_goodbye, GOODBYE_SOUND)
+DEFINE_SONG(song_qwerty, QWERTY_SOUND)
+
+// https://www.ninsheetmusic.org/download/pdf/3544
+#define LINK_SOUND H__NOTE(_G7), H__NOTE(_F7), H__NOTE(_DS7), H__NOTE(_A6), H__NOTE(_GS6), H__NOTE(_E7), H__NOTE(_GS7), H__NOTE(_C8)
+#define ITEM_OBTAINED H__NOTE(_FS6), H__NOTE(_AS6), H__NOTE(_CS7), H__NOTE(_B6), H__NOTE(_DS7), H__NOTE(_FS7), H__NOTE(_CS8)
+
+DEFINE_SONG(song_link, LINK_SOUND)
+DEFINE_SONG(song_item, ITEM_OBTAINED)
+
 void recording_start(void) {
+  // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md
+  PLAY_SONG(song_link);
   rgb_matrix_set_color_all(RGB_RED);
   rgb_matrix_mode(RGB_MATRIX_BREATHING);
 }
 
 void recording_end(void) {
+  PLAY_SONG(song_item);
   on_layer_change(get_highest_layer(layer_state));
 }
 
