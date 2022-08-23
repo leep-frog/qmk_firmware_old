@@ -1,0 +1,7 @@
+NKRO_ENABLE = yes
+COMBO_ENABLE = yes
+TAP_DANCE_ENABLE = yes
+DYNAMIC_MACRO_ENABLE = yes
+KEY_LOCK_ENABLE = yes
+#VPATH += keyboards/gboards/
+#CONSOLE_ENABLE = yes
