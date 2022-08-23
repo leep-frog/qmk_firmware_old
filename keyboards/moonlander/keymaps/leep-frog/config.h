@@ -1,3 +1,7 @@
 #pragma once
 
 #define ORYX_CONFIGURATOR
+
+#define RGBLIGHT_LAYERS
+
+#define ENABLE_RGB_MATRIX_BREATHING

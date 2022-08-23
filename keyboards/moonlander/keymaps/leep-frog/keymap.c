@@ -1,27 +1,39 @@
-/* Copyright 2020 ZSA Technology Labs, Inc <@zsa>
- * Copyright 2020 Jack Humbert <jack.humb@gmail.com>
- * Copyright 2020 Christopher Courtney <drashna@live.com> (@drashna)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include QMK_KEYBOARD_H
 #include "version.h"
+
+#define LEEP_SAFE_RANGE ML_SAFE_RANGE
+
 #include "../../../../users/leep-frog/main.c"
 
-// Implement all required functions from interface.c
-#define LEEP_SAFE_RANGE ML_SAFE_RANGE
+// Color on shift
+int layer_colors[NUM_LAYERS][3] = {
+  [LR_BASE] = { RGB_CYAN },
+  [LR_SAFE] = { RGB_GREEN },
+  [LR_CTRL] = { RGB_ORANGE },
+  [LR_ALT] = { RGB_MAGENTA },
+  [LR_CTRL_X] = { RGB_YELLOW },
+  [LR_CTRL_ALT] = { RGB_GOLD },
+  [LR_NAVIGATION] = { RGB_PINK },
+  [LR_SHORTCUTS] = { RGB_CORAL },
+  [LR_SYMB] = { RGB_PURPLE },
+  [LR_OUTLOOK] = { RGB_BLUE },
+};
+
+// Interface functions
+void on_layer_change(uint8_t layer) {
+  if (!recording) {
+    rgb_matrix_set_color_all(layer_colors[layer][0], layer_colors[layer][1], layer_colors[layer][2]);
+  }
+}
+
+void recording_start(void) {
+  rgb_matrix_set_color_all(RGB_RED);
+  rgb_matrix_mode(RGB_MATRIX_BREATHING);
+}
+
+void recording_end(void) {
+  on_layer_change(get_highest_layer(layer_state));
+}
 
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
@@ -96,7 +108,6 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
                              KC_TAB, KC_ENTER, _______,        _______, KC_SPACE, KC_RGUI
     ),
 
-   // TODO: make all CK_* 7 characters
    [LR_SHORTCUTS] = ML_LAYOUT(
         _______,  _______, _______, _______, _______, _______, _______,           _______, _______, _______,  _______, _______, _______, TO_SFTY,
         _______,  RESET,   CK_WWWB, MS_MID,  CK_WWWF, _______, _______,           _______, URL_PST, URL_COPY, URL_ICP, CK_MOMA, CK_CL,   _______,
@@ -139,7 +150,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
                                             _______, _______, _______,           _______, _______, _______
     ),
 
-        /*
+    /*
     [EMPTY_LAYER] = ML_LAYOUT(
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______, _______, _______, TO_SFTY,
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______, _______, _______, _______,
