@@ -50,11 +50,13 @@ DEFINE_SONG(song_qwerty, QWERTY_SOUND)
 #define FE_9(M, X, ...) M(X), FE_8(M, __VA_ARGS__)
 #define FE_10(M, X, ...) M(X), FE_9(M, __VA_ARGS__)
 #define FE_11(M, X, ...) M(X), FE_10(M, __VA_ARGS__)
+#define FE_12(M, X, ...) M(X), FE_11(M, __VA_ARGS__)
 
 // https://www.ninsheetmusic.org/download/pdf/3544
 #define ZELDA_DISCOVERY FE_8(H__NOTE, _G7, _F7, _DS7, _A6, _GS6, _E7, _GS7, _C8)
 #define ZELDA_ITEM_FOUND FE_7(H__NOTE, _FS6, _AS6, _CS7, _B6, _DS7, _FS7, _CS8)
 #define ZELDA_SPIRIT_ORB /* Intro arpeggion */ FE_7(E__NOTE, _A5,  _B5, _CS6, _D6, _E6, _FS6, _GS6), /* mid part */ WD_NOTE(_A6), H__NOTE(_A6), H__NOTE(_A6), H__NOTE(_G6), BD__NOTE(_A6) /* Outro arpeggio */ FE_8(E__NOTE, _E5, _A5, _CS6, _E6, _A6, _E7, _A7, _B7, _E8)
+#define ZELDA_GUARDIAN_BATTLE FE_12(H__NOTE, _B7, _REST, _A6, _B6, _FS7, _AS6, _E7, _C7, _A7, _A6, _FS7, _B6), FE_12(H__NOTE, _B7, _AS6, _FS7, _C7, _E7, _A6, _A7, _B6, _A6, _B6, _C7, _B7)
 
 #define MARIO_1_UP FE_6(H__NOTE, _E7, _G7, _E8, _C8, _D8, _G8)
 #define MARIO_LOST_A_LIFE HD_NOTE(_B5), WD_NOTE(_F6), HD_NOTE(_F6), H__NOTE(_F6), H__NOTE(_E6), H__NOTE(_D6), H__NOTE(_C6), W__NOTE(_E5), H__NOTE(_E5), W__NOTE(_C5)
