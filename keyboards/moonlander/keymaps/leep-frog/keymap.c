@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCBR, KC_Z, KC_X, KC_C, KC_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
                                                    EMPTY_BOTTOM_ROW,
 
-                              TO_SHCT, TO_SYMB, TO_ALT,  TO_CTL, TO_SFT, TO_NAV
+                              TO_SYMB, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SFT
     ),
 
     [LR_SAFE] = ML_LAYOUT(
@@ -65,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
                                                   EMPTY_BOTTOM_ROW,
 
-                              TO_SHCT, TO_SYMB, TO_ALT,       TO_CTL, TO_SFT, TO_NAV
+                              TO_SYMB, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SFT
     ),
 
     [LR_CTRL] = ML_LAYOUT(
@@ -76,7 +76,7 @@ LSFT_T(CL(LPRN)), KC_HOME, CL(F),  KC_DEL,  KC_RGHT, CK_CTLG, _______,        __
 
                                                            EMPTY_BOTTOM_ROW,
 
-                            CL(TAB), CL(ENTER), MO(LR_CTRL_ALT),    _______, CL(SPACE), RGUI_T(KC_RCBR)
+                            CL(ENTER), CL(TAB), _______,    CL(RGUI), _______, CL(SPACE)
     ),
 
     [LR_CTRL_X] = ML_LAYOUT(
@@ -87,7 +87,7 @@ LSFT_T(CL(LPRN)), KC_HOME, CL(F),  KC_DEL,  KC_RGHT, CK_CTLG, _______,        __
 
                                                            EMPTY_BOTTOM_ROW,
 
-                                CL(TAB), TO_SYMB, CL(DEL),        CL(BSPC), TO_SFT, _______
+                                CL(ENTER), CL(TAB), _______,        CL(RGUI), _______, CL(SPACE)
     ),
 
     [LR_ALT] = ML_LAYOUT(
@@ -98,7 +98,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
                                                                      EMPTY_BOTTOM_ROW,
 
-                                                  AL(TAB), AL(ENTER), _______,       MO(LR_CTRL_ALT), AL(SPACE), RGUI_T(KC_RCBR)
+                                                  AL(ENTER), _______, AL(TAB),       AL(RGUI), _______, AL(SPACE)
     ),
 
     // This layer is basically identical to the safe layer aside from the thumb keys.
@@ -110,7 +110,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
                                                 EMPTY_BOTTOM_ROW,
 
-                             KC_TAB, KC_ENTER, _______,        _______, KC_SPACE, KC_RGUI
+                             KC_ENTER, KC_TAB, _______,        KC_RGUI, _______, KC_SPACE
     ),
 
    [LR_SHORTCUTS] = ML_LAYOUT(
@@ -121,7 +121,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
                                                                      EMPTY_BOTTOM_ROW,
 
-                                           _______, _______, _______,           _______, TGL_SHF, _______
+                                           _______, _______, _______,           _______, _______, _______
     ),
 
     [LR_NAVIGATION] = ML_LAYOUT(

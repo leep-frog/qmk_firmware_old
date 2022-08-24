@@ -36,8 +36,6 @@ enum custom_keycodes { // prefix CK (custom keycode)
     TGL_SLT,
     // End alt tab
     TGL_ELT,
-    // Toggle shift
-    TGL_SHF,
     CK_CL,
     CK_MOMA,
     URL_COPY,
@@ -51,6 +49,7 @@ enum custom_keycodes { // prefix CK (custom keycode)
     CK_UNBS,
     MS_CTRL,
     CK_ALTT,
+    //CK_RSET,
 
     NUM_CK_END,
 };

@@ -97,10 +97,13 @@ bool _safe_layer(struct Processor* pd) {
 // Layer toggling
 #define TO_SFTY TO(LR_SAFE)
 #define TO_OTLK LT(LR_OUTLOOK, KC_SCLN)
-#define TO_SHCT LT(LR_SHORTCUTS, KC_TAB)
+// Change KC_DELETE and KC_BSPC to something else
+// since we should be using ctrl+h, ctrl+d for those
+// and don't need the duplication
+#define TO_SHCT LT(LR_SHORTCUTS, KC_NO)
 #define TO_SYMB LT(LR_SYMB, KC_ENTER)
-#define TO_ALT LT(LR_ALT, KC_DELETE)
-#define TO_CTL LT(LR_CTRL, KC_BSPC)
+#define TO_ALT LT(LR_ALT, KC_TAB)
+#define TO_CTL LT(LR_CTRL, KC_SPACE)
 #define TO_SFT RSFT_T(KC_SPACE)
 #define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
 

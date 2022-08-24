@@ -114,7 +114,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_DELETE] = ACTION_TAP_DANCE_FN_ADVANCED(delete_tapped, delete_finished, delete_reset),*/
 };
 
-#define CK_SHIFT_TOGGLE TD(TDK_SHIFT_TOGGLE)
+#define TGL_SHF TD(TDK_SHIFT_TOGGLE)
 #define CK_KILL TD(TDK_KILL_LINE)
 #define CK_MCR1 TD(TDK_MACRO_1)
 #define CK_MCR2 TD(TDK_MACRO_2)
