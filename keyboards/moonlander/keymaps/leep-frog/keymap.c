@@ -26,54 +26,17 @@ void on_layer_change(uint8_t layer) {
   }
 }
 
-// See below link for more sounds. Also pretty easy to make sounds if need be
-// Do the link sound!
-// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md#songs
-#define DEFINE_SONG(var_name, sound) float var_name[][2] = SONG(sound);
-// Note, some of these are declared elsewhere, but was hopping between duplicate
-// definition and undefined errors. I assume the music_on_song is declared
-// after this file is processed.
-DEFINE_SONG(song_music_on, MUSIC_ON_SOUND)
-DEFINE_SONG(song_music_off, MUSIC_ON_SOUND)
-DEFINE_SONG(song_startup, STARTUP_SOUND)
-DEFINE_SONG(song_goodbye, GOODBYE_SOUND)
-DEFINE_SONG(song_qwerty, QWERTY_SOUND)
-
-#define FE_1(M, X) M(X)
-#define FE_2(M, X, ...) M(X), FE_1(M, __VA_ARGS__)
-#define FE_3(M, X, ...) M(X), FE_2(M, __VA_ARGS__)
-#define FE_4(M, X, ...) M(X), FE_3(M, __VA_ARGS__)
-#define FE_5(M, X, ...) M(X), FE_4(M, __VA_ARGS__)
-#define FE_6(M, X, ...) M(X), FE_5(M, __VA_ARGS__)
-#define FE_7(M, X, ...) M(X), FE_6(M, __VA_ARGS__)
-#define FE_8(M, X, ...) M(X), FE_7(M, __VA_ARGS__)
-#define FE_9(M, X, ...) M(X), FE_8(M, __VA_ARGS__)
-#define FE_10(M, X, ...) M(X), FE_9(M, __VA_ARGS__)
-#define FE_11(M, X, ...) M(X), FE_10(M, __VA_ARGS__)
-#define FE_12(M, X, ...) M(X), FE_11(M, __VA_ARGS__)
-
-// https://www.ninsheetmusic.org/download/pdf/3544
-#define ZELDA_DISCOVERY FE_8(H__NOTE, _G7, _F7, _DS7, _A6, _GS6, _E7, _GS7, _C8)
-#define ZELDA_ITEM_FOUND FE_7(H__NOTE, _FS6, _AS6, _CS7, _B6, _DS7, _FS7, _CS8)
-#define ZELDA_SPIRIT_ORB /* Intro arpeggion */ FE_7(E__NOTE, _A5,  _B5, _CS6, _D6, _E6, _FS6, _GS6), /* mid part */ WD_NOTE(_A6), H__NOTE(_A6), H__NOTE(_A6), H__NOTE(_G6), BD__NOTE(_A6) /* Outro arpeggio */ FE_8(E__NOTE, _E5, _A5, _CS6, _E6, _A6, _E7, _A7, _B7, _E8)
-#define ZELDA_GUARDIAN_BATTLE FE_12(H__NOTE, _B7, _REST, _A6, _B6, _FS7, _AS6, _E7, _C7, _A7, _A6, _FS7, _B6), FE_12(H__NOTE, _B7, _AS6, _FS7, _C7, _E7, _A6, _A7, _B6, _A6, _B6, _C7, _B7)
-
-#define MARIO_1_UP FE_6(H__NOTE, _E7, _G7, _E8, _C8, _D8, _G8)
-#define MARIO_LOST_A_LIFE HD_NOTE(_B5), WD_NOTE(_F6), HD_NOTE(_F6), H__NOTE(_F6), H__NOTE(_E6), H__NOTE(_D6), H__NOTE(_C6), W__NOTE(_E5), H__NOTE(_E5), W__NOTE(_C5)
-#define MARIO_GAME_OVER HD_NOTE(_C6), QD_NOTE(_REST), HD_NOTE(_G5), QD_NOTE(_REST), HD_NOTE(_E5), H__NOTE(_A5), H__NOTE(_B5), H__NOTE(_A5), H__NOTE(_AF5), H__NOTE(_BF5), H__NOTE(_AF5), QD_NOTE(_G5), QD_NOTE(_D5), QD_NOTE(_E5)
-
-DEFINE_SONG(song_link, ZELDA_DISCOVERY)
-DEFINE_SONG(song_item, ZELDA_ITEM_FOUND)
+DEFINE_SONG(song_rec_start, RECORD_START_SONG);
+DEFINE_SONG(song_rec_end, RECORD_END_SONG);
 
 void recording_start(void) {
-  // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md
-  PLAY_SONG(song_link);
+  PLAY_SONG(song_rec_start);
   rgb_matrix_set_color_all(RGB_RED);
   rgb_matrix_mode(RGB_MATRIX_BREATHING);
 }
 
 void recording_end(void) {
-  PLAY_SONG(song_item);
+  PLAY_SONG(song_rec_end);
   on_layer_change(get_highest_layer(layer_state));
 }
 
