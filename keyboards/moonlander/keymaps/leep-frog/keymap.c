@@ -52,11 +52,15 @@ DEFINE_SONG(song_qwerty, QWERTY_SOUND)
 #define FE_11(M, X, ...) M(X), FE_10(M, __VA_ARGS__)
 
 // https://www.ninsheetmusic.org/download/pdf/3544
-#define LINK_SOUND FE_8(H__NOTE, _G7, _F7, _DS7, _A6, _GS6, _E7, _GS7, _C8)
-#define ITEM_OBTAINED FE_7(H__NOTE, _FS6, _AS6, _CS7, _B6, _DS7, _FS7, _CS8)
+#define ZELDA_DISCOVERY FE_8(H__NOTE, _G7, _F7, _DS7, _A6, _GS6, _E7, _GS7, _C8)
+#define ZELDA_ITEM_FOUND FE_7(H__NOTE, _FS6, _AS6, _CS7, _B6, _DS7, _FS7, _CS8)
+#define ZELDA_SPIRIT_ORB /* Intro arpeggion */ FE_7(E__NOTE, _A5,  _B5, _CS6, _D6, _E6, _FS6, _GS6), /* mid part */ WD_NOTE(_A6), H__NOTE(_A6), H__NOTE(_A6), H__NOTE(_G6), BD__NOTE(_A6) /* Outro arpeggio */ FE_8(E__NOTE, _E5, _A5, _CS6, _E6, _A6, _E7, _A7, _B7, _E8)
 
-DEFINE_SONG(song_link, LINK_SOUND)
-DEFINE_SONG(song_item, ITEM_OBTAINED)
+#define MARIO_1_UP FE_6(H__NOTE, _E7, _G7, _E8, _C8, _D8, _G8)
+#define MARIO_LOST_A_LIFE HD_NOTE(_B5), WD_NOTE(_F6), HD_NOTE(_F6), H__NOTE(_F6), H__NOTE(_E6), H__NOTE(_D6), H__NOTE(_C6), W__NOTE(_E5), H__NOTE(_E5), W__NOTE(_C5)
+
+DEFINE_SONG(song_link, ZELDA_DISCOVERY)
+DEFINE_SONG(song_item, ZELDA_ITEM_FOUND)
 
 void recording_start(void) {
   // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md
