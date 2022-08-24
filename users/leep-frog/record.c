@@ -14,18 +14,21 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
     keyrecord_t kr;
     kr.event.pressed = false;
     uint16_t action = play_action;
+    bool macro_1 = play_action == DYN_MACRO_PLAY1;
 
     if (state->count > 1) {
         if (!recording) {
             action = start_action;
             recording = true;
-            recording_start();
+            recording_start(macro_1);
         }
     } else if (recording) {
         action = DYN_REC_STOP;
         kr.event.pressed = true;
         recording = false;
-        recording_end();
+        recording_end(macro_1);
+    } else {
+      recording_play(macro_1);
     }
 
     process_dynamic_macro(action, &kr);

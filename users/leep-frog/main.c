@@ -32,6 +32,23 @@ bool _ctrl_w(struct Processor* pd) {
     return true;
 }
 
+bool _reset(struct Processor* pd) {
+  on_reset();
+  reset_keyboard();
+  return true;
+}
+
+bool is_muted = true;
+bool _mute(struct Processor* pd) {
+  if (is_muted) {
+    music_on();
+  } else {
+    music_off();
+  }
+  is_muted = !is_muted;
+  return true;
+}
+
 bool _alt_t(struct Processor* pd) {
     if (get_mods() & MOD_MASK_SHIFT) {
         // If holding shift, then actually send alt+shift+t
@@ -145,10 +162,12 @@ void processor_init(void) {
     RegisterPressFunc(CK_COPY, su);
     RegisterPressFunc(KC_DELETE, su);
 
-    RegisterPressFunc(CTRL_W, SIMPLE_PROCESSOR("ctrl-w", _ctrl_w));
-    RegisterPressFunc(CK_ALTT, SIMPLE_PROCESSOR("ctrl-w", _alt_t));
+    RegisterPressFunc(CTRL_W, SIMPLE_PROCESSOR("ctrl+w", _ctrl_w));
+    RegisterPressFunc(CK_RSET, SIMPLE_PROCESSOR("reset", _reset));
+    //RegisterPressFunc(CK_MUTE, SIMPLE_PROCESSOR("mute", _mute));
+    //RegisterPressFunc(CK_ALTT, SIMPLE_PROCESSOR("alt+t", _alt_t));
 
-    RegisterPressFunc(MS_CTRL, CtrlClickProcessor());
+    //RegisterPressFunc(MS_CTRL, CtrlClickProcessor());
 
     // When going into Ctrl-x layer, we still want to hit ctrl-x
     RegisterLayerOnFunc(LR_CTRL_X, STRING_SENDER("ctrl-x", SS_RCTL(SS_TAP(X_X))));
