@@ -7,6 +7,7 @@
 
 // Color on shift
 int layer_colors[NUM_LAYERS][3] = {
+  [0 ... NUM_LAYERS - 1] = { RGB_GREEN },
   [LR_BASE] = { RGB_CYAN },
   [LR_SAFE] = { RGB_GREEN },
   [LR_CTRL] = { RGB_ORANGE },
@@ -25,6 +26,8 @@ DEFINE_SONG(rec_2_end_song, RECORDING_2_END_SONG);
 DEFINE_SONG(rec_1_play_song, RECORDING_1_PLAY_SONG);
 DEFINE_SONG(rec_2_play_song, RECORDING_2_PLAY_SONG);
 DEFINE_SONG(reset_song, RESET_SONG);
+DEFINE_SONG(mute_song, MUTE_SONG);
+DEFINE_SONG(unmute_song, UNMUTE_SONG);
 
 // Interface functions
 void on_layer_change(uint8_t layer) {
@@ -38,22 +41,30 @@ void on_reset(void) {
   for (int i = 0; i < sizeof(reset_song)/sizeof(reset_song[0]); i++) {
     song_length += reset_song[i][1];
   }
-  PLAY_SONG(reset_song);
+  LEEP_PLAY_SONG(reset_song);
   wait_ms(1000*song_length);
   SEND_STRING("DONE");
 }
 
+void on_mute(void) {
+  LEEP_PLAY_SONG(mute_song);
+}
+
+void on_unmute(void) {
+  LEEP_PLAY_SONG(unmute_song);
+}
+
 void recording_start(bool macro_1) {
-  PLAY_SONG(rec_start_loop);
+  LEEP_PLAY_SONG(rec_start_loop);
   rgb_matrix_set_color_all(RGB_RED);
   rgb_matrix_mode(RGB_MATRIX_BREATHING);
 }
 
 void recording_end(bool macro_1) {
   if (macro_1) {
-    PLAY_SONG(rec_1_end_song);
+    LEEP_PLAY_SONG(rec_1_end_song);
   } else {
-    PLAY_SONG(rec_2_end_song);
+    LEEP_PLAY_SONG(rec_2_end_song);
   }
 
   on_layer_change(get_highest_layer(layer_state));
@@ -61,9 +72,9 @@ void recording_end(bool macro_1) {
 
 void recording_play(bool macro_1) {
   if (macro_1) {
-    PLAY_SONG(rec_1_play_song);
+    LEEP_PLAY_SONG(rec_1_play_song);
   } else {
-    PLAY_SONG(rec_2_play_song);
+    LEEP_PLAY_SONG(rec_2_play_song);
   }
   on_layer_change(get_highest_layer(layer_state));
 }
@@ -164,7 +175,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
     ),
 
     [LR_SYMB] = ML_LAYOUT(
-        VRSN,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,           _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  TO_SFTY,
+        _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,           _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  TO_SFTY,
         _______, KC_EXLM, KC_COLN, KC_EQL,  KC_CIRC, KC_LPRN, _______,           _______, KC_RPRN, KC_7,    KC_8,    KC_9,    KC_PERC, KC_F12,
         _______, KC_AMPR, KC_ASTR, KC_DLR,  KC_SLSH, KC_LBRC,  _______,          _______, KC_DOWN, KC_4,    KC_5,    KC_6,    KC_0,    KC_PERC,
         _______, KC_TILD, KC_EXLM, KC_AT,   KC_EQL,  KC_LCBR,                             KC_RCBR, KC_1,    KC_2,    KC_3,    KC_0,    _______,

@@ -1,6 +1,7 @@
 #ifndef LEEP_MAIN
 #define LEEP_MAIN
 
+#include <stdio.h>
 #include "interface.c"
 #include "enum.c"
 #include "google.c"
@@ -16,40 +17,85 @@
 // Note: wally sometimes crashes if the keyboard is plugged into the workstation,
 // but behaves fine if the keyboard is plugged directly into the laptop.
 
+#ifdef CONSOLE_ENABLE
+
+#define LEBUG(s, ...) uprintf ( s, ##__VA_ARGS__ );
+
+void print_int(int k) {
+  char c[10];
+  itoa(k, c, 10);
+  send_string(c);
+}
+
+#define PRINT_INT(i) print_int(i);
+
+#else
+
+#define LEBUG(s, ...)
+#define PRINT_INT(i)
+
+#endif
+
 // TODO: move these to separate files
 #define CTRL_W RCTL(KC_W)
 
-bool _ctrl_w(struct Processor* pd) {
-    if (shift_toggled) {
-        // Clear toggle
-        ToggleShift();
-        // Copy contents
-        SEND_STRING(SS_RCTL(SS_TAP(X_INSERT)));
-        // Delete selected text.
-        SEND_STRING(SS_TAP(X_DELETE));
-        return false;
+/**/
+
+bool _ctrl_w_new(bool activated) {
+    if (!shift_toggled) {
+      return true;
     }
-    return true;
+    // Clear toggle
+    ToggleShift();
+    // Copy contents
+    SEND_STRING(SS_RCTL(SS_TAP(X_INSERT)));
+    // Delete selected text.
+    SEND_STRING(SS_TAP(X_DELETE));
+    return false;
 }
 
-bool _reset(struct Processor* pd) {
+bool _other_new(bool activated) {
+  if (!shift_toggled) {
+      return true;
+    }
+    // Clear toggle
+    ToggleShift();
+    // Copy contents
+    SEND_STRING(SS_RCTL(SS_TAP(X_INSERT)));
+    // Delete selected text.
+    SEND_STRING(SS_TAP(X_DELETE));
+    return false;
+}
+
+// TODO: this should just wrap the reset function.
+bool _reset_new(bool activated) {
   on_reset();
   reset_keyboard();
   return true;
 }
 
-bool is_muted = true;
-bool _mute(struct Processor* pd) {
-  if (is_muted) {
-    music_on();
-  } else {
-    music_off();
-  }
-  is_muted = !is_muted;
-  return true;
+bool _leep_mute = false;
+
+#define LEEP_PLAY_SONG(sng) if (!_leep_mute) {\
+  PLAY_SONG(sng);\
 }
 
-bool _alt_t(struct Processor* pd) {
+#define LEEP_PLAY_LOOP(sng) if (!_leep_mute) {\
+  PLAY_LOOP(sng);\
+}
+
+bool _mute_new(bool activated) {
+  if (_leep_mute) {
+    _leep_mute = false;
+    on_unmute();
+  } else {
+    on_mute();
+    _leep_mute = true;
+  }
+  return false;
+}
+
+bool _alt_t_new(bool activated) {
     if (get_mods() & MOD_MASK_SHIFT) {
         // If holding shift, then actually send alt+shift+t
         // shift is already being held so we don't need to specify that here.
@@ -63,7 +109,7 @@ bool _alt_t(struct Processor* pd) {
     return false;
 }
 
-bool _ctrl_click(struct Processor* pd) {
+bool _ctrl_click_new(bool activated) {
     // Used to have the following line
     // #define MS_CTRL RCTL(KC_MS_BTN1)
     // but in my work Windows laptop, the ctrl and click would be too
@@ -75,16 +121,16 @@ bool _ctrl_click(struct Processor* pd) {
     return false;
 }
 
-struct Processor* CtrlClickProcessor(void) {
-    return SIMPLE_PROCESSOR("_ctrl_click", _ctrl_click);
-}
-
-bool _safe_layer(struct Processor* pd) {
-    if (shift_toggled) {
-        ToggleShift();
-    }
-    clear_mods();
+bool _safe_layer(bool activated) {
+  if (!activated) {
     return false;
+  }
+
+  if (shift_toggled) {
+      ToggleShift();
+  }
+  clear_mods();
+  return false;
 }
 
 // Custom commands
@@ -126,57 +172,124 @@ bool _safe_layer(struct Processor* pd) {
 
 // Runs just once when the keyboard initializes.
 void keyboard_post_init_user(void) {
+  // Customise these values to desired behaviour
+  /*debug_enable=true;
+  debug_matrix=true;
+  debug_keyboard=true;
+  LEBUG("initted")
+  //debug_mouse=true;*/
 }
 
-void processor_init(void) {
-    RegisterPressFunc(VRSN, STRING_SENDER("version", QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION));
-    RegisterPressFunc(TGL_ALT, STRING_SENDER("alt_tab", SS_DOWN(X_RALT) SS_TAP(X_TAB)));
-    RegisterPressFunc(TGL_SLT, STRING_SENDER("alt_shft_tab", SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB))));
-    RegisterPressFunc(TGL_ELT, STRING_SENDER("end_alt_tab", SS_UP(X_RALT)));
-    // Needed to undo SS_DOWN from TGL_ALT and TGL_SLT.
-    RegisterLayerOffFunc(LR_ALT, STRING_SENDER("end_alt_layer", SS_UP(X_RALT)));
-    // Needed to undo SS_DOWN from TGL_ALT
-    RegisterLayerOffFunc(LR_NAVIGATION, STRING_SENDER("end_alt_layer_nav", SS_UP(X_RALT)));
+#define STRING_FUNC(func_name, str) bool func_name(bool activated) {\
+  send_string(str);\
+  return false;\
+}
 
-    RegisterPressFunc(URL_ICP, URL_SENDER("url_id_copy", SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c"));
+#define URL_FUNC(func_name, str) bool func_name(bool activated) {\
+  SEND_STRING(SS_DOWN(X_RCTL) "l");\
+  URLWait();\
+  send_string(str);\
+  SEND_STRING(SS_UP(X_RCTL));\
+  return false;\
+}
 
-    RegisterPressFunc(URL_COPY, URL_SENDER("url_copy", "c"));
+#define NEW_TAB_FUNC(func_name, str) bool func_name(bool activated) {\
+  SEND_STRING(SS_RCTL("t"));\
+  URLWait();\
+  send_string(str);\
+  return false;\
+}
 
-    // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
-    // Maybe it's something to do with KC_GESC overlapping or something?
-    // Who knows why, but we do need this custom keycode regardless to get around that.
-    RegisterPressFunc(CK_ESC, STRING_SENDER("escape", SS_TAP(X_ESC)));
+STRING_FUNC(alt_tab, SS_DOWN(X_RALT) SS_TAP(X_TAB))
+STRING_FUNC(alt_shft_tab, SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)))
+STRING_FUNC(end_alt_tab, SS_UP(X_RALT))
 
-    RegisterPressFunc(URL_PST, NEW_TAB_SENDER("new_tab", SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER)));
+URL_FUNC(url_copy, "c")
+URL_FUNC(url_id_copy, SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c")
+NEW_TAB_FUNC(url_paste, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER))
+//     // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
+//     // Maybe it's something to do with KC_GESC overlapping or something?
+//     // Who knows why, but we do need this custom keycode regardless to get around that.
+STRING_FUNC(escape, SS_TAP(X_ESC))
 
-    RegisterPressFunc(CK_CL, NEW_TAB_SENDER("cl", "cl/" SS_TAP(X_ENTER)));
-    RegisterPressFunc(CK_MOMA, NEW_TAB_SENDER("moma", "moma "));
+NEW_TAB_FUNC(cl, "cl/" SS_TAP(X_ENTER))
+NEW_TAB_FUNC(moma, "moma " SS_TAP(X_ENTER))
 
-    RegisterPressFunc(CK_CTLG, CtrlGProcessor());
+STRING_FUNC(uni_bs, universal_backspace)
 
-    RegisterPressFunc(CK_UNBS, STRING_SENDER("universal_backspace", universal_backspace));
+#define KEY_PROCESSOR_OFFSET(v) v - CK_ENUM_START - 1
 
-    // Shift toggling
-    struct Processor* su = ToggleShiftProcessor(false);
-    RegisterPressFunc(KC_BSPC, su);
-    RegisterPressFunc(CK_COPY, su);
-    RegisterPressFunc(KC_DELETE, su);
+typedef bool (*processor_func_type)(bool activated);
 
-    RegisterPressFunc(CTRL_W, SIMPLE_PROCESSOR("ctrl+w", _ctrl_w));
-    RegisterPressFunc(CK_RSET, SIMPLE_PROCESSOR("reset", _reset));
-    //RegisterPressFunc(CK_MUTE, SIMPLE_PROCESSOR("mute", _mute));
-    //RegisterPressFunc(CK_ALTT, SIMPLE_PROCESSOR("alt+t", _alt_t));
+typedef struct {
+  processor_func_type fn;
+} processor_action_t;
 
-    //RegisterPressFunc(MS_CTRL, CtrlClickProcessor());
+#define PRC_ACTION(user_fn) { .fn = user_fn }
+#define MAKE_KEY_PROCESSOR(key, func_name) [ KEY_PROCESSOR_OFFSET ( key ) ] = PRC_ACTION ( func_name )
 
-    // When going into Ctrl-x layer, we still want to hit ctrl-x
-    RegisterLayerOnFunc(LR_CTRL_X, STRING_SENDER("ctrl-x", SS_RCTL(SS_TAP(X_X))));
-    RegisterLayerOnFunc(LR_SAFE, SIMPLE_PROCESSOR("safe_layer", _safe_layer));
+//processor_action_t key_processors[CK_ENUM_END - CK_ENUM_START - 1] = {
+#define NUM_KEY_PROCESSORS KEY_PROCESSOR_OFFSET(CK_ENUM_END)
+const processor_action_t PROGMEM key_processors[NUM_KEY_PROCESSORS] = {
+  [0 ... NUM_KEY_PROCESSORS - 1] = { .fn = NULL },
+  MAKE_KEY_PROCESSOR(TGL_ALT, alt_tab),
+  MAKE_KEY_PROCESSOR(TGL_SLT, alt_shft_tab),
+  MAKE_KEY_PROCESSOR(TGL_ELT, end_alt_tab),
 
-    RegisterLayerOnFunc(LR_CTRL_ALT, STRING_SENDER("ca_layer_on", SS_DOWN(X_RCTL) SS_DOWN(X_RALT)));
-    RegisterLayerOffFunc(LR_CTRL_ALT, STRING_SENDER("ca_layer_off", SS_UP(X_RCTL) SS_UP(X_RALT)));
+  MAKE_KEY_PROCESSOR(URL_COPY, url_copy),
+  MAKE_KEY_PROCESSOR(URL_ICP, url_id_copy),
+  MAKE_KEY_PROCESSOR(URL_PST, url_paste),
+  MAKE_KEY_PROCESSOR(CK_CL, cl),
+  MAKE_KEY_PROCESSOR(CK_MOMA, moma),
+  MAKE_KEY_PROCESSOR(CK_UNBS, uni_bs),
 
-    return;
+  MAKE_KEY_PROCESSOR(CK_ESC, escape),
+  MAKE_KEY_PROCESSOR(CK_CTLG, _ctrl_g_new),
+  //MAKE_KEY_PROCESSOR(CK_RSET, _reset_new),
+  MAKE_KEY_PROCESSOR(CK_MUTE, _mute_new),
+  MAKE_KEY_PROCESSOR(CK_ALTT, _alt_t_new),
+  // TODO: enums should be CK, defined should be DK
+  //MAKE_KEY_PROCESSOR(CK_COPY, UntoggleShift),
+  //[KC_BSPC] = &UntoggleShift,
+  //[KC_DELETE] = &UntoggleShift,
+  //[MS_CTRL] = &_ctrl_click_new,
+  //[CTRL_W] = &_ctrl_w_new,
+};
+
+bool alt_and_or_nav_layer(bool activated) {
+  if (!activated) {
+    SEND_STRING(SS_UP(X_RALT));
+  }
+  return true;
+}
+
+bool ctrl_x_layer(bool activated) {
+  if (activated) {
+    SEND_STRING(SS_RCTL(SS_TAP(X_X)));
+  }
+  return true;
+}
+
+bool ctrl_alt_layer(bool activated) {
+  if (activated) {
+    SEND_STRING(SS_DOWN(X_RCTL) SS_DOWN(X_RALT));
+  } else {
+    SEND_STRING(SS_UP(X_RCTL) SS_UP(X_RALT));
+  }
+  return true;
+}
+
+#define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
+
+const processor_action_t PROGMEM layer_processors[NUM_LAYERS] = {
+  [0 ... NUM_LAYERS - 1] = { .fn = NULL },
+  MAKE_LAYER_PROCESSOR(LR_CTRL_X, ctrl_x_layer),
+  // Needed to undo SS_DOWN from TGL_ALT and TGL_SLT.
+  MAKE_LAYER_PROCESSOR(LR_ALT, alt_and_or_nav_layer),
+  // Needed to undo SS_DOWN from TGL_ALT
+  MAKE_LAYER_PROCESSOR(LR_NAVIGATION, alt_and_or_nav_layer),
+  MAKE_LAYER_PROCESSOR(LR_CTRL_ALT, ctrl_alt_layer),
+  MAKE_LAYER_PROCESSOR(LR_SAFE, _safe_layer),
 };
 
 // https://beta.docs.qmk.fm/using-qmk/guides/custom_quantum_functions#matrix_scan_-function-documentation
@@ -185,5 +298,46 @@ void processor_init(void) {
 //void matrix_scan_user(void) {
     //recording_blinker();
 //}
+
+bool layers_status[NUM_LAYERS] = {
+  [0] = true,
+  [1 ... NUM_LAYERS - 1] = false,
+};
+
+bool run_array_processor(const processor_action_t processors[], size_t sz, size_t idx, bool activated) {
+  if (idx >= 0 && idx < sz && processors[idx].fn) {
+    processors[idx].fn(activated);
+    return false;
+  }
+  return true;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+  if (!record->event.pressed) {
+    return true;
+  }
+  // The boolean here could be if the key was pressed or unpressed,
+  // but not that's currently used so it'd just be extra logic (here and
+  // in all implementing functions).
+  return run_array_processor(key_processors, NUM_KEY_PROCESSORS, KEY_PROCESSOR_OFFSET(keycode), true);
+}
+
+// Runs whenever there is a layer state change.
+layer_state_t layer_state_set_user(layer_state_t state) {
+  LEBUG("layer 1")
+
+  // Run processors
+  for (int i = 0; i < NUM_LAYERS; i++) {
+    bool current_state = layer_state_cmp(state, i);
+    if (current_state != layers_status[i]) {
+      run_array_processor(layer_processors, NUM_LAYERS, i, current_state);
+      layers_status[i] = current_state;
+    }
+  }
+
+  on_layer_change(get_highest_layer(state));
+
+  return state;
+}
 
 #endif

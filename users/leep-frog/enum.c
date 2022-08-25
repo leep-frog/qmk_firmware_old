@@ -28,36 +28,45 @@ enum press_type { // prefix PT
 };
 
 enum custom_keycodes { // prefix CK (custom keycode)
-    VRSN = LEEP_SAFE_RANGE,
-    NUM_CK_START,
-    // Toggle alt tab
-    TGL_ALT,
-    // Toggle shift-alt tab
-    TGL_SLT,
-    // End alt tab
-    TGL_ELT,
-    CK_CL,
-    CK_MOMA,
-    URL_COPY,
-    // Copy URL ID
-    URL_ICP,
-    // URL_PST
-    URL_PST,
-    CK_NEW,
-    CK_CTLG,
-    CK_ESC,
-    CK_UNBS,
-    MS_CTRL,
-    CK_ALTT,
-    CK_RSET,
-    CK_MUTE,
+  CK_ENUM_START = LEEP_SAFE_RANGE,
 
-    NUM_CK_END,
+  /***************
+   * Toggle keys *
+   ***************/
+  // Toggle alt tab
+  TGL_ALT,
+  // Toggle shift-alt tab
+  TGL_SLT,
+  // End alt tab
+  TGL_ELT,
+
+  /************
+   * URL keys *
+   ************/
+  // Copy URL from a Chrome browser
+  URL_COPY,
+  // Copy URL ID
+  URL_ICP,
+  // Paste URL
+  URL_PST,
+
+  /***************
+   * Custom keys *
+   ***************/
+  CK_CTLG,
+  CK_ESC,
+  CK_UNBS,
+  MS_CTRL,
+  CK_ALTT,
+  CK_RSET,
+  CK_MUTE,
+  CK_CL,
+  CK_MOMA,
+
+  CK_ENUM_END,
 };
 
 #define PROCESSOR
-
-bool k = true;
 
 enum td_keys { // prefix TDK
     TDK_SHIFT_TOGGLE,

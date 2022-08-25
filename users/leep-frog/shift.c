@@ -16,6 +16,13 @@ void ToggleShift(void) {
     shift_toggled = !shift_toggled;
 }
 
+bool UntoggleShift(bool activated) {
+    if (shift_toggled) {
+      ToggleShift();
+    }
+    return true;
+}
+
 // Runs emacs shift toggle (ctrl-j) if hit once, otherwise activates shift
 // toggle layer.
 void TDToggleShift(qk_tap_dance_state_t *state, void *user_data) {
@@ -49,28 +56,13 @@ void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
     SEND_STRING(SS_RCTL("c") SS_TAP(X_DELETE));
 }
 
-bool _shift_toggler(struct Processor* pd) {
-    if (pd->data.bool_arg != shift_toggled) {
-        ToggleShift();
-    }
-    return true;
-}
-
-struct Processor* ToggleShiftProcessor(bool want) {
-    return SIMPLE_BOOL_PROCESSOR("shift_toggler", _shift_toggler, want);
-}
-
-bool _ctrl_g(struct Processor* pd) {
-    if (pd->data.bool_arg != shift_toggled) {
-        ToggleShift();
+bool _ctrl_g_new(bool activated) {
+    if (shift_toggled) {
+      ToggleShift();
     } else {
-        SEND_STRING(SS_RCTL("g"));
+      SEND_STRING(SS_RCTL("g"));
     }
     return true;
-}
-
-struct Processor* CtrlGProcessor(void) {
-    return SIMPLE_BOOL_PROCESSOR("shift_toggler", _ctrl_g, false);
 }
 
 #endif

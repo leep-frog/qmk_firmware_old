@@ -10,6 +10,12 @@
 // Run when reset key is hit (but before actual keyboard reset)
 void on_reset(void);
 
+// Run when muted
+void on_mute(void);
+
+// Run when unmuted
+void on_unmute(void);
+
 // Run when recording starts
 void recording_start(bool macro_1);
 
