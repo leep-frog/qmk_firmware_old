@@ -159,6 +159,7 @@ bool _safe_layer(bool activated) {
 #define TO_CTL LT(LR_CTRL, KC_SPACE)
 #define TO_SFT RSFT_T(KC_SPACE)
 #define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
+#define TO_CTAL MO(LR_CTRL_ALT)
 
 // Runs just once when the keyboard initializes.
 void keyboard_post_init_user(void) {

@@ -12,10 +12,10 @@ int layer_colors[NUM_LAYERS][3] = {
   [0 ... NUM_LAYERS - 1] = { RGB_GREEN },
   [LR_BASE] = { RGB_CYAN },
   [LR_SAFE] = { RGB_GREEN },
-  [LR_CTRL] = { RGB_CHARTREUSE },
+  [LR_CTRL] = { RGB_SPRINGGREEN },
   // Color when shift is held
   [LR_ALT] = { RGB_MAGENTA },
-  [LR_CTRL_X] = { RGB_SPRINGGREEN },
+  [LR_CTRL_X] = { RGB_CHARTREUSE },
   [LR_CTRL_ALT] = { RGB_GOLD },
   [LR_NAVIGATION] = { RGB_CORAL },
   [LR_SHORTCUTS] = { RGB_TURQUOISE },
@@ -121,7 +121,7 @@ LSFT_T(CL(LPRN)), KC_HOME, CL(F),  KC_DEL,  KC_RGHT, CK_CTLG, _______,        __
 
                                                            BOTTOM_ROW,
 
-                            CL(ENTER), CL(TAB), _______,    CL(RGUI), _______, CL(SPACE)
+                            CL(ENTER), CL(TAB), TO_CTAL,         CL(RGUI), _______, CL(SPACE)
     ),
 
     [LR_CTRL_X] = ML_LAYOUT(
@@ -143,7 +143,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
                                                                      BOTTOM_ROW,
 
-                                                  AL(ENTER), _______, AL(TAB),       AL(RGUI), _______, AL(SPACE)
+                                                  AL(ENTER), _______, AL(TAB),       AL(RGUI), TO_CTAL, AL(SPACE)
     ),
 
     // This layer is basically identical to the safe layer aside from the thumb keys.
