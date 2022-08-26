@@ -121,7 +121,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 /*#define CK_UNIVERSAL_BACKSPACE TD(TDK_BACKSPACE)
 #define CK_DEL_WORD TD(TDK_DELETE)*/
 #define CK_DEL_WORD RCTL(KC_DELETE)
-#define CK_MARKDOWN_PASTE TD(TDK_MARKDOWN_PASTE)
+#define CK_MDPS TD(TDK_MARKDOWN_PASTE)
 #define CK_OLRL TD(TDK_OUTLOOK_RELOAD)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {

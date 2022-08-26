@@ -3,6 +3,8 @@
 
 #define LEEP_SAFE_RANGE ML_SAFE_RANGE
 
+#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
+
 #include "../../../../users/leep-frog/main.c"
 
 // Color on shift
@@ -15,7 +17,7 @@ int layer_colors[NUM_LAYERS][3] = {
   [LR_ALT] = { RGB_MAGENTA },
   [LR_CTRL_X] = { RGB_SPRINGGREEN },
   [LR_CTRL_ALT] = { RGB_GOLD },
-  [LR_NAVIGATION] = { RGB_ORANGE },
+  [LR_NAVIGATION] = { RGB_CORAL },
   [LR_SHORTCUTS] = { RGB_TURQUOISE },
   [LR_SYMB] = { RGB_ORANGE },
   [LR_OUTLOOK] = { RGB_BLUE },
@@ -33,7 +35,7 @@ DEFINE_SONG(unmute_song, SONG(MARIO_1_UP));
 // Interface functions
 void on_layer_change(uint8_t layer) {
   if (!recording && !shift_toggled) {
-    rgb_matrix_set_color_all(layer_colors[layer][0], layer_colors[layer][1], layer_colors[layer][2]);
+    LEEP_LAYER_COLOR(layer);
   }
 }
 
@@ -51,6 +53,14 @@ void on_mute(void) {
 
 void on_unmute(void) {
   LEEP_PLAY_SONG(unmute_song);
+}
+
+void on_shift(void) {
+  rgb_matrix_set_color_all(RGB_RED);
+}
+
+void on_unshift(void) {
+  LEEP_LAYER_COLOR(LR_CTRL);
 }
 
 void recording_start(bool macro_1) {
@@ -173,7 +183,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
     [LR_SYMB] = ML_LAYOUT(
         _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,           _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  TO_SFTY,
         _______, KC_EXLM, KC_COLN, KC_EQL,  KC_CIRC, KC_LPRN, _______,           _______, KC_RPRN, KC_7,    KC_8,    KC_9,    KC_PERC, KC_F12,
-        _______, KC_AMPR, KC_ASTR, KC_DLR,  KC_SLSH, KC_LBRC,  _______,          _______, KC_DOWN, KC_4,    KC_5,    KC_6,    KC_0,    KC_PERC,
+        _______, KC_AMPR, KC_ASTR, KC_DLR,  KC_SLSH, KC_LBRC,  _______,          _______, CK_MDPS, KC_4,    KC_5,    KC_6,    KC_0,    KC_PERC,
         _______, KC_TILD, KC_EXLM, KC_AT,   KC_EQL,  KC_LCBR,                             KC_RCBR, KC_1,    KC_2,    KC_3,    KC_0,    _______,
                                                            BOTTOM_ROW,
                                             RGB_HUD, KC_ENTER, RGB_HUI, TOGGLE_LAYER_COLOR, KC_SPACE, _______

@@ -9,10 +9,10 @@ void ToggleShift(void) {
     if (shift_toggled) {
         // Turn off shift.
         SEND_STRING(SS_UP(X_RSFT));
-        rgb_matrix_set_color_all(LR_CTRL_X);
+        on_unshift();
     } else {
         // Turn on shift.
-        rgb_matrix_set_color_all(RGB_RED);
+        on_shift();
         SEND_STRING(SS_DOWN(X_RSFT));
     }
     shift_toggled = !shift_toggled;
@@ -40,9 +40,7 @@ void TDToggleShift(qk_tap_dance_state_t *state, void *user_data) {
 void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         // Deactivate shift layer if necessary.
-        if (shift_toggled) {
-            ToggleShift();
-        }
+        UntoggleShift();
         SEND_STRING(SS_RCTL("k"));
         return;
     }

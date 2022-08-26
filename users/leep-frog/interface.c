@@ -17,6 +17,12 @@ void on_mute(void);
 // Run when unmuted
 void on_unmute(void);
 
+// Run when shift is toggled
+void on_shift(void);
+
+// Run when shift is untoggled
+void on_unshift(void);
+
 // Run when recording starts
 void recording_start(bool macro_1);
 
