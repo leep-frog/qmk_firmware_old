@@ -9,8 +9,10 @@ void ToggleShift(void) {
     if (shift_toggled) {
         // Turn off shift.
         SEND_STRING(SS_UP(X_RSFT));
+        rgb_matrix_set_color_all(LR_CTRL_X);
     } else {
         // Turn on shift.
+        rgb_matrix_set_color_all(RGB_RED);
         SEND_STRING(SS_DOWN(X_RSFT));
     }
     shift_toggled = !shift_toggled;
@@ -34,7 +36,7 @@ void TDToggleShift(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // Runs emacs line kill (ctrl-k) if hit once, otherwise emulates behavior for regular text things.
-// TODO: Make generic function for single tap vs double tap.
+// TODO: Make generic function/macro for single tap vs double tap.
 void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         // Deactivate shift layer if necessary.

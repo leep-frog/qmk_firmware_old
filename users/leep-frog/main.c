@@ -303,6 +303,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     return true;
   }
 
+  // Untoggle shift the layer for all non-movement keys
+  switch (keycode & QK_BASIC_MAX) {
+    case KC_HOME ... KC_UP:
+    case KC_BSPACE:
+      break;
+    default:
+      // Don't untoggle for ctrl g since that should *only* deactivate the shift layer
+      // (and not send ctrl+g afterwards too)
+      if (keycode != CK_CTLG) {
+        UntoggleShift();
+      }
+  }
+
   // We explicitly want all keycodes to return something to
   // 1) prevent custom keycodes from having logic in this switch and in run_array_processor
   // 2) prevent regular keycode logic from getting to custom keycodes (shouldn't actually be a problem but jic)
@@ -311,11 +324,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     LEEP_CASE(CTRL_W, _ctrl_w_new)
     LEEP_CASE(MS_CTRL, _ctrl_click_new)
     LEEP_CASE(CK_COPY, UntoggleShift)
-  }
-
-  switch (keycode & QK_BASIC_MAX) {
-    LEEP_CASE(KC_DELETE, UntoggleShift)
-    LEEP_CASE(KC_BSPC, UntoggleShift)
   }
 
   // The boolean here could be if the key was pressed or unpressed,

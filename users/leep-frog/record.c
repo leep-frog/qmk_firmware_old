@@ -42,38 +42,4 @@ void recorder_2(qk_tap_dance_state_t *state, void *user_data) {
     recorder_base(state, DYN_MACRO_PLAY2, DYN_REC_START2);
 }
 
-// TODO: use dynamic_macro_led_blink(), see https://github.com/qmk/qmk_firmware/blob/master/docs/feature_dynamic_macros.md
-/*void recording_blinker(void) {
-    if (!recording) {
-        // If blink timer is 0, then we haven't been recording for a while.
-        if (!blink_timer) {
-            return;
-        }
-        // Otherwise, we probably just stopped recording so turn off the led.
-        recording_end();
-        blink_timer = 0;
-        return;
-    }
-
-    if (!blink_timer) {
-        // If blink timer is 0, then we just started recording.
-        blink_timer = timer_read();
-        recording_start();
-        blink_on = true;
-        return;
-    }
-
-    if (timer_elapsed(blink_timer) < 500) {
-        return;
-    }
-
-    if (blink_on) {
-        record_light_off();
-    } else {
-        record_light_on();
-    }
-    blink_on = !blink_on;
-    blink_timer = timer_read();
-}*/
-
 #endif

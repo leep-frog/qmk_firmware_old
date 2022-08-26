@@ -16,7 +16,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 LT(LR_SHORTCUTS, KC_TAB), LT(LR_SYMB, KC_ENTER), LT(LR_ALT, KC_DELETE),  LT(LR_CTRL, KC_BSPC), RSFT_T(KC_SPACE), LT(LR_NAVIGATION, KC_LGUI)
 ),
 
-// TODO: cricut print stickers for blank keys for this
 [LR_SAFE] = LAYOUT_ergodox_pretty(
     KC_GRAVE, KC_1,     KC_2,    KC_3,    KC_4,     KC_5, _______,        CK_ESC,       KC_6,    KC_7,    KC_8,        KC_9,    KC_0,    TO(LR_BASE),
     KC_TAB,   KC_Q,     KC_W,    KC_E,    KC_R,     KC_T, LGHT_ON,    LGHT_OF, KC_Y,    KC_U,    KC_I,        KC_O,    KC_P,    KC_BSLASH,

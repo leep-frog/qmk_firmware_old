@@ -32,7 +32,7 @@ DEFINE_SONG(unmute_song, SONG(MARIO_1_UP));
 
 // Interface functions
 void on_layer_change(uint8_t layer) {
-  if (!recording) {
+  if (!recording && !shift_toggled) {
     rgb_matrix_set_color_all(layer_colors[layer][0], layer_colors[layer][1], layer_colors[layer][2]);
   }
 }
