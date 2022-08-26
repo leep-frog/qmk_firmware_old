@@ -39,8 +39,6 @@ void print_int(int k) {
 // TODO: move these to separate files
 #define CTRL_W RCTL(KC_W)
 
-/**/
-
 bool _ctrl_w_new(bool activated) {
     if (!shift_toggled) {
       return true;
@@ -74,14 +72,29 @@ bool _reset_new(bool activated) {
   return true;
 }
 
+typedef struct {
+  uint8_t tempo;
+  float song[][2];
+} leep_song;
+
+#define DEFINE_SONG_WITH_TEMPO( var_name, sound, tempo ) \
+float var_name ## _song[][2] =  sound;\
+uint8_t var_name ## _tempo = tempo;
+
+#define DEFINE_SONG(var_name, sound) \
+float var_name ## _song[][2] =  sound;\
+uint8_t var_name ## _tempo = TEMPO_DEFAULT;
+
 bool _leep_mute = false;
 
 #define LEEP_PLAY_SONG(sng) if (!_leep_mute) {\
-  PLAY_SONG(sng);\
+  set_tempo( sng ## _tempo );\
+  PLAY_SONG( sng ## _song );\
 }
 
 #define LEEP_PLAY_LOOP(sng) if (!_leep_mute) {\
-  PLAY_LOOP(sng);\
+  set_tempo( sng ## _tempo );\
+  PLAY_SONG( sng ## _song );\
 }
 
 bool _mute_new(bool activated) {
@@ -312,10 +325,23 @@ bool run_array_processor(const processor_action_t processors[], size_t sz, size_
   return true;
 }
 
+#define LEEP_CASE(kc, rv, code) case (kc):\
+code;\
+return rv;
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+  // Return if this is being run on key un-pressed.
   if (!record->event.pressed) {
     return true;
   }
+
+  // We explicitly want all keycodes to return something to
+  // 1) prevent custom keycodes from having logic in this switch and in run_array_processor
+  // 2) prevent regular keycode logic from getting to custom keycodes (shouldn't actually be a problem but jic)
+  switch (keycode) {
+    LEEP_CASE(RESET, true, on_reset())
+  }
+
   // The boolean here could be if the key was pressed or unpressed,
   // but not that's currently used so it'd just be extra logic (here and
   // in all implementing functions).

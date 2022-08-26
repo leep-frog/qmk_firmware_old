@@ -37,8 +37,8 @@
 #define FE_11(M, X, ...) M(X), FE_10(M, __VA_ARGS__)
 #define FE_12(M, X, ...) M(X), FE_11(M, __VA_ARGS__)
 
+// Override built-ins:
+// https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md#songs
 //#define STARTUP_SONG SONG(ZELDA_DISCOVERY)
 #define STARTUP_SONG SONG()
 #define GOODBYE_SONG SONG()
-#define MUTE_SONG SONG(MARIO_GAME_OVER)
-#define UNMUTE_SONG SONG(MARIO_1_UP)

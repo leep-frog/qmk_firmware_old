@@ -10,24 +10,25 @@ int layer_colors[NUM_LAYERS][3] = {
   [0 ... NUM_LAYERS - 1] = { RGB_GREEN },
   [LR_BASE] = { RGB_CYAN },
   [LR_SAFE] = { RGB_GREEN },
-  [LR_CTRL] = { RGB_ORANGE },
-  [LR_ALT] = { RGB_MAGENTA },
-  [LR_CTRL_X] = { RGB_YELLOW },
+  [LR_CTRL] = { RGB_CHARTREUSE },
+  // Color when shift is held
+  [LR_ALT] = { RGB_ORANGE },
+  [LR_CTRL_X] = { RGB_SPRINGGREEN },
   [LR_CTRL_ALT] = { RGB_GOLD },
-  [LR_NAVIGATION] = { RGB_PINK },
-  [LR_SHORTCUTS] = { RGB_CORAL },
-  [LR_SYMB] = { RGB_PURPLE },
+  [LR_NAVIGATION] = { RGB_ORANGE },
+  [LR_SHORTCUTS] = { RGB_YELLOW },
+  [LR_SYMB] = { RGB_MAGENTA },
   [LR_OUTLOOK] = { RGB_BLUE },
 };
 
-DEFINE_SONG(rec_start_loop, RECORDING_LOOP_SONG);
-DEFINE_SONG(rec_1_end_song, RECORDING_1_END_SONG);
-DEFINE_SONG(rec_2_end_song, RECORDING_2_END_SONG);
-DEFINE_SONG(rec_1_play_song, RECORDING_1_PLAY_SONG);
-DEFINE_SONG(rec_2_play_song, RECORDING_2_PLAY_SONG);
-DEFINE_SONG(reset_song, RESET_SONG);
-DEFINE_SONG(mute_song, MUTE_SONG);
-DEFINE_SONG(unmute_song, UNMUTE_SONG);
+DEFINE_SONG(rec_start_loop, SONG(ZELDA_GUARDIAN_BATTLE));
+DEFINE_SONG(rec_1_end_song, SONG(ZELDA_ITEM_FOUND));
+DEFINE_SONG(rec_2_end_song, SONG(MARIO_1_UP));
+DEFINE_SONG(rec_1_play_song, SONG(ZELDA_SPIRIT_ORB));
+DEFINE_SONG(rec_2_play_song, SONG(ZELDA_DISCOVERY));
+DEFINE_SONG(reset_song, SONG(MARIO_LOST_A_LIFE));
+DEFINE_SONG_WITH_TEMPO(mute_song, SONG(MARIO_GAME_OVER), 100);
+DEFINE_SONG(unmute_song, SONG(MARIO_1_UP));
 
 // Interface functions
 void on_layer_change(uint8_t layer) {
@@ -37,13 +38,10 @@ void on_layer_change(uint8_t layer) {
 }
 
 void on_reset(void) {
-  int song_length = 0;
-  for (int i = 0; i < sizeof(reset_song)/sizeof(reset_song[0]); i++) {
-    song_length += reset_song[i][1];
-  }
   LEEP_PLAY_SONG(reset_song);
-  wait_ms(1000*song_length);
-  SEND_STRING("DONE");
+  while (is_playing_notes()) {
+    wait_ms(150);
+  }
 }
 
 void on_mute(void) {
@@ -154,7 +152,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
    [LR_SHORTCUTS] = ML_LAYOUT(
         _______,  _______, _______, _______, _______, _______, _______,           _______, _______, _______,  _______, _______, _______, TO_SFTY,
-        _______,  CK_RSET, CK_WWWB, MS_MID,  CK_WWWF, _______, _______,           _______, URL_PST, URL_COPY, URL_ICP, CK_MOMA, CK_CL,   _______,
+        _______,  RESET,   CK_WWWB, MS_MID,  CK_WWWF, _______, _______,           _______, URL_PST, URL_COPY, URL_ICP, CK_MOMA, CK_CL,   _______,
         KC_ENTER, CL(A),   MS_LEFT, MS_SMID, MS_RGHT, _______, _______,           _______, _______, GD_HD_4,  GD_HD_5, _______, _______, _______,
         _______,  CK_MCR2, CK_MCR1, MS_CTRL, _______, GD_BULT,                             CK_NEW,  GD_HD_1,  GD_HD_2, GD_HD_3, _______, _______,
 
@@ -165,7 +163,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_NAVIGATION] = ML_LAYOUT(
         _______, _______, _______, _______, _______,  _______,     _______,           _______, _______,     _______, _______, _______, _______, TO_SFTY,
-        _______, _______, CK_WWWB, _______, CK_RSET,  RCTL(AL(T)), _______,           _______, CL(T),       CK_TABB, CL(W),   CK_TABF, GU(UP),  TGL_ALT,
+        _______, _______, CK_WWWB, _______, RESET,    RCTL(AL(T)), _______,           _______, CL(T),       CK_TABB, CL(W),   CK_TABF, GU(UP),  TGL_ALT,
         _______, _______, _______, _______, GU(RGHT), _______,     _______,           _______, RCTL(SH(T)), WS_LEFT, CODE_WS, WS_RGHT, MISC_WS, TGL_ELT,
         _______, _______, _______, _______, _______,  GU(LEFT),                                GU(DOWN),    _______, WS_UP,   WS_DOWN, _______, _______,
 
