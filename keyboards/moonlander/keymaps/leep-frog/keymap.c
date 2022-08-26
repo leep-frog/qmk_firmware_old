@@ -12,12 +12,12 @@ int layer_colors[NUM_LAYERS][3] = {
   [LR_SAFE] = { RGB_GREEN },
   [LR_CTRL] = { RGB_CHARTREUSE },
   // Color when shift is held
-  [LR_ALT] = { RGB_ORANGE },
+  [LR_ALT] = { RGB_MAGENTA },
   [LR_CTRL_X] = { RGB_SPRINGGREEN },
   [LR_CTRL_ALT] = { RGB_GOLD },
   [LR_NAVIGATION] = { RGB_ORANGE },
-  [LR_SHORTCUTS] = { RGB_YELLOW },
-  [LR_SYMB] = { RGB_MAGENTA },
+  [LR_SHORTCUTS] = { RGB_TURQUOISE },
+  [LR_SYMB] = { RGB_ORANGE },
   [LR_OUTLOOK] = { RGB_BLUE },
 };
 
@@ -64,8 +64,6 @@ void recording_end(bool macro_1) {
   } else {
     LEEP_PLAY_SONG(rec_2_end_song);
   }
-
-  on_layer_change(get_highest_layer(layer_state));
 }
 
 void recording_play(bool macro_1) {
@@ -74,7 +72,6 @@ void recording_play(bool macro_1) {
   } else {
     LEEP_PLAY_SONG(rec_2_play_song);
   }
-  on_layer_change(get_highest_layer(layer_state));
 }
 
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
