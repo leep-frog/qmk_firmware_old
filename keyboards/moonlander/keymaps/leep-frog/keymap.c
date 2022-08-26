@@ -37,11 +37,12 @@ void on_layer_change(uint8_t layer) {
   }
 }
 
-void on_reset(void) {
+bool on_reset(void) {
   LEEP_PLAY_SONG(reset_song);
   while (is_playing_notes()) {
     wait_ms(150);
   }
+  return true;
 }
 
 void on_mute(void) {

@@ -16,7 +16,7 @@ void ToggleShift(void) {
     shift_toggled = !shift_toggled;
 }
 
-bool UntoggleShift(bool activated) {
+bool UntoggleShift(void) {
     if (shift_toggled) {
       ToggleShift();
     }

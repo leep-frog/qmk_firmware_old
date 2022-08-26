@@ -7,8 +7,9 @@
 #error Must define LEEP_SAFE_RANGE in keymap.c
 #endif
 
-// Run when reset key is hit (but before actual keyboard reset)
-void on_reset(void);
+// Run when reset key is hit (but before actual keyboard reset).
+// Should return whether or not to actually reset the keyboard.
+bool on_reset(void);
 
 // Run when muted
 void on_mute(void);

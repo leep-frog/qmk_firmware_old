@@ -36,10 +36,12 @@ void print_int(int k) {
 
 #endif
 
+// TODO: enums should be CK_*, defined should be DK_*
+
 // TODO: move these to separate files
 #define CTRL_W RCTL(KC_W)
 
-bool _ctrl_w_new(bool activated) {
+bool _ctrl_w_new(void) {
     if (!shift_toggled) {
       return true;
     }
@@ -51,31 +53,6 @@ bool _ctrl_w_new(bool activated) {
     SEND_STRING(SS_TAP(X_DELETE));
     return false;
 }
-
-bool _other_new(bool activated) {
-  if (!shift_toggled) {
-      return true;
-    }
-    // Clear toggle
-    ToggleShift();
-    // Copy contents
-    SEND_STRING(SS_RCTL(SS_TAP(X_INSERT)));
-    // Delete selected text.
-    SEND_STRING(SS_TAP(X_DELETE));
-    return false;
-}
-
-// TODO: this should just wrap the reset function.
-bool _reset_new(bool activated) {
-  on_reset();
-  reset_keyboard();
-  return true;
-}
-
-typedef struct {
-  uint8_t tempo;
-  float song[][2];
-} leep_song;
 
 #define DEFINE_SONG_WITH_TEMPO( var_name, sound, tempo ) \
 float var_name ## _song[][2] =  sound;\
@@ -122,7 +99,7 @@ bool _alt_t_new(bool activated) {
     return false;
 }
 
-bool _ctrl_click_new(bool activated) {
+bool _ctrl_click_new(void) {
     // Used to have the following line
     // #define MS_CTRL RCTL(KC_MS_BTN1)
     // but in my work Windows laptop, the ctrl and click would be too
@@ -258,15 +235,8 @@ const processor_action_t PROGMEM key_processors[NUM_KEY_PROCESSORS] = {
 
   MAKE_KEY_PROCESSOR(CK_ESC, escape),
   MAKE_KEY_PROCESSOR(CK_CTLG, _ctrl_g_new),
-  //MAKE_KEY_PROCESSOR(CK_RSET, _reset_new),
   MAKE_KEY_PROCESSOR(CK_MUTE, _mute_new),
   MAKE_KEY_PROCESSOR(CK_ALTT, _alt_t_new),
-  // TODO: enums should be CK, defined should be DK
-  //MAKE_KEY_PROCESSOR(CK_COPY, UntoggleShift),
-  //[KC_BSPC] = &UntoggleShift,
-  //[KC_DELETE] = &UntoggleShift,
-  //[MS_CTRL] = &_ctrl_click_new,
-  //[CTRL_W] = &_ctrl_w_new,
 };
 
 bool alt_and_or_nav_layer(bool activated) {
@@ -325,9 +295,7 @@ bool run_array_processor(const processor_action_t processors[], size_t sz, size_
   return true;
 }
 
-#define LEEP_CASE(kc, rv, code) case (kc):\
-code;\
-return rv;
+#define LEEP_CASE(kc, fn) case (kc): return fn();
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   // Return if this is being run on key un-pressed.
@@ -339,7 +307,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   // 1) prevent custom keycodes from having logic in this switch and in run_array_processor
   // 2) prevent regular keycode logic from getting to custom keycodes (shouldn't actually be a problem but jic)
   switch (keycode) {
-    LEEP_CASE(RESET, true, on_reset())
+    LEEP_CASE(RESET, on_reset)
+    LEEP_CASE(CTRL_W, _ctrl_w_new)
+    LEEP_CASE(MS_CTRL, _ctrl_click_new)
+    LEEP_CASE(CK_COPY, UntoggleShift)
+  }
+
+  switch (keycode & QK_BASIC_MAX) {
+    LEEP_CASE(KC_DELETE, UntoggleShift)
+    LEEP_CASE(KC_BSPC, UntoggleShift)
   }
 
   // The boolean here could be if the key was pressed or unpressed,
@@ -350,8 +326,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
 // Runs whenever there is a layer state change.
 layer_state_t layer_state_set_user(layer_state_t state) {
-  LEBUG("layer 1")
-
   // Run processors
   for (int i = 0; i < NUM_LAYERS; i++) {
     bool current_state = layer_state_cmp(state, i);
