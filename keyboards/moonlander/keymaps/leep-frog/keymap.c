@@ -13,7 +13,6 @@ int layer_colors[NUM_LAYERS][3] = {
   [LR_BASE] = { RGB_CYAN },
   [LR_SAFE] = { RGB_GREEN },
   [LR_CTRL] = { RGB_SPRINGGREEN },
-  // Color when shift is held
   [LR_ALT] = { RGB_MAGENTA },
   [LR_CTRL_X] = { RGB_CHARTREUSE },
   [LR_CTRL_ALT] = { RGB_GOLD },
@@ -21,6 +20,9 @@ int layer_colors[NUM_LAYERS][3] = {
   [LR_SHORTCUTS] = { RGB_TURQUOISE },
   [LR_SYMB] = { RGB_ORANGE },
   [LR_OUTLOOK] = { RGB_BLUE },
+  // We don't change the keyboard color for shift because there isn't
+  // a way to only do it on mod and not on tap as well, and seeing the
+  // color change for every space character was really annoying.
 };
 
 DEFINE_SONG(rec_start_loop, SONG(ZELDA_GUARDIAN_BATTLE));

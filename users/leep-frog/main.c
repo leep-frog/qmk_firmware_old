@@ -157,6 +157,9 @@ bool _safe_layer(bool activated) {
 #define TO_SYMB LT(LR_SYMB, KC_ENTER)
 #define TO_ALT LT(LR_ALT, KC_TAB)
 #define TO_CTL LT(LR_CTRL, KC_SPACE)
+// We don't change the keyboard color for shift because there isn't
+// a way to only do it on mod and not on tap as well, and seeing the
+// color change for every space character was really annoying.
 #define TO_SFT RSFT_T(KC_SPACE)
 #define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
 #define TO_CTAL MO(LR_CTRL_ALT)
