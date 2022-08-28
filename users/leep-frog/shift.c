@@ -20,7 +20,7 @@ void ToggleShift(void) {
 
 bool UntoggleShift(void) {
     if (shift_toggled) {
-      ToggleShift();
+        ToggleShift();
     }
     return true;
 }
@@ -39,8 +39,7 @@ void TDToggleShift(qk_tap_dance_state_t *state, void *user_data) {
 // TODO: Make generic function/macro for single tap vs double tap.
 void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
-        // Deactivate shift layer if necessary.
-        UntoggleShift();
+        // Shift layer is already untoggle in main.c so no need to untoggle it here.
         SEND_STRING(SS_RCTL("k"));
         return;
     }
@@ -58,9 +57,9 @@ void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
 
 bool _ctrl_g_new(bool activated) {
     if (shift_toggled) {
-      ToggleShift();
+        ToggleShift();
     } else {
-      SEND_STRING(SS_RCTL("g"));
+        SEND_STRING(SS_RCTL("g"));
     }
     return true;
 }

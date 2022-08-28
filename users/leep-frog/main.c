@@ -324,7 +324,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     LEEP_CASE(RESET, on_reset)
     LEEP_CASE(CTRL_W, _ctrl_w_new)
     LEEP_CASE(MS_CTRL, _ctrl_click_new)
-    LEEP_CASE(CK_COPY, UntoggleShift)
   }
 
   // The boolean here could be if the key was pressed or unpressed,
