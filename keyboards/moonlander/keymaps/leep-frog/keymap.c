@@ -25,14 +25,14 @@ int layer_colors[NUM_LAYERS][3] = {
   // color change for every space character was really annoying.
 };
 
-DEFINE_SONG(rec_start_loop, SONG(ZELDA_GUARDIAN_BATTLE));
-DEFINE_SONG(rec_1_end_song, SONG(ZELDA_ITEM_FOUND));
-DEFINE_SONG(rec_2_end_song, SONG(MARIO_1_UP));
-DEFINE_SONG(rec_1_play_song, SONG(ZELDA_SPIRIT_ORB));
-DEFINE_SONG(rec_2_play_song, SONG(ZELDA_DISCOVERY));
-DEFINE_SONG_WITH_TEMPO(reset_song, SONG(MARIO_GAME_OVER), 100);
-DEFINE_SONG(mute_song, SONG(MARIO_LOST_A_LIFE));
-DEFINE_SONG(unmute_song, SONG(MARIO_1_UP));
+DEFINE_SONG(zelda_discovery_song, SONG(ZELDA_DISCOVERY));
+DEFINE_SONG(zelda_guardian_battle_song, SONG(ZELDA_GUARDIAN_BATTLE));
+DEFINE_SONG(zelda_item_found_song, SONG(ZELDA_ITEM_FOUND));
+DEFINE_SONG(zelda_spirit_orb_song, SONG(ZELDA_SPIRIT_ORB));
+
+DEFINE_SONG(mario_1_up_song, SONG(MARIO_1_UP));
+DEFINE_SONG(mario_lost_a_life_song, SONG(MARIO_LOST_A_LIFE));
+DEFINE_SONG_WITH_TEMPO(mario_game_over_song, SONG(MARIO_GAME_OVER), 100);
 
 // Interface functions
 void on_layer_change(uint8_t layer) {
@@ -42,7 +42,7 @@ void on_layer_change(uint8_t layer) {
 }
 
 bool on_reset(void) {
-  LEEP_PLAY_SONG(reset_song);
+  LEEP_PLAY_SONG(mario_game_over_song);
   while (is_playing_notes()) {
     wait_ms(150);
   }
@@ -50,11 +50,11 @@ bool on_reset(void) {
 }
 
 void on_mute_1(void) {
-  LEEP_PLAY_SONG(mute_song);
+  LEEP_PLAY_SONG(mario_lost_a_life_song);
 }
 
 void on_unmute_1(void) {
-  LEEP_PLAY_SONG(unmute_song);
+  LEEP_PLAY_SONG(mario_1_up_song);
 }
 
 void on_mute_2(void) {
@@ -74,24 +74,24 @@ void on_unshift(void) {
 }
 
 void recording_start(bool macro_1) {
-  LEEP_PLAY_SONG(rec_start_loop);
+  LEEP_PLAY_SONG(zelda_guardian_battle_song);
   rgb_matrix_set_color_all(RGB_RED);
   rgb_matrix_mode(RGB_MATRIX_BREATHING);
 }
 
 void recording_end(bool macro_1) {
   if (macro_1) {
-    LEEP_PLAY_SONG(rec_1_end_song);
+    LEEP_PLAY_SONG(zelda_item_found_song);
   } else {
-    LEEP_PLAY_SONG(rec_2_end_song);
+    LEEP_PLAY_SONG(mario_1_up_song);
   }
 }
 
 void recording_play(bool macro_1) {
   if (macro_1) {
-    LEEP_PLAY_SONG(rec_1_play_song);
+    LEEP_PLAY_SONG(zelda_spirit_orb_song);
   } else {
-    LEEP_PLAY_SONG(rec_2_play_song);
+    LEEP_PLAY_SONG(zelda_discovery_song);
   }
 }
 
