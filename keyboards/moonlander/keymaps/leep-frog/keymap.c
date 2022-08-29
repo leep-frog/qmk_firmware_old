@@ -25,6 +25,9 @@ int layer_colors[NUM_LAYERS][3] = {
   // color change for every space character was really annoying.
 };
 
+// Explicitly only define each song once (not once per use) to limit memory usage.
+// All song uses should exclusively be used through references to these
+// existing songs (and not by creating new song instances).
 DEFINE_SONG(zelda_discovery_song, SONG(ZELDA_DISCOVERY));
 DEFINE_SONG(zelda_guardian_battle_song, SONG(ZELDA_GUARDIAN_BATTLE));
 DEFINE_SONG(zelda_item_found_song, SONG(ZELDA_ITEM_FOUND));
@@ -34,6 +37,15 @@ DEFINE_SONG(mario_1_up_song, SONG(MARIO_1_UP));
 DEFINE_SONG(mario_lost_a_life_song, SONG(MARIO_LOST_A_LIFE));
 DEFINE_SONG_WITH_TEMPO(mario_game_over_song, SONG(MARIO_GAME_OVER), 100);
 
+#define SNG_RESET LEEP_PLAY_SONG(mario_game_over_song)
+#define SNG_MUTE LEEP_PLAY_SONG(mario_lost_a_life_song)
+#define SNG_UNMUTE LEEP_PLAY_SONG(mario_1_up_song)
+#define SNG_REC_START LEEP_PLAY_SONG(zelda_guardian_battle_song)
+#define SNG_REC_1_END LEEP_PLAY_SONG(zelda_item_found_song)
+#define SNG_REC_2_END LEEP_PLAY_SONG(mario_1_up_song)
+#define SNG_REC_1_PLAY LEEP_PLAY_SONG(zelda_spirit_orb_song)
+#define SNG_REC_2_PLAY LEEP_PLAY_SONG(zelda_discovery_song)
+
 // Interface functions
 void on_layer_change(uint8_t layer) {
   if (!recording && !shift_toggled) {
@@ -42,7 +54,7 @@ void on_layer_change(uint8_t layer) {
 }
 
 bool on_reset(void) {
-  LEEP_PLAY_SONG(mario_game_over_song);
+  SNG_RESET;
   while (is_playing_notes()) {
     wait_ms(150);
   }
@@ -50,11 +62,11 @@ bool on_reset(void) {
 }
 
 void on_mute_1(void) {
-  LEEP_PLAY_SONG(mario_lost_a_life_song);
+  SNG_MUTE;
 }
 
 void on_unmute_1(void) {
-  LEEP_PLAY_SONG(mario_1_up_song);
+  SNG_UNMUTE;
 }
 
 void on_mute_2(void) {
@@ -74,24 +86,24 @@ void on_unshift(void) {
 }
 
 void recording_start(bool macro_1) {
-  LEEP_PLAY_SONG(zelda_guardian_battle_song);
+  SNG_REC_START;
   rgb_matrix_set_color_all(RGB_RED);
   rgb_matrix_mode(RGB_MATRIX_BREATHING);
 }
 
 void recording_end(bool macro_1) {
   if (macro_1) {
-    LEEP_PLAY_SONG(zelda_item_found_song);
+    SNG_REC_1_END;
   } else {
-    LEEP_PLAY_SONG(mario_1_up_song);
+    SNG_REC_2_END;
   }
 }
 
 void recording_play(bool macro_1) {
   if (macro_1) {
-    LEEP_PLAY_SONG(zelda_spirit_orb_song);
+    SNG_REC_1_PLAY;
   } else {
-    LEEP_PLAY_SONG(zelda_discovery_song);
+    SNG_REC_2_PLAY;
   }
 }
 
