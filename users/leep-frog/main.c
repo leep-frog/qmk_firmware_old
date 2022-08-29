@@ -1,4 +1,4 @@
-/#ifndef LEEP_MAIN
+#ifndef LEEP_MAIN
 #define LEEP_MAIN
 
 #include <stdio.h>
