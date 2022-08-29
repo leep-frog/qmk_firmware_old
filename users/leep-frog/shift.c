@@ -1,8 +1,6 @@
 #ifndef LEEP_SHIFT
 #define LEEP_SHIFT
 
-#include "processor.c"
-
 bool shift_toggled;
 
 void ToggleShift(void) {

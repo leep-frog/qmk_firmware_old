@@ -1,4 +1,4 @@
-#ifndef LEEP_MAIN
+/#ifndef LEEP_MAIN
 #define LEEP_MAIN
 
 #include <stdio.h>
@@ -10,7 +10,6 @@
 #include "url.c"
 #include "combo.c"
 #include "tap_dance.c"
-#include "processor.c"
 #include "shift.c"
 #include "ctrl.c"
 
