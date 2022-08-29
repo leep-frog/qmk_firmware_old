@@ -11,11 +11,17 @@
 // Should return whether or not to actually reset the keyboard.
 bool on_reset(void);
 
-// Run when muted
-void on_mute(void);
+// Run when muted with mute key 1 (audio signal)
+void on_mute_1(void);
 
-// Run when unmuted
-void on_unmute(void);
+// Run when unmuted with mute key 1 (audio signal)
+void on_unmute_1(void);
+
+// Run when muted with mute key 2 (non-audio signal)
+void on_mute_2(void);
+
+// Run when unmuted with mute key 2 (non-audio signal)
+void on_unmute_2(void);
 
 // Run when shift is toggled
 void on_shift(void);

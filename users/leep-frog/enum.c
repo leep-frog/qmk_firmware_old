@@ -58,7 +58,8 @@ enum custom_keycodes { // prefix CK (custom keycode)
   CK_UNBS,
   MS_CTRL,
   CK_ALTT,
-  CK_MUTE,
+  CK_MUT1,
+  CK_MUT2,
   CK_CL,
   CK_MOMA,
 

@@ -49,12 +49,26 @@ bool on_reset(void) {
   return true;
 }
 
-void on_mute(void) {
+void on_mute_1(void) {
   LEEP_PLAY_SONG(mute_song);
 }
 
-void on_unmute(void) {
+void on_unmute_1(void) {
   LEEP_PLAY_SONG(unmute_song);
+}
+
+#define MUTE_SIGNAL_TIME 1500
+
+void on_mute_2(void) {
+  rgb_matrix_set_color_all(RGB_ORANGE);
+  wait_ms(MUTE_SIGNAL_TIME);
+  LEEP_LAYER_COLOR(LR_BASE);
+}
+
+void on_unmute_2(void) {
+  rgb_matrix_set_color_all(RGB_GREEN);
+  wait_ms(MUTE_SIGNAL_TIME);
+  LEEP_LAYER_COLOR(LR_BASE);
 }
 
 void on_shift(void) {
@@ -90,7 +104,7 @@ void recording_play(bool macro_1) {
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
 #define ML_LAYOUT(...) LAYOUT_moonlander(__VA_ARGS__)
-#define BOTTOM_ROW CK_MUTE, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______
+#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {

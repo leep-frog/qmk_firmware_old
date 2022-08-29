@@ -74,12 +74,23 @@ bool _leep_mute = false;
   PLAY_SONG( sng ## _song );\
 }
 
-bool _mute_new(bool activated) {
+bool _mute_1(bool activated) {
   if (_leep_mute) {
     _leep_mute = false;
-    on_unmute();
+    on_unmute_1();
   } else {
-    on_mute();
+    on_mute_1();
+    _leep_mute = true;
+  }
+  return false;
+}
+
+bool _mute_2(bool activated) {
+  if (_leep_mute) {
+    _leep_mute = false;
+    on_unmute_2();
+  } else {
+    on_mute_2();
     _leep_mute = true;
   }
   return false;
@@ -239,7 +250,8 @@ const processor_action_t PROGMEM key_processors[NUM_KEY_PROCESSORS] = {
 
   MAKE_KEY_PROCESSOR(CK_ESC, escape),
   MAKE_KEY_PROCESSOR(CK_CTLG, _ctrl_g_new),
-  MAKE_KEY_PROCESSOR(CK_MUTE, _mute_new),
+  MAKE_KEY_PROCESSOR(CK_MUT1, _mute_1),
+  MAKE_KEY_PROCESSOR(CK_MUT2, _mute_1),
   MAKE_KEY_PROCESSOR(CK_ALTT, _alt_t_new),
 };
 
