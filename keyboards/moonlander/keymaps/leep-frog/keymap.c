@@ -57,18 +57,12 @@ void on_unmute_1(void) {
   LEEP_PLAY_SONG(unmute_song);
 }
 
-#define MUTE_SIGNAL_TIME 1500
-
 void on_mute_2(void) {
   rgb_matrix_set_color_all(RGB_ORANGE);
-  wait_ms(MUTE_SIGNAL_TIME);
-  LEEP_LAYER_COLOR(LR_BASE);
 }
 
 void on_unmute_2(void) {
   rgb_matrix_set_color_all(RGB_GREEN);
-  wait_ms(MUTE_SIGNAL_TIME);
-  LEEP_LAYER_COLOR(LR_BASE);
 }
 
 void on_shift(void) {
