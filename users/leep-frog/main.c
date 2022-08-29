@@ -251,7 +251,7 @@ const processor_action_t PROGMEM key_processors[NUM_KEY_PROCESSORS] = {
   MAKE_KEY_PROCESSOR(CK_ESC, escape),
   MAKE_KEY_PROCESSOR(CK_CTLG, _ctrl_g_new),
   MAKE_KEY_PROCESSOR(CK_MUT1, _mute_1),
-  MAKE_KEY_PROCESSOR(CK_MUT2, _mute_1),
+  MAKE_KEY_PROCESSOR(CK_MUT2, _mute_2),
   MAKE_KEY_PROCESSOR(CK_ALTT, _alt_t_new),
 };
 
