@@ -333,18 +333,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (keycode <= CS_ENUM_START) {
     return true;
   }
-  if (keycode <= CS_ENUM_END) {
+  if (keycode < CS_ENUM_END) {
+    // Custom string logic
     send_string(cs_processors[keycode - CS_ENUM_START - 1]);
     return false;
-  }
-  if (keycode <= CU_ENUM_END) {
+  } else if (keycode < CU_ENUM_END) {
+    // Custom URL string logic
     SEND_STRING(SS_DOWN(X_RCTL) "l");
     URLWait();
     send_string(cu_processors[keycode - CU_ENUM_START - 1]);
     SEND_STRING(SS_UP(X_RCTL));
     return false;
-  }
-  if (keycode <= CN_ENUM_END) {
+  } else if (keycode < CN_ENUM_END) {
+    // Custom New URL tab logic
     SEND_STRING(SS_RCTL("t"));
     URLWait();
     send_string(cn_processors[keycode - CN_ENUM_START - 1]);

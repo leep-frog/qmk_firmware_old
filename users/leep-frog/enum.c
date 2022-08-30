@@ -22,9 +22,13 @@ enum layers { // prefix LR
 #endif
 #define RGBLIGHT_MAX_LAYERS NUM_LAYERS
 
-enum custom_stringers { // prefix 'CS_'
-  CS_ENUM_START = LEEP_SAFE_RANGE,
+#define LEEP_ENUM(name, prefix, start, ...) enum name {\
+  prefix ## _ENUM_START = start - 1,\
+  __VA_ARGS__\
+  prefix ## _ENUM_END,\
+};
 
+LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
   // Toggle alt tab
   TGL_ALT,
   // Toggle shift-alt tab
@@ -36,51 +40,35 @@ enum custom_stringers { // prefix 'CS_'
   CK_UNBS,
   // Escape
   CK_ESC,
-
-  CS_ENUM_END,
-};
+)
 
 #define NUM_CS CS_ENUM_END - CS_ENUM_START - 1
 
-enum custom_url_strings { // prefix 'CU_'
-  // TODO: These start and end ones are making us waste values. Fix this.
-  CU_ENUM_START = CS_ENUM_END,
-
+LEEP_ENUM(custom_url_strings, CU, CS_ENUM_END,
   // Copy URL from a Chrome browser
   URL_COPY,
   // Copy URL ID
   URL_ICP,
-
-  CU_ENUM_END,
-};
+)
 
 #define NUM_CU CU_ENUM_END - CU_ENUM_START - 1
 
-enum custom_new_tab_stringers { // prefix 'CN_'
-  CN_ENUM_START = CU_ENUM_END,
-
+LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
   // Paste URL
   URL_PST,
 
   CK_CL,
   CK_MOMA,
-
-  CN_ENUM_END,
-};
+)
 
 #define NUM_CN CN_ENUM_END - CN_ENUM_START - 1
 
-enum custom_keycodes { // prefix CK (custom keycode)
-  CK_ENUM_START = CN_ENUM_END,
-
+LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
   CK_CTLG,
-  //MS_CTRL,
   CK_ALTT,
   CK_MUT1,
   CK_MUT2,
-
-  CK_ENUM_END,
-};
+)
 
 #define NUM_CK CK_ENUM_END - CK_ENUM_START - 1
 
