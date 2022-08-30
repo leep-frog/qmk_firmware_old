@@ -118,7 +118,7 @@ bool _ctrl_click_new(void) {
     // but in my work Windows laptop, the ctrl and click would be too
     // close together and sometimes wouldn't work properly.
     SEND_STRING(SS_DOWN(X_RCTL));
-    wait_ms(15);
+    wait_ms(50);
     SEND_STRING(SS_TAP(X_MS_BTN1));
     SEND_STRING(SS_UP(X_RCTL));
     return false;
@@ -205,10 +205,12 @@ typedef bool (*processor_action_t)(bool activated);
 #define PROCESSOR_VALUE6(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE5(start, __VA_ARGS__)
 #define PROCESSOR_VALUE7(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE6(start, __VA_ARGS__)
 
-#define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix ## _processors[num] suffix = {\
-  [0 ... num - 1] = dflt,\
-  PROCESSOR_VALUE ## num ( e_start, __VA_ARGS__ )\
+#define OPTIONAL_PROCESSOR_MACRO(_type_, sz, num_provided, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix ## _processors[sz] suffix = {\
+  [0 ... sz - 1] = dflt,\
+  PROCESSOR_VALUE ## num_provided ( e_start, __VA_ARGS__ )\
 };
+
+#define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) OPTIONAL_PROCESSOR_MACRO(_type_, num, num, e_start, prefix, suffix, dflt, __VA_ARGS__)
 
 PROCESSOR_MACRO(char, 5, CS_ENUM_START, cs, [MAX_STRING_LEN+1], "",
   TGL_ALT, SS_DOWN(X_RALT) SS_TAP(X_TAB),
@@ -265,16 +267,15 @@ bool ctrl_alt_layer(bool activated) {
 
 #define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
 
-const processor_action_t PROGMEM layer_processors[NUM_LAYERS] = {
-  [0 ... NUM_LAYERS - 1] = PRC_ACTION( NULL ),
-  MAKE_LAYER_PROCESSOR(LR_CTRL_X, ctrl_x_layer),
+OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 5, -1, layer, , NULL,
+  LR_CTRL_X, &ctrl_x_layer,
   // Needed to undo SS_DOWN from TGL_ALT and TGL_SLT.
-  MAKE_LAYER_PROCESSOR(LR_ALT, alt_and_or_nav_layer),
+  LR_ALT, &alt_and_or_nav_layer,
   // Needed to undo SS_DOWN from TGL_ALT
-  MAKE_LAYER_PROCESSOR(LR_NAVIGATION, alt_and_or_nav_layer),
-  MAKE_LAYER_PROCESSOR(LR_CTRL_ALT, ctrl_alt_layer),
-  MAKE_LAYER_PROCESSOR(LR_SAFE, _safe_layer),
-};
+  LR_NAVIGATION, &alt_and_or_nav_layer,
+  LR_CTRL_ALT, &ctrl_alt_layer,
+  LR_SAFE, &_safe_layer
+)
 
 // https://beta.docs.qmk.fm/using-qmk/guides/custom_quantum_functions#matrix_scan_-function-documentation
 // This gets run at every matrix scan (many times per second), so be careful
@@ -287,14 +288,6 @@ bool layers_status[NUM_LAYERS] = {
   [0] = true,
   [1 ... NUM_LAYERS - 1] = false,
 };
-
-bool run_array_processor(const processor_action_t processors[], size_t sz, size_t idx, bool activated) {
-  if (idx >= 0 && idx < sz && processors[idx]) {
-    processors[idx](activated);
-    return false;
-  }
-  return true;
-}
 
 #define LEEP_CASE(kc, fn) case (kc): return fn();
 
@@ -325,33 +318,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     LEEP_CASE(CTRL_W, _ctrl_w_new)
     // TODO: MS_CTRL is a custom keycode so it should
     LEEP_CASE(MS_CTRL, _ctrl_click_new)
+    case LEEP_ENUM_CASE(CS):
+      send_string(cs_processors[LEEP_ENUM_OFFSET(CS, keycode)]);
+      return false;
+    case LEEP_ENUM_CASE(CU):
+      SEND_STRING(SS_DOWN(X_RCTL) "l");
+      URLWait();
+      send_string(cu_processors[LEEP_ENUM_OFFSET(CU, keycode)]);
+      SEND_STRING(SS_UP(X_RCTL));
+      return false;
+    case LEEP_ENUM_CASE(CN):
+      SEND_STRING(SS_RCTL("t"));
+      URLWait();
+      send_string(cn_processors[LEEP_ENUM_OFFSET(CN, keycode)]);
+      return false;
+    case LEEP_ENUM_CASE(CK):
+      if (ck_processors[LEEP_ENUM_OFFSET(CK, keycode)]) {
+        ck_processors[LEEP_ENUM_OFFSET(CK, keycode)](true);
+      }
+      return false;
   }
-
-  // The boolean here could be if the key was pressed or unpressed,
-  // but not that's currently used so it'd just be extra logic (here and
-  // in all implementing functions).
-  if (keycode <= CS_ENUM_START) {
-    return true;
-  }
-  if (keycode < CS_ENUM_END) {
-    // Custom string logic
-    send_string(cs_processors[keycode - CS_ENUM_START - 1]);
-    return false;
-  } else if (keycode < CU_ENUM_END) {
-    // Custom URL string logic
-    SEND_STRING(SS_DOWN(X_RCTL) "l");
-    URLWait();
-    send_string(cu_processors[keycode - CU_ENUM_START - 1]);
-    SEND_STRING(SS_UP(X_RCTL));
-    return false;
-  } else if (keycode < CN_ENUM_END) {
-    // Custom New URL tab logic
-    SEND_STRING(SS_RCTL("t"));
-    URLWait();
-    send_string(cn_processors[keycode - CN_ENUM_START - 1]);
-    return false;
-  }
-  return run_array_processor(ck_processors, NUM_CK, keycode - CK_ENUM_START - 1, true);
+  return true;
 }
 
 // Runs whenever there is a layer state change.
@@ -360,8 +347,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   for (int i = 0; i < NUM_LAYERS; i++) {
     bool current_state = layer_state_cmp(state, i);
     if (current_state != layers_status[i]) {
-      run_array_processor(layer_processors, NUM_LAYERS, i, current_state);
       layers_status[i] = current_state;
+      if (layer_processors[i]) {
+        layer_processors[i](current_state);
+      }
     }
   }
 

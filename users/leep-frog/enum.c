@@ -22,11 +22,27 @@ enum layers { // prefix LR
 #endif
 #define RGBLIGHT_MAX_LAYERS NUM_LAYERS
 
+enum td_keys { // prefix TDK
+    TDK_SHIFT_TOGGLE,
+    TDK_KILL_LINE,
+    TDK_MACRO_1,
+    TDK_MACRO_2,
+    TDK_BACKSPACE,
+    TDK_DELETE,
+    TDK_MARKDOWN_PASTE,
+    TDK_OUTLOOK_RELOAD,
+};
+
+// Custom keycode enums
 #define LEEP_ENUM(name, prefix, start, ...) enum name {\
   prefix ## _ENUM_START = start - 1,\
   __VA_ARGS__\
   prefix ## _ENUM_END,\
 };
+
+#define LEEP_ENUM_OFFSET(prefix, v) v - prefix ## _ENUM_START - 1
+
+#define LEEP_ENUM_CASE(prefix) prefix ## _ENUM_START + 1 ... prefix ## _ENUM_END - 1
 
 LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
   // Toggle alt tab
@@ -42,16 +58,12 @@ LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
   CK_ESC,
 )
 
-#define NUM_CS CS_ENUM_END - CS_ENUM_START - 1
-
 LEEP_ENUM(custom_url_strings, CU, CS_ENUM_END,
   // Copy URL from a Chrome browser
   URL_COPY,
   // Copy URL ID
   URL_ICP,
 )
-
-#define NUM_CU CU_ENUM_END - CU_ENUM_START - 1
 
 LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
   // Paste URL
@@ -61,28 +73,11 @@ LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
   CK_MOMA,
 )
 
-#define NUM_CN CN_ENUM_END - CN_ENUM_START - 1
-
 LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
   CK_CTLG,
   CK_ALTT,
   CK_MUT1,
   CK_MUT2,
 )
-
-#define NUM_CK CK_ENUM_END - CK_ENUM_START - 1
-
-#define PROCESSOR
-
-enum td_keys { // prefix TDK
-    TDK_SHIFT_TOGGLE,
-    TDK_KILL_LINE,
-    TDK_MACRO_1,
-    TDK_MACRO_2,
-    TDK_BACKSPACE,
-    TDK_DELETE,
-    TDK_MARKDOWN_PASTE,
-    TDK_OUTLOOK_RELOAD,
-};
 
 #endif
