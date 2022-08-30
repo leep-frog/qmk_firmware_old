@@ -22,11 +22,6 @@ enum layers { // prefix LR
 #endif
 #define RGBLIGHT_MAX_LAYERS NUM_LAYERS
 
-enum press_type { // prefix PT
-    PT_PRESS,
-    PT_UNPRESS,
-};
-
 enum custom_stringers { // prefix 'CS_'
   CS_ENUM_START = LEEP_SAFE_RANGE,
 

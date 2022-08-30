@@ -187,8 +187,6 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;*/
 }
 
-#define C__OFFSET(C__START, v) v - C__START - 1
-
 #define KEY_PROCESSOR_OFFSET(v) C__OFFSET(CK_ENUM_START, v)
 
 typedef bool (*processor_action_t)(bool activated);
@@ -197,44 +195,50 @@ typedef bool (*processor_action_t)(bool activated);
 
 #define MAX_STRING_LEN 20
 
-// TODO: macro to create arrays like this (MACRO(type, prefix, second_array, __VA_ARGS__))
-const char PROGMEM cs_processors[NUM_CS][MAX_STRING_LEN+1] = {
-  [0 ... NUM_CS - 1] = "",
-  [C__OFFSET(CS_ENUM_START, TGL_ALT)] = SS_DOWN(X_RALT) SS_TAP(X_TAB),
-  [C__OFFSET(CS_ENUM_START, TGL_SLT)] = SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)),
-  [C__OFFSET(CS_ENUM_START, TGL_ELT)] = SS_UP(X_RALT),
+#define C__OFFSET(C__START, v) v - C__START - 1
+
+#define PROCESSOR_VALUE1(start, key, value) [C__OFFSET(start, key)] = value,
+#define PROCESSOR_VALUE2(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE1(start, __VA_ARGS__)
+#define PROCESSOR_VALUE3(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE2(start, __VA_ARGS__)
+#define PROCESSOR_VALUE4(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE3(start, __VA_ARGS__)
+#define PROCESSOR_VALUE5(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE4(start, __VA_ARGS__)
+#define PROCESSOR_VALUE6(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE5(start, __VA_ARGS__)
+#define PROCESSOR_VALUE7(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE6(start, __VA_ARGS__)
+
+#define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix ## _processors[num] suffix = {\
+  [0 ... num - 1] = dflt,\
+  PROCESSOR_VALUE ## num ( e_start, __VA_ARGS__ )\
+};
+
+PROCESSOR_MACRO(char, 5, CS_ENUM_START, cs, [MAX_STRING_LEN+1], "",
+  TGL_ALT, SS_DOWN(X_RALT) SS_TAP(X_TAB),
+  TGL_SLT, SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)),
+  TGL_ELT, SS_UP(X_RALT),
   // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
   // Maybe it's something to do with KC_GESC overlapping or something?
   // Who knows why, but we do need this custom keycode regardless to get around that.
-  [C__OFFSET(CS_ENUM_START, CK_ESC)] = SS_TAP(X_ESC),
-  [C__OFFSET(CS_ENUM_START, CK_UNBS)] = SS_RCTL(SS_TAP(X_BSPACE)),
-};
+  CK_ESC, SS_TAP(X_ESC),
+  CK_UNBS, SS_RCTL(SS_TAP(X_BSPACE))
+)
 
-const char PROGMEM cu_processors[NUM_CU][MAX_STRING_LEN+1] = {
-  [0 ... NUM_CU - 1] = "",
-  // TODO: Change this to URL_CPY
-  [C__OFFSET(CU_ENUM_START, URL_COPY)] = "c",
-  [C__OFFSET(CU_ENUM_START, URL_ICP)] = SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c",
-};
+PROCESSOR_MACRO(char, 2, CU_ENUM_START, cu, [MAX_STRING_LEN+1], "",
+  URL_COPY, "c",
+  URL_ICP, SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c"
+)
 
-const char PROGMEM cn_processors[NUM_CN][MAX_STRING_LEN+1] = {
-  [0 ... NUM_CN - 1] = "",
-  [C__OFFSET(CN_ENUM_START, URL_PST)] = SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER),
-  [C__OFFSET(CN_ENUM_START, CK_CL)] = "cl/" SS_TAP(X_ENTER),
-  [C__OFFSET(CN_ENUM_START, CK_MOMA)] = "moma " SS_TAP(X_ENTER),
-};
+PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN+1], "",
+  URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER),
+  CK_CL, "cl/" SS_TAP(X_ENTER),
+  CK_MOMA, "moma " SS_TAP(X_ENTER)
+)
 
-// TODO: Remove this macro
-#define MAKE_KEY_PROCESSOR(key, func_name) [ KEY_PROCESSOR_OFFSET ( key ) ] = PRC_ACTION ( func_name )
-
-const processor_action_t PROGMEM ck_processors[NUM_CK] = {
-  [0 ... NUM_CK - 1] = PRC_ACTION( NULL ),
-  MAKE_KEY_PROCESSOR(CK_CTLG, _ctrl_g_new),
-  MAKE_KEY_PROCESSOR(CK_MUT1, _mute_1),
-  MAKE_KEY_PROCESSOR(CK_MUT2, _mute_2),
-  MAKE_KEY_PROCESSOR(CK_ALTT, _alt_t_new),
-  // TODO: MS_CTRL????
-};
+// TODO: MS_CTRL????
+PROCESSOR_MACRO(processor_action_t, 4, CK_ENUM_START, ck, , NULL,
+  CK_CTLG, &_ctrl_g_new,
+  CK_MUT1, &_mute_1,
+  CK_MUT2, &_mute_2,
+  CK_ALTT, &_alt_t_new
+)
 
 bool alt_and_or_nav_layer(bool activated) {
   if (!activated) {
