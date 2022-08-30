@@ -109,6 +109,9 @@ bool _alt_t_new(bool activated) {
     return false;
 }
 
+// TODO: Use function instead of this.
+#define MS_CTRL RCTL(KC_MS_BTN1)
+
 bool _ctrl_click_new(void) {
     // Used to have the following line
     // #define MS_CTRL RCTL(KC_MS_BTN1)
@@ -184,82 +187,53 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;*/
 }
 
-#define STRING_FUNC(func_name, str) bool func_name(bool activated) {\
-  send_string(str);\
-  return false;\
-}
+#define C__OFFSET(C__START, v) v - C__START - 1
 
-#define URL_FUNC(func_name, str) bool func_name(bool activated) {\
-  SEND_STRING(SS_DOWN(X_RCTL) "l");\
-  URLWait();\
-  send_string(str);\
-  SEND_STRING(SS_UP(X_RCTL));\
-  return false;\
-}
-
-#define NEW_TAB_FUNC(func_name, str) bool func_name(bool activated) {\
-  SEND_STRING(SS_RCTL("t"));\
-  URLWait();\
-  send_string(str);\
-  return false;\
-}
-
-STRING_FUNC(alt_tab, SS_DOWN(X_RALT) SS_TAP(X_TAB))
-STRING_FUNC(alt_shft_tab, SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)))
-STRING_FUNC(end_alt_tab, SS_UP(X_RALT))
-
-URL_FUNC(url_copy, "c")
-URL_FUNC(url_id_copy, SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c")
-NEW_TAB_FUNC(url_paste, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER))
-//     // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
-//     // Maybe it's something to do with KC_GESC overlapping or something?
-//     // Who knows why, but we do need this custom keycode regardless to get around that.
-STRING_FUNC(escape, SS_TAP(X_ESC))
-
-NEW_TAB_FUNC(cl, "cl/" SS_TAP(X_ENTER))
-NEW_TAB_FUNC(moma, "moma " SS_TAP(X_ENTER))
-
-STRING_FUNC(uni_bs, universal_backspace)
-
-#define KEY_PROCESSOR_OFFSET(v) v - CK_ENUM_START - 1
+#define KEY_PROCESSOR_OFFSET(v) C__OFFSET(CK_ENUM_START, v)
 
 typedef bool (*processor_action_t)(bool activated);
 
 #define PRC_ACTION(user_fn) user_fn
 
-/*
-typedef bool (*processor_func_type)(bool activated);
+#define MAX_STRING_LEN 20
 
-typedef struct {
-  processor_func_type fn;
-} processor_action_t;
+// TODO: macro to create arrays like this (MACRO(type, prefix, second_array, __VA_ARGS__))
+const char PROGMEM cs_processors[NUM_CS][MAX_STRING_LEN+1] = {
+  [0 ... NUM_CS - 1] = "",
+  [C__OFFSET(CS_ENUM_START, TGL_ALT)] = SS_DOWN(X_RALT) SS_TAP(X_TAB),
+  [C__OFFSET(CS_ENUM_START, TGL_SLT)] = SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)),
+  [C__OFFSET(CS_ENUM_START, TGL_ELT)] = SS_UP(X_RALT),
+  // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
+  // Maybe it's something to do with KC_GESC overlapping or something?
+  // Who knows why, but we do need this custom keycode regardless to get around that.
+  [C__OFFSET(CS_ENUM_START, CK_ESC)] = SS_TAP(X_ESC),
+  [C__OFFSET(CS_ENUM_START, CK_UNBS)] = SS_RCTL(SS_TAP(X_BSPACE)),
+};
 
-#define PRC_ACTION(user_fn) { .fn = user_fn }
-*/
+const char PROGMEM cu_processors[NUM_CU][MAX_STRING_LEN+1] = {
+  [0 ... NUM_CU - 1] = "",
+  // TODO: Change this to URL_CPY
+  [C__OFFSET(CU_ENUM_START, URL_COPY)] = "c",
+  [C__OFFSET(CU_ENUM_START, URL_ICP)] = SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c",
+};
 
+const char PROGMEM cn_processors[NUM_CN][MAX_STRING_LEN+1] = {
+  [0 ... NUM_CN - 1] = "",
+  [C__OFFSET(CN_ENUM_START, URL_PST)] = SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER),
+  [C__OFFSET(CN_ENUM_START, CK_CL)] = "cl/" SS_TAP(X_ENTER),
+  [C__OFFSET(CN_ENUM_START, CK_MOMA)] = "moma " SS_TAP(X_ENTER),
+};
+
+// TODO: Remove this macro
 #define MAKE_KEY_PROCESSOR(key, func_name) [ KEY_PROCESSOR_OFFSET ( key ) ] = PRC_ACTION ( func_name )
 
-//processor_action_t key_processors[CK_ENUM_END - CK_ENUM_START - 1] = {
-#define NUM_KEY_PROCESSORS KEY_PROCESSOR_OFFSET(CK_ENUM_END)
-const processor_action_t PROGMEM key_processors[NUM_KEY_PROCESSORS] = {
-  [0 ... NUM_KEY_PROCESSORS - 1] = PRC_ACTION( NULL ),
-  // TODO: Make this an array of strings (where applicable) to improve memory usage.
-  MAKE_KEY_PROCESSOR(TGL_ALT, alt_tab),
-  MAKE_KEY_PROCESSOR(TGL_SLT, alt_shft_tab),
-  MAKE_KEY_PROCESSOR(TGL_ELT, end_alt_tab),
-
-  MAKE_KEY_PROCESSOR(URL_COPY, url_copy),
-  MAKE_KEY_PROCESSOR(URL_ICP, url_id_copy),
-  MAKE_KEY_PROCESSOR(URL_PST, url_paste),
-  MAKE_KEY_PROCESSOR(CK_CL, cl),
-  MAKE_KEY_PROCESSOR(CK_MOMA, moma),
-  MAKE_KEY_PROCESSOR(CK_UNBS, uni_bs),
-
-  MAKE_KEY_PROCESSOR(CK_ESC, escape),
+const processor_action_t PROGMEM ck_processors[NUM_CK] = {
+  [0 ... NUM_CK - 1] = PRC_ACTION( NULL ),
   MAKE_KEY_PROCESSOR(CK_CTLG, _ctrl_g_new),
   MAKE_KEY_PROCESSOR(CK_MUT1, _mute_1),
   MAKE_KEY_PROCESSOR(CK_MUT2, _mute_2),
   MAKE_KEY_PROCESSOR(CK_ALTT, _alt_t_new),
+  // TODO: MS_CTRL????
 };
 
 bool alt_and_or_nav_layer(bool activated) {
@@ -345,13 +319,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   switch (keycode) {
     LEEP_CASE(RESET, on_reset)
     LEEP_CASE(CTRL_W, _ctrl_w_new)
+    // TODO: MS_CTRL is a custom keycode so it should
     LEEP_CASE(MS_CTRL, _ctrl_click_new)
   }
 
   // The boolean here could be if the key was pressed or unpressed,
   // but not that's currently used so it'd just be extra logic (here and
   // in all implementing functions).
-  return run_array_processor(key_processors, NUM_KEY_PROCESSORS, KEY_PROCESSOR_OFFSET(keycode), true);
+  if (keycode <= CS_ENUM_START) {
+    return true;
+  }
+  if (keycode <= CS_ENUM_END) {
+    send_string(cs_processors[keycode - CS_ENUM_START - 1]);
+    return false;
+  }
+  if (keycode <= CU_ENUM_END) {
+    SEND_STRING(SS_DOWN(X_RCTL) "l");
+    URLWait();
+    send_string(cu_processors[keycode - CU_ENUM_START - 1]);
+    SEND_STRING(SS_UP(X_RCTL));
+    return false;
+  }
+  if (keycode <= CN_ENUM_END) {
+    SEND_STRING(SS_RCTL("t"));
+    URLWait();
+    send_string(cn_processors[keycode - CN_ENUM_START - 1]);
+    return false;
+  }
+  return run_array_processor(ck_processors, NUM_CK, keycode - CK_ENUM_START - 1, true);
 }
 
 // Runs whenever there is a layer state change.

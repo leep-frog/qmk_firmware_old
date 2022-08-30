@@ -27,12 +27,9 @@ enum press_type { // prefix PT
     PT_UNPRESS,
 };
 
-enum custom_keycodes { // prefix CK (custom keycode)
-  CK_ENUM_START = LEEP_SAFE_RANGE,
+enum custom_stringers { // prefix 'CS_'
+  CS_ENUM_START = LEEP_SAFE_RANGE,
 
-  /***************
-   * Toggle keys *
-   ***************/
   // Toggle alt tab
   TGL_ALT,
   // Toggle shift-alt tab
@@ -40,31 +37,57 @@ enum custom_keycodes { // prefix CK (custom keycode)
   // End alt tab
   TGL_ELT,
 
-  /************
-   * URL keys *
-   ************/
+  // Universal backspace
+  CK_UNBS,
+  // Escape
+  CK_ESC,
+
+  CS_ENUM_END,
+};
+
+#define NUM_CS CS_ENUM_END - CS_ENUM_START - 1
+
+enum custom_url_strings { // prefix 'CU_'
+  // TODO: These start and end ones are making us waste values. Fix this.
+  CU_ENUM_START = CS_ENUM_END,
+
   // Copy URL from a Chrome browser
   URL_COPY,
   // Copy URL ID
   URL_ICP,
+
+  CU_ENUM_END,
+};
+
+#define NUM_CU CU_ENUM_END - CU_ENUM_START - 1
+
+enum custom_new_tab_stringers { // prefix 'CN_'
+  CN_ENUM_START = CU_ENUM_END,
+
   // Paste URL
   URL_PST,
 
-  /***************
-   * Custom keys *
-   ***************/
-  CK_CTLG,
-  CK_ESC,
-  CK_UNBS,
-  MS_CTRL,
-  CK_ALTT,
-  CK_MUT1,
-  CK_MUT2,
   CK_CL,
   CK_MOMA,
 
+  CN_ENUM_END,
+};
+
+#define NUM_CN CN_ENUM_END - CN_ENUM_START - 1
+
+enum custom_keycodes { // prefix CK (custom keycode)
+  CK_ENUM_START = CN_ENUM_END,
+
+  CK_CTLG,
+  //MS_CTRL,
+  CK_ALTT,
+  CK_MUT1,
+  CK_MUT2,
+
   CK_ENUM_END,
 };
+
+#define NUM_CK CK_ENUM_END - CK_ENUM_START - 1
 
 #define PROCESSOR
 

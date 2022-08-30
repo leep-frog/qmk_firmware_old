@@ -39,5 +39,6 @@
 
 // Override built-ins:
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md#songs
-#define STARTUP_SONG SONG(ZELDA_DISCOVERY)
+//#define STARTUP_SONG SONG(ZELDA_DISCOVERY)
+#define STARTUP_SONG SONG()
 #define GOODBYE_SONG SONG()
