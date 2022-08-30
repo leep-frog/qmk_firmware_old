@@ -78,6 +78,7 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
   CK_ALTT,
   CK_MUT1,
   CK_MUT2,
+  MS_CTRL,
 )
 
 #endif

@@ -109,10 +109,7 @@ bool _alt_t_new(bool activated) {
     return false;
 }
 
-// TODO: Use function instead of this.
-#define MS_CTRL RCTL(KC_MS_BTN1)
-
-bool _ctrl_click_new(void) {
+bool _ctrl_click(bool activated) {
     // Used to have the following line
     // #define MS_CTRL RCTL(KC_MS_BTN1)
     // but in my work Windows laptop, the ctrl and click would be too
@@ -234,12 +231,12 @@ PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN+1], "",
   CK_MOMA, "moma " SS_TAP(X_ENTER)
 )
 
-// TODO: MS_CTRL????
-PROCESSOR_MACRO(processor_action_t, 4, CK_ENUM_START, ck, , NULL,
+PROCESSOR_MACRO(processor_action_t, 5, CK_ENUM_START, ck, , NULL,
   CK_CTLG, &_ctrl_g_new,
   CK_MUT1, &_mute_1,
   CK_MUT2, &_mute_2,
-  CK_ALTT, &_alt_t_new
+  CK_ALTT, &_alt_t_new,
+  MS_CTRL, &_ctrl_click
 )
 
 bool alt_and_or_nav_layer(bool activated) {
@@ -316,8 +313,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   switch (keycode) {
     LEEP_CASE(RESET, on_reset)
     LEEP_CASE(CTRL_W, _ctrl_w_new)
-    // TODO: MS_CTRL is a custom keycode so it should
-    LEEP_CASE(MS_CTRL, _ctrl_click_new)
     case LEEP_ENUM_CASE(CS):
       send_string(cs_processors[LEEP_ENUM_OFFSET(CS, keycode)]);
       return false;
