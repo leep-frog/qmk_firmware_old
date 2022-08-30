@@ -223,6 +223,11 @@ STRING_FUNC(uni_bs, universal_backspace)
 
 #define KEY_PROCESSOR_OFFSET(v) v - CK_ENUM_START - 1
 
+typedef bool (*processor_action_t)(bool activated);
+
+#define PRC_ACTION(user_fn) user_fn
+
+/*
 typedef bool (*processor_func_type)(bool activated);
 
 typedef struct {
@@ -230,12 +235,15 @@ typedef struct {
 } processor_action_t;
 
 #define PRC_ACTION(user_fn) { .fn = user_fn }
+*/
+
 #define MAKE_KEY_PROCESSOR(key, func_name) [ KEY_PROCESSOR_OFFSET ( key ) ] = PRC_ACTION ( func_name )
 
 //processor_action_t key_processors[CK_ENUM_END - CK_ENUM_START - 1] = {
 #define NUM_KEY_PROCESSORS KEY_PROCESSOR_OFFSET(CK_ENUM_END)
 const processor_action_t PROGMEM key_processors[NUM_KEY_PROCESSORS] = {
-  [0 ... NUM_KEY_PROCESSORS - 1] = { .fn = NULL },
+  [0 ... NUM_KEY_PROCESSORS - 1] = PRC_ACTION( NULL ),
+  // TODO: Make this an array of strings (where applicable) to improve memory usage.
   MAKE_KEY_PROCESSOR(TGL_ALT, alt_tab),
   MAKE_KEY_PROCESSOR(TGL_SLT, alt_shft_tab),
   MAKE_KEY_PROCESSOR(TGL_ELT, end_alt_tab),
@@ -280,7 +288,7 @@ bool ctrl_alt_layer(bool activated) {
 #define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
 
 const processor_action_t PROGMEM layer_processors[NUM_LAYERS] = {
-  [0 ... NUM_LAYERS - 1] = { .fn = NULL },
+  [0 ... NUM_LAYERS - 1] = PRC_ACTION( NULL ),
   MAKE_LAYER_PROCESSOR(LR_CTRL_X, ctrl_x_layer),
   // Needed to undo SS_DOWN from TGL_ALT and TGL_SLT.
   MAKE_LAYER_PROCESSOR(LR_ALT, alt_and_or_nav_layer),
@@ -303,8 +311,8 @@ bool layers_status[NUM_LAYERS] = {
 };
 
 bool run_array_processor(const processor_action_t processors[], size_t sz, size_t idx, bool activated) {
-  if (idx >= 0 && idx < sz && processors[idx].fn) {
-    processors[idx].fn(activated);
+  if (idx >= 0 && idx < sz && processors[idx]) {
+    processors[idx](activated);
     return false;
   }
   return true;
