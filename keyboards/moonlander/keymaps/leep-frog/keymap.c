@@ -81,7 +81,7 @@ void on_unmute_2(void) {
 }
 
 void on_shift(void) {
-  LEEP_SOLID_COLOR(HSV_RED);
+  LEEP_COLOR_MODE(HSV_RED, RGB_MATRIX_CYCLE_PINWHEEL);
 }
 
 void on_unshift(void) {
@@ -90,7 +90,7 @@ void on_unshift(void) {
 
 void recording_start(bool macro_1) {
   SNG_REC_START;
-  LEEP_COLOR_MODE(HSV_BLUE, RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+  LEEP_COLOR_MODE(HSV_BLUE, RGB_MATRIX_RAINBOW_PINWHEELS);
 }
 
 void recording_end(bool macro_1) {
