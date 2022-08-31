@@ -1,6 +1,12 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 
+// Initial keyboard reset seems to be because of some rgblight/rgb_matrix issue (I think).
+// The top LEDs keep iteratively flashing when it breaks the first time,
+// but not sure what that tells us.
+
+#define HSV_RED_ORANGE 9, 255, 255
+
 #define LEEP_SAFE_RANGE ML_SAFE_RANGE
 
 //#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
@@ -15,14 +21,14 @@ int layer_colors[NUM_LAYERS][3] = {
   [0 ... NUM_LAYERS - 1] = { HSV_GREEN },
   [LR_BASE] = { HSV_CYAN },
   [LR_SAFE] = { HSV_GREEN },
-  [LR_CTRL] = { HSV_SPRINGGREEN },
-  [LR_ALT] = { HSV_MAGENTA },
+  [LR_CTRL] = { HSV_PURPLE },
+  [LR_ALT] = { HSV_BLUE },
   [LR_CTRL_X] = { HSV_CHARTREUSE },
   [LR_CTRL_ALT] = { HSV_GOLD },
-  [LR_NAVIGATION] = { HSV_CORAL },
-  [LR_SHORTCUTS] = { HSV_TURQUOISE },
-  [LR_SYMB] = { HSV_ORANGE },
-  [LR_OUTLOOK] = { HSV_BLUE },
+  [LR_NAVIGATION] = { HSV_ORANGE },
+  [LR_SHORTCUTS] = { HSV_RED_ORANGE },
+  [LR_SYMB] = { HSV_MAGENTA },
+  [LR_OUTLOOK] = { HSV_SPRINGGREEN },
   // We don't change the keyboard color for shift because there isn't
   // a way to only do it on mod and not on tap as well, and seeing the
   // color change for every space character was really annoying.
