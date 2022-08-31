@@ -1,7 +1,5 @@
 #pragma once
 
-#define ORYX_CONFIGURATOR
-
 #include "../../config.h"
 
 // How long it takes for a tap to become a hold. Primarily added because
@@ -19,10 +17,6 @@
 #define COMBO_TERM 40  // Number of milliseconds for combo keys.
 
 #define COMBO_VARIABLE_LEN
-
-#define RGBLIGHT_LAYERS
-
-#define ENABLE_RGB_MATRIX_BREATHING
 
 #define FE_1(M, X) M(X)
 #define FE_2(M, X, ...) M(X), FE_1(M, __VA_ARGS__)
