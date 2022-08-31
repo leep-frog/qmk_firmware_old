@@ -3,23 +3,26 @@
 
 #define LEEP_SAFE_RANGE ML_SAFE_RANGE
 
-#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
+//#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
+#define LEEP_LAYER_COLOR(lyr) rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR); rgblight_sethsv(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
+#define LEEP_SOLID_COLOR(clr) rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR); rgblight_sethsv(clr)
+#define LEEP_COLOR_MODE(clr, mde) rgb_matrix_mode(mde); rgblight_sethsv(clr)
 
 #include "../../../../users/leep-frog/main.c"
 
 // Color on shift
 int layer_colors[NUM_LAYERS][3] = {
-  [0 ... NUM_LAYERS - 1] = { RGB_GREEN },
-  [LR_BASE] = { RGB_CYAN },
-  [LR_SAFE] = { RGB_GREEN },
-  [LR_CTRL] = { RGB_SPRINGGREEN },
-  [LR_ALT] = { RGB_MAGENTA },
-  [LR_CTRL_X] = { RGB_CHARTREUSE },
-  [LR_CTRL_ALT] = { RGB_GOLD },
-  [LR_NAVIGATION] = { RGB_CORAL },
-  [LR_SHORTCUTS] = { RGB_TURQUOISE },
-  [LR_SYMB] = { RGB_ORANGE },
-  [LR_OUTLOOK] = { RGB_BLUE },
+  [0 ... NUM_LAYERS - 1] = { HSV_GREEN },
+  [LR_BASE] = { HSV_CYAN },
+  [LR_SAFE] = { HSV_GREEN },
+  [LR_CTRL] = { HSV_SPRINGGREEN },
+  [LR_ALT] = { HSV_MAGENTA },
+  [LR_CTRL_X] = { HSV_CHARTREUSE },
+  [LR_CTRL_ALT] = { HSV_GOLD },
+  [LR_NAVIGATION] = { HSV_CORAL },
+  [LR_SHORTCUTS] = { HSV_TURQUOISE },
+  [LR_SYMB] = { HSV_ORANGE },
+  [LR_OUTLOOK] = { HSV_BLUE },
   // We don't change the keyboard color for shift because there isn't
   // a way to only do it on mod and not on tap as well, and seeing the
   // color change for every space character was really annoying.
@@ -70,15 +73,15 @@ void on_unmute_1(void) {
 }
 
 void on_mute_2(void) {
-  rgb_matrix_set_color_all(RGB_ORANGE);
+  LEEP_SOLID_COLOR(HSV_ORANGE);
 }
 
 void on_unmute_2(void) {
-  rgb_matrix_set_color_all(RGB_GREEN);
+  LEEP_SOLID_COLOR(HSV_GREEN);
 }
 
 void on_shift(void) {
-  rgb_matrix_set_color_all(RGB_RED);
+  LEEP_SOLID_COLOR(HSV_RED);
 }
 
 void on_unshift(void) {
@@ -87,11 +90,11 @@ void on_unshift(void) {
 
 void recording_start(bool macro_1) {
   SNG_REC_START;
-  rgb_matrix_set_color_all(RGB_RED);
-  rgb_matrix_mode(RGB_MATRIX_BREATHING);
+  LEEP_COLOR_MODE(HSV_BLUE, RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
 }
 
 void recording_end(bool macro_1) {
+  LEEP_LAYER_COLOR(LR_SHORTCUTS);
   if (macro_1) {
     SNG_REC_1_END;
   } else {
@@ -110,7 +113,7 @@ void recording_play(bool macro_1) {
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
 #define ML_LAYOUT(...) LAYOUT_moonlander(__VA_ARGS__)
-#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______
+#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, _______, _______,    _______, _______, _______, _______, _______, RGB_TOG
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
