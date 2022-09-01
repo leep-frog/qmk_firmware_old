@@ -103,6 +103,11 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
     tap_code16(KC_F5);
 }
 
+void TDReset(qk_tap_dance_state_t *state, void *user_data) {
+  on_reset(state->count);
+  reset_keyboard();
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_SHIFT_TOGGLE]  = ACTION_TAP_DANCE_FN(TDToggleShift),
     [TDK_KILL_LINE]     = ACTION_TAP_DANCE_FN(TDKillLine),
@@ -110,6 +115,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_MACRO_2]       = ACTION_TAP_DANCE_FN(recorder_2),
     [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste),
     [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload),
+    [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset),
     /*[TDK_BACKSPACE] = ACTION_TAP_DANCE_FN_ADVANCED(backspace_tapped, backspace_finished, backspace_reset),
     [TDK_DELETE] = ACTION_TAP_DANCE_FN_ADVANCED(delete_tapped, delete_finished, delete_reset),*/
 };
@@ -123,9 +129,11 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_DEL_WORD RCTL(KC_DELETE)
 #define CK_MDPS TD(TDK_MARKDOWN_PASTE)
 #define CK_OLRL TD(TDK_OUTLOOK_RELOAD)
+#define TD_RST TD(TDK_RESET)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+      case TD_RST:
       case CK_MCR1:
       case CK_MCR2:
         // If not recording give extra time to double tap to start recording.

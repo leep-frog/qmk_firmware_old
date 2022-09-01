@@ -4,6 +4,7 @@
 // Initial keyboard reset seems to be because of some rgblight/rgb_matrix issue (I think).
 // The top LEDs keep iteratively flashing when it breaks the first time,
 // but not sure what that tells us.
+// Maybe try deferring coloring until first key is pressed?
 
 #define HSV_RED_ORANGE 9, 255, 255
 
@@ -62,12 +63,15 @@ void on_layer_change(uint8_t layer) {
   }
 }
 
-bool on_reset(void) {
-  SNG_RESET;
-  while (is_playing_notes()) {
-    wait_ms(150);
+void on_reset(uint8_t count) {
+  if (count == 1) {
+    SNG_RESET;
+    while (is_playing_notes()) {
+      wait_ms(150);
+    }
+  } else {
+    LEEP_SOLID_COLOR(HSV_RED);
   }
-  return true;
 }
 
 void on_mute_1(void) {
@@ -191,7 +195,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
    [LR_SHORTCUTS] = ML_LAYOUT(
         _______,  _______, _______, _______, _______, _______, _______,           _______, _______, _______,  _______, _______, _______, TO_SFTY,
-        _______,  RESET,   CK_WWWB, MS_MID,  CK_WWWF, _______, _______,           _______, URL_PST, URL_COPY, URL_ICP, CK_MOMA, CK_CL,   _______,
+        _______,  TD_RST,  CK_WWWB, MS_MID,  CK_WWWF, _______, _______,           _______, URL_PST, URL_COPY, URL_ICP, CK_MOMA, CK_CL,   _______,
         KC_ENTER, CL(A),   MS_LEFT, MS_SMID, MS_RGHT, _______, _______,           _______, _______, GD_HD_4,  GD_HD_5, _______, _______, _______,
         _______,  CK_MCR2, CK_MCR1, MS_CTRL, _______, GD_BULT,                             CK_NEW,  GD_HD_1,  GD_HD_2, GD_HD_3, _______, _______,
 
@@ -202,7 +206,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_NAVIGATION] = ML_LAYOUT(
         _______, _______, _______, _______, _______,  _______,     _______,           _______, _______,     _______, _______, _______, _______, TO_SFTY,
-        _______, _______, CK_WWWB, _______, RESET,    RCTL(AL(T)), _______,           _______, CL(T),       CK_TABB, CL(W),   CK_TABF, GU(UP),  TGL_ALT,
+        _______, _______, CK_WWWB, _______, TD_RST,   RCTL(AL(T)), _______,           _______, CL(T),       CK_TABB, CL(W),   CK_TABF, GU(UP),  TGL_ALT,
         _______, _______, _______, _______, GU(RGHT), _______,     _______,           _______, RCTL(SH(T)), WS_LEFT, CODE_WS, WS_RGHT, MISC_WS, TGL_ELT,
         _______, _______, _______, _______, _______,  GU(LEFT),                                GU(DOWN),    _______, WS_UP,   WS_DOWN, _______, _______,
 

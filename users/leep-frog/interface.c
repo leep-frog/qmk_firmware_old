@@ -9,7 +9,7 @@
 
 // Run when reset key is hit (but before actual keyboard reset).
 // Should return whether or not to actually reset the keyboard.
-bool on_reset(void);
+void on_reset(uint8_t count);
 
 // Run when muted with mute key 1 (audio signal)
 void on_mute_1(void);

@@ -311,7 +311,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   // 1) prevent custom keycodes from having logic in this switch and in run_array_processor
   // 2) prevent regular keycode logic from getting to custom keycodes (shouldn't actually be a problem but jic)
   switch (keycode) {
-    LEEP_CASE(RESET, on_reset)
     LEEP_CASE(CTRL_W, _ctrl_w_new)
     case LEEP_ENUM_CASE(CS):
       send_string(cs_processors[LEEP_ENUM_OFFSET(CS, keycode)]);
