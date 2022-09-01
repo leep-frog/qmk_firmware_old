@@ -144,14 +144,6 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;*/
 }
 
-bool on_reset(void) {
-  SNG_RESET;
-  while (is_playing_notes()) {
-    wait_ms(150);
-  }
-  return true;
-}
-
 #define KEY_PROCESSOR_OFFSET(v) C__OFFSET(CK_ENUM_START, v)
 
 typedef bool (*processor_action_t)(bool activated);
