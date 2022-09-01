@@ -4,12 +4,13 @@
 #define HSV_RED_ORANGE 9, 255, 255
 
 //#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
-//#define LEEP_COLOR
+#define ENABLE_LEEP_COLOR
 
 #ifdef ENABLE_LEEP_COLOR
 #define LEEP_LAYER_COLOR(lyr) rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR); rgblight_sethsv(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
 #define LEEP_SOLID_COLOR(clr) rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR); rgblight_sethsv(clr)
-#define LEEP_COLOR_MODE(clr, mde) rgb_matrix_mode(mde); rgblight_sethsv(clr)
+//#define LEEP_COLOR_MODE(clr, mde) rgb_matrix_mode(mde); rgblight_sethsv(clr)
+#define LEEP_COLOR_MODE(clr, mde) rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR); rgblight_sethsv(clr)
 
 // Color on shift
 int layer_colors[NUM_LAYERS][3] = {
