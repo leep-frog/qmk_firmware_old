@@ -1,116 +1,15 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 
+// interface.c requirements
 #define LEEP_SAFE_RANGE ML_SAFE_RANGE
 
-#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
-
 #include "../../../../users/leep-frog/main.c"
-
-// Color on shift
-int layer_colors[NUM_LAYERS][3] = {
-  [0 ... NUM_LAYERS - 1] = { RGB_GREEN },
-  [LR_BASE] = { RGB_CYAN },
-  [LR_SAFE] = { RGB_GREEN },
-  [LR_CTRL] = { RGB_SPRINGGREEN },
-  [LR_ALT] = { RGB_MAGENTA },
-  [LR_CTRL_X] = { RGB_CHARTREUSE },
-  [LR_CTRL_ALT] = { RGB_GOLD },
-  [LR_NAVIGATION] = { RGB_CORAL },
-  [LR_SHORTCUTS] = { RGB_TURQUOISE },
-  [LR_SYMB] = { RGB_ORANGE },
-  [LR_OUTLOOK] = { RGB_BLUE },
-  // We don't change the keyboard color for shift because there isn't
-  // a way to only do it on mod and not on tap as well, and seeing the
-  // color change for every space character was really annoying.
-};
-
-// Explicitly only define each song once (not once per use) to limit memory usage.
-// All song uses should exclusively be used through references to these
-// existing songs (and not by creating new song instances).
-DEFINE_SONG(zelda_discovery_song, SONG(ZELDA_DISCOVERY));
-DEFINE_SONG(zelda_guardian_battle_song, SONG(ZELDA_GUARDIAN_BATTLE));
-DEFINE_SONG(zelda_item_found_song, SONG(ZELDA_ITEM_FOUND));
-DEFINE_SONG(zelda_spirit_orb_song, SONG(ZELDA_SPIRIT_ORB));
-
-DEFINE_SONG(mario_1_up_song, SONG(MARIO_1_UP));
-DEFINE_SONG(mario_lost_a_life_song, SONG(MARIO_LOST_A_LIFE));
-DEFINE_SONG_WITH_TEMPO(mario_game_over_song, SONG(MARIO_GAME_OVER), 100);
-
-#define SNG_RESET LEEP_PLAY_SONG(mario_game_over_song)
-#define SNG_MUTE LEEP_PLAY_SONG(mario_lost_a_life_song)
-#define SNG_UNMUTE LEEP_PLAY_SONG(mario_1_up_song)
-#define SNG_REC_START LEEP_PLAY_SONG(zelda_guardian_battle_song)
-#define SNG_REC_1_END LEEP_PLAY_SONG(zelda_item_found_song)
-#define SNG_REC_2_END LEEP_PLAY_SONG(mario_1_up_song)
-#define SNG_REC_1_PLAY LEEP_PLAY_SONG(zelda_spirit_orb_song)
-#define SNG_REC_2_PLAY LEEP_PLAY_SONG(zelda_discovery_song)
-
-// Interface functions
-void on_layer_change(uint8_t layer) {
-  if (!recording && !shift_toggled) {
-    LEEP_LAYER_COLOR(layer);
-  }
-}
-
-bool on_reset(void) {
-  SNG_RESET;
-  while (is_playing_notes()) {
-    wait_ms(150);
-  }
-  return true;
-}
-
-void on_mute_1(void) {
-  SNG_MUTE;
-}
-
-void on_unmute_1(void) {
-  SNG_UNMUTE;
-}
-
-void on_mute_2(void) {
-  rgb_matrix_set_color_all(RGB_ORANGE);
-}
-
-void on_unmute_2(void) {
-  rgb_matrix_set_color_all(RGB_GREEN);
-}
-
-void on_shift(void) {
-  rgb_matrix_set_color_all(RGB_RED);
-}
-
-void on_unshift(void) {
-  LEEP_LAYER_COLOR(LR_CTRL);
-}
-
-void recording_start(bool macro_1) {
-  SNG_REC_START;
-  rgb_matrix_set_color_all(RGB_RED);
-  rgb_matrix_mode(RGB_MATRIX_BREATHING);
-}
-
-void recording_end(bool macro_1) {
-  if (macro_1) {
-    SNG_REC_1_END;
-  } else {
-    SNG_REC_2_END;
-  }
-}
-
-void recording_play(bool macro_1) {
-  if (macro_1) {
-    SNG_REC_1_PLAY;
-  } else {
-    SNG_REC_2_PLAY;
-  }
-}
 
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
 #define ML_LAYOUT(...) LAYOUT_moonlander(__VA_ARGS__)
-#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______
+#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, _______, _______,    _______, _______, _______, _______, _______, RGB_TOG
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {

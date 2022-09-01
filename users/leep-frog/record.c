@@ -20,15 +20,25 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
         if (!recording) {
             action = start_action;
             recording = true;
-            recording_start(macro_1);
+            SNG_REC_START;
+            LEEP_SYS_COLOR(RGB_RED);
+            rgb_matrix_mode(RGB_MATRIX_BREATHING);
         }
     } else if (recording) {
         action = DYN_REC_STOP;
         kr.event.pressed = true;
         recording = false;
-        recording_end(macro_1);
+        if (macro_1) {
+          SNG_REC_1_END;
+        } else {
+          SNG_REC_2_END;
+        }
     } else {
-      recording_play(macro_1);
+      if (macro_1) {
+        SNG_REC_1_PLAY;
+      } else {
+        SNG_REC_2_PLAY;
+      }
     }
 
     process_dynamic_macro(action, &kr);
