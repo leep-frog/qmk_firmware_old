@@ -60,9 +60,9 @@ bool _mute_1(bool activated) {
 bool _mute_2(bool activated) {
   if (_leep_mute) {
     _leep_mute = false;
-    LEEP_SYS_COLOR(RGB_GREEN);
+    LEEP_SYS_COLOR(GREEN);
   } else {
-    LEEP_SYS_COLOR(RGB_ORANGE);
+    LEEP_SYS_COLOR(ORANGE);
     _leep_mute = true;
   }
   return false;

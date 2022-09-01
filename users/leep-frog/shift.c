@@ -10,7 +10,7 @@ void ToggleShift(void) {
         LEEP_LAYER_COLOR(LR_CTRL);
     } else {
         // Turn on shift.
-        LEEP_SYS_COLOR(RGB_RED);
+        LEEP_SYS_COLOR(RED);
         SEND_STRING(SS_DOWN(X_RSFT));
     }
     shift_toggled = !shift_toggled;
