@@ -46,6 +46,28 @@ DEFINE_SONG_WITH_TEMPO(mario_game_over_song, SONG(MARIO_GAME_OVER), 100);
 #define SNG_REC_1_PLAY LEEP_PLAY_SONG(zelda_spirit_orb_song)
 #define SNG_REC_2_PLAY LEEP_PLAY_SONG(zelda_discovery_song)
 
+bool _mute_1(bool activated) {
+  if (_leep_mute) {
+    _leep_mute = false;
+    SNG_UNMUTE;
+  } else {
+    SNG_MUTE;
+    _leep_mute = true;
+  }
+  return false;
+}
+
+bool _mute_2(bool activated) {
+  if (_leep_mute) {
+    _leep_mute = false;
+    LEEP_SOLID_COLOR(HSV_GREEN);
+  } else {
+    LEEP_SOLID_COLOR(HSV_ORANGE);
+    _leep_mute = true;
+  }
+  return false;
+}
+
 #else // ifdef ENABLE_LEEP_MUSIC
 
 #define SNG_RESET

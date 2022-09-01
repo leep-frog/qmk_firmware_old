@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include "interface.c"
 #include "enum.c"
-#include "music.c"
 #include "color.c"
+#include "music.c"
 #include "google.c"
 #include "workspace.c"
 #include "record.c"
@@ -47,34 +47,12 @@ bool _ctrl_w_new(void) {
       return true;
     }
     // Clear toggle
-    ToggleShift();
+    UntoggleShift();
     // Copy contents
     SEND_STRING(SS_RCTL(SS_TAP(X_INSERT)));
     // Delete selected text.
     SEND_STRING(SS_TAP(X_DELETE));
     return false;
-}
-
-bool _mute_1(bool activated) {
-  if (_leep_mute) {
-    _leep_mute = false;
-    SNG_UNMUTE;
-  } else {
-    SNG_MUTE;
-    _leep_mute = true;
-  }
-  return false;
-}
-
-bool _mute_2(bool activated) {
-  if (_leep_mute) {
-    _leep_mute = false;
-    LEEP_SOLID_COLOR(HSV_GREEN);
-  } else {
-    LEEP_SOLID_COLOR(HSV_ORANGE);
-    _leep_mute = true;
-  }
-  return false;
 }
 
 bool _alt_t_new(bool activated) {
@@ -101,18 +79,6 @@ bool _ctrl_click(bool activated) {
     SEND_STRING(SS_TAP(X_MS_BTN1));
     SEND_STRING(SS_UP(X_RCTL));
     return false;
-}
-
-bool _safe_layer(bool activated) {
-  if (!activated) {
-    return false;
-  }
-
-  if (shift_toggled) {
-      ToggleShift();
-  }
-  clear_mods();
-  return false;
 }
 
 // Custom commands
@@ -244,6 +210,16 @@ bool ctrl_alt_layer(bool activated) {
   return true;
 }
 
+bool _safe_layer(bool activated) {
+  if (!activated) {
+    return false;
+  }
+
+  UntoggleShift();
+  clear_mods();
+  return false;
+}
+
 #define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
 
 OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 5, -1, layer, , NULL,
@@ -263,11 +239,6 @@ OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 5, -1, layer, , NULL,
     //recording_blinker();
 //}
 
-bool layers_status[NUM_LAYERS] = {
-  [0] = true,
-  [1 ... NUM_LAYERS - 1] = false,
-};
-
 #define LEEP_CASE(kc, fn) case (kc): return fn();
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
@@ -276,17 +247,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     return true;
   }
 
-  // Untoggle shift the layer for all non-movement keys
-  switch (keycode & QK_BASIC_MAX) {
-    case KC_HOME ... KC_UP:
-    case KC_BSPACE:
-      break;
-    default:
-      // Don't untoggle for ctrl g since that should *only* deactivate the shift layer
-      // (and not send ctrl+g afterwards too)
-      if (keycode != CK_CTLG) {
-        UntoggleShift();
-      }
+  uint16_t m_keycode = keycode & QK_BASIC_MAX;
+  // Don't untoggle for ctrl g/w since that should *only* deactivate the shift layer
+  // (and not send ctrl+g/w afterwards too)
+  // TODO: layer change keys.
+  bool ignore_shift = (m_keycode >= KC_HOME || m_keycode <= KC_UP ||
+      m_keycode == KC_BSPACE || keycode == CK_CTLG || keycode == CTRL_W);
+
+  if (!ignore_shift) {
+    UntoggleShift();
   }
 
   // We explicitly want all keycodes to return something to
@@ -316,6 +285,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   }
   return true;
 }
+
+bool layers_status[NUM_LAYERS] = {
+  [0] = true,
+  [1 ... NUM_LAYERS - 1] = false,
+};
 
 // Runs whenever there is a layer state change.
 layer_state_t layer_state_set_user(layer_state_t state) {
