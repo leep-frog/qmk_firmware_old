@@ -17,18 +17,31 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
     bool macro_1 = play_action == DYN_MACRO_PLAY1;
 
     if (state->count > 1) {
+      // Start macro
         if (!recording) {
             action = start_action;
             recording = true;
-            recording_start(macro_1);
+            SNG_REC_START;
+            LEEP_COLOR_MODE(HSV_BLUE, RGB_MATRIX_RAINBOW_PINWHEELS);
         }
     } else if (recording) {
+      // End macro
         action = DYN_REC_STOP;
         kr.event.pressed = true;
         recording = false;
-        recording_end(macro_1);
+        LEEP_LAYER_COLOR(LR_SHORTCUTS);
+        if (macro_1) {
+          SNG_REC_1_END;
+        } else {
+          SNG_REC_2_END;
+        }
     } else {
-      recording_play(macro_1);
+      // Play macro
+      if (macro_1) {
+        SNG_REC_1_PLAY;
+      } else {
+        SNG_REC_2_PLAY;
+      }
     }
 
     process_dynamic_macro(action, &kr);

@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "interface.c"
 #include "enum.c"
+#include "music.c"
+#include "color.c"
 #include "google.c"
 #include "workspace.c"
 #include "record.c"
@@ -53,32 +55,12 @@ bool _ctrl_w_new(void) {
     return false;
 }
 
-#define DEFINE_SONG_WITH_TEMPO( var_name, sound, tempo ) \
-float var_name ## _song[][2] =  sound;\
-uint8_t var_name ## _tempo = tempo;
-
-#define DEFINE_SONG(var_name, sound) \
-float var_name ## _song[][2] =  sound;\
-uint8_t var_name ## _tempo = TEMPO_DEFAULT;
-
-bool _leep_mute = false;
-
-#define LEEP_PLAY_SONG(sng) if (!_leep_mute) {\
-  set_tempo( sng ## _tempo );\
-  PLAY_SONG( sng ## _song );\
-}
-
-#define LEEP_PLAY_LOOP(sng) if (!_leep_mute) {\
-  set_tempo( sng ## _tempo );\
-  PLAY_SONG( sng ## _song );\
-}
-
 bool _mute_1(bool activated) {
   if (_leep_mute) {
     _leep_mute = false;
-    on_unmute_1();
+    SNG_UNMUTE;
   } else {
-    on_mute_1();
+    SNG_MUTE;
     _leep_mute = true;
   }
   return false;
@@ -87,9 +69,9 @@ bool _mute_1(bool activated) {
 bool _mute_2(bool activated) {
   if (_leep_mute) {
     _leep_mute = false;
-    on_unmute_2();
+    LEEP_SOLID_COLOR(HSV_GREEN);
   } else {
-    on_mute_2();
+    LEEP_SOLID_COLOR(HSV_ORANGE);
     _leep_mute = true;
   }
   return false;
@@ -348,7 +330,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
   }
 
-  on_layer_change(get_highest_layer(state));
+  if (!recording && !shift_toggled) {
+    LEEP_LAYER_COLOR(get_highest_layer(state));
+  }
 
   return state;
 }

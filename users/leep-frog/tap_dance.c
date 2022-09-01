@@ -104,7 +104,14 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
-  on_reset(state->count);
+  if (state->count == 1) {
+    SNG_RESET;
+    while (is_playing_notes()) {
+      wait_ms(150);
+    }
+  } else {
+    LEEP_SOLID_COLOR(HSV_RED);
+  }
   reset_keyboard();
 }
 
