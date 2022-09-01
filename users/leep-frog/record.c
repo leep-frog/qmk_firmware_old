@@ -21,8 +21,7 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
             action = start_action;
             recording = true;
             SNG_REC_START;
-            LEEP_SYS_COLOR(RED);
-            rgb_matrix_mode(RGB_MATRIX_BREATHING);
+            LEEP_COLOR_MODE(RED, RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
         }
     } else if (recording) {
         action = DYN_REC_STOP;
@@ -33,6 +32,7 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
         } else {
           SNG_REC_2_END;
         }
+        LEEP_SOLID_COLOR(GREEN);
     } else {
       if (macro_1) {
         SNG_REC_1_PLAY;

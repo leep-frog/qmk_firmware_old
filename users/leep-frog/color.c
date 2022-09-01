@@ -6,10 +6,13 @@
 #ifdef ENABLE_LEEP_COLOR
 
 // This macro is incase we ever switch from hsv representation to rgb or vice versa.
-#define LEEP_C(clr) RGB_ ## clr
+#define LEEP_C(clr) HSV_ ## clr
 
-#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
-#define LEEP_SYS_COLOR(clr) rgb_matrix_set_color_all(LEEP_C(clr))
+//#define LEEP_LAYER_COLOR(lyr) rgb_matrix_set_color_all(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2])
+//#define LEEP_SOLID_COLOR(clr) rgb_matrix_set_color_all(LEEP_C(clr))
+#define LEEP_LAYER_COLOR(lyr) rgb_matrix_sethsv_noeeprom(layer_colors[lyr][0], layer_colors[lyr][1], layer_colors[lyr][2]); rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+#define LEEP_SOLID_COLOR(clr) rgb_matrix_sethsv_noeeprom(LEEP_C(clr)); rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+#define LEEP_COLOR_MODE(clr, mde) rgb_matrix_sethsv_noeeprom(LEEP_C(clr)); rgb_matrix_mode_noeeprom(mde);
 
 int layer_colors[NUM_LAYERS][3] = {
   [0 ... NUM_LAYERS - 1] = { LEEP_C(GREEN) },
