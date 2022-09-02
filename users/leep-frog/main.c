@@ -81,6 +81,19 @@ bool _ctrl_click(bool activated) {
     return false;
 }
 
+bool _eye_care_down(bool activated) {
+  // The color change takes effect after the keycode is processed, so we can't
+  // change the color twice in the _eye_care function.
+  // Instead we set the first color on key down.
+  LEEP_SOLID_COLOR(RED);
+  return false;
+}
+
+void _eye_care_up(void) {
+  wait_ms(20 * 1000);
+  LEEP_SOLID_COLOR(GREEN);
+}
+
 bool _safe_layer(bool activated) {
   if (!activated) {
     return false;
@@ -150,7 +163,7 @@ typedef bool (*processor_action_t)(bool activated);
 
 #define PRC_ACTION(user_fn) user_fn
 
-#define MAX_STRING_LEN 20
+#define MAX_STRING_LEN 12
 
 #define C__OFFSET(C__START, v) v - C__START - 1
 
@@ -191,12 +204,13 @@ PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN+1], "",
   CK_MOMA, "moma " SS_TAP(X_ENTER)
 )
 
-PROCESSOR_MACRO(processor_action_t, 5, CK_ENUM_START, ck, , NULL,
+PROCESSOR_MACRO(processor_action_t, 6, CK_ENUM_START, ck, , NULL,
   CK_CTLG, &_ctrl_g_new,
   CK_MUT1, &_mute_1,
   CK_MUT2, &_mute_2,
   CK_ALTT, &_alt_t_new,
-  MS_CTRL, &_ctrl_click
+  MS_CTRL, &_ctrl_click,
+  CK_EYE, &_eye_care_down
 )
 
 bool alt_and_or_nav_layer(bool activated) {
@@ -251,6 +265,11 @@ bool layers_status[NUM_LAYERS] = {
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   // Return if this is being run on key un-pressed.
   if (!record->event.pressed) {
+
+    if (keycode == CK_EYE) {
+      _eye_care_up();
+    }
+
     return true;
   }
 
