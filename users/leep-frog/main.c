@@ -86,12 +86,14 @@ bool _eye_care_down(bool activated) {
   // change the color twice in the _eye_care function.
   // Instead we set the first color on key down.
   LEEP_SOLID_COLOR(RED);
+  SNG_EYE_START;
   return false;
 }
 
 void _eye_care_up(void) {
   wait_ms(20 * 1000);
   LEEP_SOLID_COLOR(GREEN);
+  SNG_EYE_END;
 }
 
 bool _safe_layer(bool activated) {
