@@ -55,6 +55,11 @@ bool _ctrl_w_new(void) {
     return false;
 }
 
+bool _rgb_off(bool activated) {
+  LEEP_SOLID_COLOR(OFF);
+  return false;
+}
+
 bool _alt_t_new(bool activated) {
     if (get_mods() & MOD_MASK_SHIFT) {
         // If holding shift, then actually send alt+shift+t
@@ -206,13 +211,14 @@ PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN+1], "",
   CK_MOMA, "moma " SS_TAP(X_ENTER)
 )
 
-PROCESSOR_MACRO(processor_action_t, 6, CK_ENUM_START, ck, , NULL,
+PROCESSOR_MACRO(processor_action_t, 7, CK_ENUM_START, ck, , NULL,
   CK_CTLG, &_ctrl_g_new,
   CK_MUT1, &_mute_1,
   CK_MUT2, &_mute_2,
   CK_ALTT, &_alt_t_new,
   MS_CTRL, &_ctrl_click,
-  CK_EYE, &_eye_care_down
+  CK_EYE, &_eye_care_down,
+  CK_RGBF, &_rgb_off
 )
 
 bool alt_and_or_nav_layer(bool activated) {
