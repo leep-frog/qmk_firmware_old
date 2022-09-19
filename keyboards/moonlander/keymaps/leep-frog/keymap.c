@@ -98,7 +98,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
                                                                       BOTTOM_ROW,
 
-                                            GU(TAB), _______, _______,           _______, _______, _______
+                                            GU(TAB), GU(TAB), _______,           _______, GU(TAB), _______
     ),
 
     [LR_SYMB] = ML_LAYOUT(
