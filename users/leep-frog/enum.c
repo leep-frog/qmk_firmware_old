@@ -32,6 +32,9 @@ enum td_keys { // prefix TDK
     TDK_MARKDOWN_PASTE,
     TDK_OUTLOOK_RELOAD,
     TDK_RESET,
+    TDK_U,
+    TDK_V,
+    TDK_Y,
 };
 
 // Custom keycode enums
