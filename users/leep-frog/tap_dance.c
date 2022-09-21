@@ -111,6 +111,38 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
     tap_code16(KC_F5);
 }
 
+void tda(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    SEND_STRING("a");
+    return;
+  }
+
+  // Else select all
+  SEND_STRING(SS_RCTL(SS_TAP(X_A)));
+}
+
+void tdu(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    SEND_STRING("u");
+    return;
+  }
+
+  // Else copy the url
+  SEND_STRING(SS_DOWN(X_RCTL) "l" );
+  URLWait();
+  SEND_STRING("c" SS_UP(X_RCTL));
+}
+
+void tdv(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    SEND_STRING("v");
+    return;
+  }
+
+  // Else paste
+  SEND_STRING(SS_PASTE);
+}
+
 void tdy(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     SEND_STRING("y");
@@ -127,28 +159,6 @@ void tdy(qk_tap_dance_state_t *state, void *user_data) {
   SEND_STRING(SS_DOWN(X_RCTL) "t" SS_UP(X_RCTL));
   URLWait();
   SEND_STRING(SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER));
-}
-
-void tdv(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING("v");
-    return;
-  }
-
-  // Else paste
-  SEND_STRING(SS_PASTE);
-}
-
-void tdu(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING("u");
-    return;
-  }
-
-  // Else copy the url
-  SEND_STRING(SS_DOWN(X_RCTL) "l" );
-  URLWait();
-  SEND_STRING("c" SS_UP(X_RCTL));
 }
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
@@ -170,6 +180,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste),
     [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload),
     [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset),
+    [TDK_A] = ACTION_TAP_DANCE_FN(tda),
     [TDK_U] = ACTION_TAP_DANCE_FN(tdu),
     [TDK_V] = ACTION_TAP_DANCE_FN(tdv),
     [TDK_Y] = ACTION_TAP_DANCE_FN(tdy),
@@ -187,6 +198,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_MDPS TD(TDK_MARKDOWN_PASTE)
 #define CK_OLRL TD(TDK_OUTLOOK_RELOAD)
 #define TD_RST TD(TDK_RESET)
+#define TD_A TD(TDK_A)
 #define TD_U TD(TDK_U)
 #define TD_V TD(TDK_V)
 #define TD_Y TD(TDK_Y)
