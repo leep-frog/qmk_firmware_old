@@ -147,6 +147,9 @@ bool _safe_layer(bool activated) {
 #define TO_SYMB LT(LR_SYMB, KC_ENTER)
 #define TO_ALT LT(LR_ALT, KC_TAB)
 #define TO_CTL LT(LR_CTRL, KC_TAB)
+#define TO_ONEL LT(LR_ONE_HAND, KC_S)
+#define TO_ONER LT(LR_ONE_HAND, KC_L)
+
 // We don't change the keyboard color for shift because there isn't
 // a way to only do it on mod and not on tap as well, and seeing the
 // color change for every space character was really annoying.
@@ -221,7 +224,7 @@ PROCESSOR_MACRO(processor_action_t, 7, CK_ENUM_START, ck, , NULL,
   CK_RGBF, &_rgb_off
 )
 
-bool alt_and_or_nav_layer(bool activated) {
+bool deactivate_alt(bool activated) {
   if (!activated) {
     SEND_STRING(SS_UP(X_RALT));
   }
@@ -246,12 +249,12 @@ bool ctrl_alt_layer(bool activated) {
 
 #define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
 
-OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 5, -1, layer, , NULL,
+OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 6, -1, layer, , NULL,
   LR_CTRL_X, &ctrl_x_layer,
   // Needed to undo SS_DOWN from TGL_ALT and TGL_SLT.
-  LR_ALT, &alt_and_or_nav_layer,
-  // Needed to undo SS_DOWN from TGL_ALT
-  LR_NAVIGATION, &alt_and_or_nav_layer,
+  LR_ALT, &deactivate_alt,
+  LR_NAVIGATION, &deactivate_alt,
+  LR_ONE_HAND, &deactivate_alt,
   LR_CTRL_ALT, &ctrl_alt_layer,
   LR_SAFE, &_safe_layer
 )

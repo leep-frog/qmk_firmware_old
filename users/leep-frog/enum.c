@@ -12,6 +12,7 @@ enum layers { // prefix LR
     LR_SAFE,
     LR_OUTLOOK,
     LR_CTRL_ALT,
+    LR_ONE_HAND,
 
     NUM_LAYERS,
 };
