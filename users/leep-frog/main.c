@@ -49,7 +49,7 @@ bool _ctrl_w_new(void) {
     // Clear toggle
     ToggleShift();
     // Copy contents
-    SEND_STRING(SS_RCTL(SS_TAP(X_INSERT)));
+    SEND_STRING(SS_COPY);
     // Delete selected text.
     SEND_STRING(SS_TAP(X_DELETE));
     return false;

@@ -81,6 +81,7 @@ void delete_reset (qk_tap_dance_state_t *state, void *user_data) {
 }*/
 
 #define SS_PASTE SS_RSFT(SS_TAP(X_INSERT))
+#define SS_COPY SS_RCTL(SS_TAP(X_INSERT))
 
 void TDMarkdownPaste(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
@@ -158,7 +159,32 @@ void tdy(qk_tap_dance_state_t *state, void *user_data) {
   // TODO: make this macro
   SEND_STRING(SS_DOWN(X_RCTL) "t" SS_UP(X_RCTL));
   URLWait();
-  SEND_STRING(SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER));
+  SEND_STRING(SS_PASTE SS_TAP(X_ENTER));
+}
+
+void oh_copy(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    SEND_STRING(SS_COPY);
+    return;
+  }
+
+  // Else copy the url
+  SEND_STRING(SS_DOWN(X_RCTL) "l" );
+  URLWait();
+  SEND_STRING("c" SS_UP(X_RCTL));
+}
+
+void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    SEND_STRING(SS_PASTE);
+    return;
+  }
+
+  // Else URL paste
+  // TODO: make this macro
+  SEND_STRING(SS_DOWN(X_RCTL) "t" SS_UP(X_RCTL));
+  URLWait();
+  SEND_STRING(SS_PASTE SS_TAP(X_ENTER));
 }
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
@@ -184,6 +210,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_U] = ACTION_TAP_DANCE_FN(tdu),
     [TDK_V] = ACTION_TAP_DANCE_FN(tdv),
     [TDK_Y] = ACTION_TAP_DANCE_FN(tdy),
+    [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy),
+    [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
     /*[TDK_BACKSPACE] = ACTION_TAP_DANCE_FN_ADVANCED(backspace_tapped, backspace_finished, backspace_reset),
     [TDK_DELETE] = ACTION_TAP_DANCE_FN_ADVANCED(delete_tapped, delete_finished, delete_reset),*/
 };
@@ -202,6 +230,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define TD_U TD(TDK_U)
 #define TD_V TD(TDK_V)
 #define TD_Y TD(TDK_Y)
+#define OH_COPY TD(TDK_OH_COPY)
+#define OH_PSTE TD(TDK_OH_PASTE)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
