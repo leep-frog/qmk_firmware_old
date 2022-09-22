@@ -137,19 +137,6 @@ bool _safe_layer(bool activated) {
 #define LGHT_ON RCTL(RALT(RSFT(KC_8)))
 #define LGHT_OF RCTL(RALT(RSFT(KC_9)))
 
-// Layer toggling
-#define TO_SFTY TO(LR_SAFE)
-#define TO_OTLK LT(LR_OUTLOOK, KC_SCLN)
-// Change KC_DELETE and KC_BSPC to something else
-// since we should be using ctrl+h, ctrl+d for those
-// and don't need the duplication
-#define TO_SHCT LT(LR_SHORTCUTS, KC_NO)
-#define TO_SYMB LT(LR_SYMB, KC_ENTER)
-#define TO_ALT LT(LR_ALT, KC_TAB)
-#define TO_CTL LT(LR_CTRL, KC_TAB)
-#define TO_ONEL LT(LR_ONE_HAND, KC_S)
-#define TO_ONER LT(LR_ONE_HAND, KC_L)
-
 // We don't change the keyboard color for shift because there isn't
 // a way to only do it on mod and not on tap as well, and seeing the
 // color change for every space character was really annoying.

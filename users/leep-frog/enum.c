@@ -89,4 +89,15 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
   CK_RGBF,
 )
 
+// Layer toggling
+// Defined here because needed by combo.c
+#define TO_SFTY TO(LR_SAFE)
+#define TO_OTLK LT(LR_OUTLOOK, KC_SCLN)
+#define TO_SHCT LT(LR_SHORTCUTS, KC_NO)
+#define TO_SYMB LT(LR_SYMB, KC_ENTER)
+#define TO_ALT LT(LR_ALT, KC_TAB)
+#define TO_CTL LT(LR_CTRL, KC_TAB)
+#define TO_ONEL LT(LR_ONE_HAND, KC_S)
+#define TO_ONER LT(LR_ONE_HAND, KC_L)
+
 #endif
