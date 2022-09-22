@@ -100,7 +100,5 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
 #define TO_SYMB LT(LR_SYMB, KC_ENTER)
 #define TO_ALT LT(LR_ALT, KC_TAB)
 #define TO_CTL LT(LR_CTRL, KC_TAB)
-#define TO_ONEL LT(LR_ONE_HAND, KC_S)
-#define TO_ONER LT(LR_ONE_HAND, KC_L)
 
 #endif

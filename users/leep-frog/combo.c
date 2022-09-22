@@ -25,10 +25,10 @@ uint16_t COMBO_LEN = COMBO_LENGTH; // remove the COMBO_COUNT define and use this
 
 const uint16_t PROGMEM ji_combo[] = {KC_J, KC_I, COMBO_END};
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
-const uint16_t PROGMEM jl_combo[] = {TO_ONER, KC_J, COMBO_END};
-const uint16_t PROGMEM kl_combo[] = {TO_ONER, KC_K, COMBO_END};
+const uint16_t PROGMEM jl_combo[] = {KC_L, KC_J, COMBO_END};
+const uint16_t PROGMEM kl_combo[] = {KC_L, KC_K, COMBO_END};
 const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM sd_combo[] = {TO_ONEL, KC_D, COMBO_END};
+const uint16_t PROGMEM sd_combo[] = {KC_S, KC_D, COMBO_END};
 const uint16_t PROGMEM jcln_combo[] = {KC_J, KC_SCLN, COMBO_END};
 
 combo_t key_combos[COMBO_LENGTH] = {

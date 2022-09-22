@@ -3,82 +3,48 @@
 #include "record.c"
 #include "shift.c"
 
-/* Below was copied from https://github.com/samhocevar-forks/qmk-firmware/blob/master/docs/feature_tap_dance.md */
+/* See below link for following functions
+// https://github.com/samhocevar-forks/qmk-firmware/blob/master/docs/feature_tap_dance.md#setup
+enum {
+  SINGLE_TAP = 1,
+  SINGLE_HOLD = 2,
+  DOUBLE_TAP = 3,
+  DOUBLE_HOLD = 4,
+  DOUBLE_SINGLE_TAP = 5, //send two single taps
+  TRIPLE_TAP = 6,
+  TRIPLE_HOLD = 7
+};
 
-/* Alt then ctrl */
+int cur_dance (qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    if (state->interrupted || !state->pressed)  return SINGLE_TAP;
+    //key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
+    else return SINGLE_HOLD;
+  }
+  else if (state->count == 2) {
+    // DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
+    // action when hitting 'pp'. Suggested use case for this return value is when you want to send two
+    // keystrokes of the key, and not the 'double tap' action/macro.
+    if (state->interrupted) return DOUBLE_SINGLE_TAP;
+    else if (state->pressed) return DOUBLE_HOLD;
+    else return DOUBLE_TAP;
+  }
+  //Assumes no one is trying to type the same letter three times (at least not quickly).
+  //If your tap dance key is 'KC_W', and you want to type "www." quickly - then you will need to add
+  //an exception here to return a 'TRIPLE_SINGLE_TAP', and define that enum just like 'DOUBLE_SINGLE_TAP'
+  if (state->count == 3) {
+    if (state->interrupted || !state->pressed)  return TRIPLE_TAP;
+    else return TRIPLE_HOLD;
+  }
+  else return 8; //magic number. At some point this method will expand to work for more presses
+}
+// End copy */
 
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));
 // Removed ctrl+alt+h. That was used for bash backspace, but realized
 // that we can use 'bind' or 'bindkey' in bash environments to bind
 // ctrl+backspace to "backward-kill-word" (found with `bind -P | grep word`)
 char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE));
-/*#define UNI_BACKSPACE RCTL(KC_BSPACE)
-
-bool bspace_layer;
-bool bspace_registered;
-
-void backspace_tapped (qk_tap_dance_state_t *state, void *user_data) {
-    // If we are on the first tap, then we might be just starting to hold the key.
-    if (state->count > 1) {
-        tap_code16(UNI_BACKSPACE);
-    }
-}
-
-void backspace_finished (qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1 && state->pressed) {
-        layer_on(LR_CTRL_ALT);
-        bspace_layer = true;
-    } else {
-        // clicks extra one we missed from the first guy
-        register_code16(UNI_BACKSPACE);
-        bspace_registered = true;
-    }
-}
-
-void backspace_reset (qk_tap_dance_state_t *state, void *user_data) {
-    if (bspace_layer) {
-        layer_off(LR_CTRL_ALT);
-        bspace_layer = false;
-    }
-    if (bspace_registered) {
-        unregister_code16(UNI_BACKSPACE);
-        bspace_registered = false;
-    }
-}
-
-bool del_layer;
-bool del_registered;
-
-#define DEL_WORD RCTL(KC_DELETE)
-
-void delete_tapped (qk_tap_dance_state_t *state, void *user_data) {
-    // If we are on the first tap, then we might be just starting to hold the key.
-    if (state->count > 1) {
-        tap_code16(DEL_WORD);
-    }
-}
-
-void delete_finished (qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1 && state->pressed) {
-        layer_on(LR_CTRL_ALT);
-        del_layer = true;
-    } else {
-        // clicks extra one we missed from the first guy
-        register_code16(DEL_WORD);
-        del_registered = true;
-    }
-}
-
-void delete_reset (qk_tap_dance_state_t *state, void *user_data) {
-    if (del_layer) {
-        layer_off(LR_CTRL_ALT);
-        del_layer = false;
-    }
-    if (del_registered) {
-        unregister_code16(DEL_WORD);
-        del_registered = false;
-    }
-}*/
 
 #define SS_PASTE SS_RSFT(SS_TAP(X_INSERT))
 #define SS_COPY SS_RCTL(SS_TAP(X_INSERT))

@@ -9,18 +9,18 @@
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
 #define ML_LAYOUT(...) LAYOUT_moonlander(__VA_ARGS__)
-#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, _______, _______,    _______, _______, _______, _______, CK_RGBF, CK_EYE
+#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, TG(LR_ONE_HAND), TG(LR_ONE_HAND),    TG(LR_ONE_HAND), TG(LR_ONE_HAND), _______, _______, CK_RGBF, CK_EYE
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LR_BASE] = ML_LAYOUT(
-        CK_LOCK, KC_1, KC_2,    KC_3, KC_4, KC_5, WS_LEFT,       CK_ESC,  KC_6, KC_7, KC_8,    KC_9,    KC_0,    TO_SFTY,
-        KC_TAB,  KC_Q, KC_W,    KC_E, KC_R, KC_T, LGHT_ON,       LGHT_OF, TD_Y, TD_U, KC_I,    KC_O,    KC_P,    KC_BSLS,
-        KC_LSPO, TD_A, TO_ONEL, KC_D, KC_F, KC_G, WS_LEFT,       WS_RGHT, KC_H, KC_J, KC_K,    TO_ONER, TO_OTLK, KC_RSPC,
-        KC_LCBR, KC_Z, KC_X,    KC_C, TD_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT,  KC_SLSH, KC_RCBR,
-                                                   BOTTOM_ROW,
+        CK_LOCK, KC_1, KC_2, KC_3, KC_4, KC_5, WS_LEFT,       CK_ESC,  KC_6, KC_7, KC_8,    KC_9,   KC_0,    TO_SFTY,
+TG(LR_ONE_HAND), KC_Q, KC_W, KC_E, KC_R, KC_T, LGHT_ON,       LGHT_OF, TD_Y, TD_U, KC_I,    KC_O,   KC_P,    TG(LR_ONE_HAND),
+        KC_LSPO, TD_A, KC_S, KC_D, KC_F, KC_G, WS_LEFT,       WS_RGHT, KC_H, KC_J, KC_K,    KC_L,   TO_OTLK, KC_RSPC,
+        KC_LCBR, KC_Z, KC_X, KC_C, TD_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
+                                                     BOTTOM_ROW,
 
-                              TO_SYMB, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SFT
+                              TO_SYMB, TO_ALT, TO_SHCT,       TO_NAV, TO_CTL, TO_SFT
     ),
 
     [LR_SAFE] = ML_LAYOUT(
@@ -29,9 +29,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSPO, KC_A, KC_S, KC_D, KC_F, KC_G, WS_LEFT,       WS_RGHT, KC_H, KC_J, KC_K,    KC_L,   TO_OTLK, KC_RSPC,
         KC_LCBR, KC_Z, KC_X, KC_C, KC_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
 
-                                                  BOTTOM_ROW,
+                                                     BOTTOM_ROW,
 
-                              TO_SYMB, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SFT
+                                TO_SYMB, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SFT
     ),
 
     [LR_CTRL] = ML_LAYOUT(
@@ -40,9 +40,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 LSFT_T(CL(LPRN)), KC_HOME, CL(F),  KC_DEL,  KC_RGHT, CK_CTLG, _______,        _______, KC_BSPC, TGL_SHF, CK_KILL, KC_PGUP,  CL(SCLN), RSFT_T(CL(RPRN)),
         CL(LCBR), CL(Z),   CTRL_X, CK_COPY, KC_PGDN, KC_LEFT,                                   KC_DOWN, CL(M),   CL(COMM), CL(DOT),  CL(SLSH), CL(RCBR),
 
-                                                           BOTTOM_ROW,
+                                                                    BOTTOM_ROW,
 
-                            CL(ENTER), CL(TAB), TO_CTAL,         CL(RGUI), _______, CL(SPACE)
+                                         CL(ENTER), CL(TAB), TO_CTAL,         CL(RGUI), _______, CL(SPACE)
     ),
 
     [LR_CTRL_X] = ML_LAYOUT(
@@ -51,9 +51,9 @@ LSFT_T(CL(LPRN)), KC_HOME, CL(F),  KC_DEL,  KC_RGHT, CK_CTLG, _______,        __
         CL(LSPO), CL(A), CL(S), CL(D), CL(F), CL(G), RCTL(WS_LEFT),           RCTL(WS_RGHT),     CL(H), CL(J), CL(K),     CL(L),    CL(SCLN), CL(RSPC),
         CL(LCBR), CL(Z), CL(X), CL(C), CL(V), CL(B),                                             CL(N), CL(M), CL(COMMA), CL(DOT),  CL(SLSH), CL(RCBR),
 
-                                                           BOTTOM_ROW,
+                                                                   BOTTOM_ROW,
 
-                                CL(ENTER), CL(TAB), _______,        CL(RGUI), _______, CL(SPACE)
+                                        CL(ENTER), CL(TAB), _______,        CL(RGUI), _______, CL(SPACE)
     ),
 
     [LR_ALT] = ML_LAYOUT(
@@ -62,7 +62,7 @@ LSFT_T(CL(LPRN)), KC_HOME, CL(F),  KC_DEL,  KC_RGHT, CK_CTLG, _______,        __
 LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),        RALT(WS_RGHT), CK_UNBS, AL(J),   AL(K),    KC_WH_U, AL(SCLN), RSFT_T(AL(RPRN)),
         AL(LCBR), AL(Z), AL(X),  AL(C),   KC_WH_D,   CL(LEFT),                                     AL(N),   AL(M),   AL(COMM), AL(DOT), AL(SLSH), AL(RCBR),
 
-                                                                     BOTTOM_ROW,
+                                                                            BOTTOM_ROW,
 
                                                   AL(ENTER), _______, AL(TAB),       AL(RGUI), TO_CTAL, AL(SPACE)
     ),
@@ -74,7 +74,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
         KC_LSPO, KC_A, KC_S, KC_D, KC_F, KC_G, WS_LEFT,       WS_RGHT, KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_RSPC,
         KC_LCBR, KC_Z, KC_X, KC_C, KC_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
 
-                                                BOTTOM_ROW,
+                                                      BOTTOM_ROW,
 
                              KC_ENTER, KC_TAB, _______,        KC_RGUI, _______, KC_SPACE
     ),
@@ -103,10 +103,10 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_SYMB] = ML_LAYOUT(
         _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,           _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  TO_SFTY,
-        _______, KC_EXLM, KC_COLN, KC_EQL,  KC_CIRC, KC_LPRN, _______,           _______, KC_RPRN, KC_7,    KC_8,    KC_9,    KC_PERC, KC_F12,
-        KC_TAB,  KC_AMPR, KC_ASTR, KC_DLR,  KC_SLSH, KC_LBRC,  _______,          _______, CK_MDPS, KC_4,    KC_5,    KC_6,    KC_0,    KC_PERC,
+        _______, KC_EXLM, KC_COLN, KC_EQL,  KC_CIRC, KC_PIPE, _______,           _______, KC_RPRN, KC_7,    KC_8,    KC_9,    KC_PERC, KC_F12,
+        KC_TAB,  KC_AMPR, KC_ASTR, KC_DLR,  KC_SLSH, KC_LBRC, _______,           _______, CK_MDPS, KC_4,    KC_5,    KC_6,    KC_0,    KC_PERC,
         _______, KC_TILD, KC_EXLM, KC_AT,   KC_EQL,  KC_BSLS,                             KC_RCBR, KC_1,    KC_2,    KC_3,    KC_0,    _______,
-                                                           BOTTOM_ROW,
+                                                                      BOTTOM_ROW,
                                             RGB_HUD, KC_ENTER, RGB_HUI, TOGGLE_LAYER_COLOR, KC_SPACE, _______
     ),
 
@@ -116,20 +116,20 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
         _______, _______, _______, _______, _______, _______, _______,           _______, KC_DEL,  CL(1),   CL(DOT),   CL(2),   _______, _______,
         _______, _______, _______, _______, _______, _______,                             _______, CL(U),   _______,   CL(M),   _______, _______,
 
-                                                           BOTTOM_ROW,
+                                                                      BOTTOM_ROW,
 
                                             _______, _______, _______,           _______, _______, _______
     ),
 
     [LR_ONE_HAND] = ML_LAYOUT(
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______, _______, _______, TO_SFTY,
-        _______, _______, _______, OH_COPY, OH_PSTE, _______, _______,           _______, _______, OH_COPY, OH_PSTE, _______, _______, _______,
-        _______, WS_LEFT, _______, CK_TABB, CK_TABF, WS_RGHT, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, _______, WS_RGHT, _______,
-        _______, CK_WWWB, _______, TGL_SLT, TGL_ALT, CK_WWWF,                             CK_WWWB, TGL_SLT, TGL_ALT, _______, CK_WWWF, _______,
+TG(LR_ONE_HAND), _______, CL(W),   TGL_SLT, TGL_ALT, CL(T),   _______,           _______, CL(T),   TGL_SLT, TGL_ALT, CL(W), _______, TG(LR_ONE_HAND),
+       KC_ENTER, WS_LEFT, _______, CK_TABB, CK_TABF, WS_RGHT, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, _______, WS_RGHT, KC_ENTER,
+        _______, CK_WWWB, CK_WWWF, OH_COPY, OH_PSTE, _______,                             _______, OH_COPY, OH_PSTE, CK_WWWB, CK_WWWF, _______,
 
-        _______, _______, _______, _______, _______,          _______,           _______,          _______, _______, _______, _______, _______,
+                                                                      BOTTOM_ROW,
 
-                                            _______, CL(T),   CL(W),           CL(W),   CL(T),   _______
+                    TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND),           TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND)
     ),
 
     /*
@@ -139,7 +139,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
 
-        _______, _______, _______, _______, _______,          _______,           _______,          _______, _______, _______, _______, _______,
+                                                                      BOTTOM_ROW,
 
                                             _______, _______, _______,           _______, _______, _______
     ),
