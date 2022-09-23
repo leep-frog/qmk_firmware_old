@@ -295,8 +295,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
       SEND_STRING(SS_UP(X_RCTL));
       return false;
     case LEEP_ENUM_CASE(CN):
-      SEND_STRING(SS_RCTL("t"));
-      URLWait();
+      NEW_TAB();
       send_string(cn_processors[LEEP_ENUM_OFFSET(CN, keycode)]);
       return false;
     case LEEP_ENUM_CASE(CK):

@@ -156,9 +156,7 @@ void tdu(qk_tap_dance_state_t *state, void *user_data) {
   }
 
   // Else copy the url
-  SEND_STRING(SS_DOWN(X_RCTL) "l" );
-  URLWait();
-  SEND_STRING("c" SS_UP(X_RCTL));
+  URL_COPY();
 }
 
 void tdv(qk_tap_dance_state_t *state, void *user_data) {
@@ -182,11 +180,7 @@ void tdy(qk_tap_dance_state_t *state, void *user_data) {
     return;
   }
 
-  // Else URL paste
-  // TODO: make this macro
-  SEND_STRING(SS_DOWN(X_RCTL) "t" SS_UP(X_RCTL));
-  URLWait();
-  SEND_STRING(SS_PASTE SS_TAP(X_ENTER));
+  URL_PASTE();
 }
 
 void oh_copy(qk_tap_dance_state_t *state, void *user_data) {
@@ -195,10 +189,7 @@ void oh_copy(qk_tap_dance_state_t *state, void *user_data) {
     return;
   }
 
-  // Else copy the url
-  SEND_STRING(SS_DOWN(X_RCTL) "l" );
-  URLWait();
-  SEND_STRING("c" SS_UP(X_RCTL));
+  URL_COPY();
 }
 
 void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
@@ -207,11 +198,7 @@ void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
     return;
   }
 
-  // Else URL paste
-  // TODO: make this macro
-  SEND_STRING(SS_DOWN(X_RCTL) "t" SS_UP(X_RCTL));
-  URLWait();
-  SEND_STRING(SS_PASTE SS_TAP(X_ENTER));
+  URL_PASTE();
 }
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {

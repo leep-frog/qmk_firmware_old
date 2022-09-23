@@ -17,7 +17,7 @@ enum combos {
   DF_QUOTE,
   SD_TICK,
   JCLN_LOCK,
-  // TODO (maybe): SF_TAB,
+  // SF is still an available combo slot.
 
   COMBO_LENGTH,
 };

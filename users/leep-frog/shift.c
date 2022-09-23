@@ -34,7 +34,6 @@ void TDToggleShift(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // Runs emacs line kill (ctrl-k) if hit once, otherwise emulates behavior for regular text things.
-// TODO: Make generic function/macro for single tap vs double tap.
 void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         // Shift layer is already untoggle in main.c so no need to untoggle it here.
