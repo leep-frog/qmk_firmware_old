@@ -3,7 +3,7 @@
 #include "record.c"
 #include "shift.c"
 
-/* See below link for following functions
+// See below link for following functions
 // https://github.com/samhocevar-forks/qmk-firmware/blob/master/docs/feature_tap_dance.md#setup
 enum {
   SINGLE_TAP = 1,
@@ -38,7 +38,68 @@ int cur_dance (qk_tap_dance_state_t *state) {
   }
   else return 8; //magic number. At some point this method will expand to work for more presses
 }
-// End copy */
+// End copy
+
+// SHIFT STATE
+int shift_state = 0;
+
+void shift_finished (qk_tap_dance_state_t *state, void *user_data) {
+  shift_state = cur_dance(state);
+  switch (shift_state) {
+    case SINGLE_HOLD:
+      register_code(KC_RSFT);
+      LEEP_SOLID_COLOR(BLUE);
+      break;
+    case DOUBLE_HOLD:
+      layer_on(LR_ONE_HAND);
+      break;
+    default:
+    for (int i = 0; i < state->count; i++) {
+      tap_code16(KC_SPACE);
+    }
+  }
+}
+
+void shift_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (shift_state) {
+    case SINGLE_HOLD:
+      unregister_code(KC_RSFT);
+      LEEP_LAYER_COLOR(LR_BASE);
+      break;
+    case DOUBLE_HOLD:
+      layer_off(LR_ONE_HAND);
+      break;
+  }
+  shift_state = 0;
+}
+
+// ALT DANCE
+int alt_state = 0;
+
+void alt_finished (qk_tap_dance_state_t *state, void *user_data) {
+  alt_state = cur_dance(state);
+  switch (shift_state) {
+    case SINGLE_HOLD:
+      layer_on(LR_ALT);
+      break;
+    case SINGLE_TAP:
+      layer_on(LR_ONE_HAND);
+      break;
+  }
+}
+
+void alt_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (shift_state) {
+    case SINGLE_HOLD:
+      layer_off(LR_ALT);
+      break;
+    case SINGLE_TAP:
+      layer_off(LR_ONE_HAND);
+      break;
+  }
+  alt_state = 0;
+}
+
 
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));
 // Removed ctrl+alt+h. That was used for bash backspace, but realized
@@ -178,6 +239,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_Y] = ACTION_TAP_DANCE_FN(tdy),
     [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy),
     [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
+    [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, shift_finished, shift_reset),
+    [TDK_ALT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, alt_finished, alt_reset),
+
     /*[TDK_BACKSPACE] = ACTION_TAP_DANCE_FN_ADVANCED(backspace_tapped, backspace_finished, backspace_reset),
     [TDK_DELETE] = ACTION_TAP_DANCE_FN_ADVANCED(delete_tapped, delete_finished, delete_reset),*/
 };
@@ -198,6 +262,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define TD_Y TD(TDK_Y)
 #define OH_COPY TD(TDK_OH_COPY)
 #define OH_PSTE TD(TDK_OH_PASTE)
+
+#define TO_SFT TD(TDK_SHIFT_LAYER)
+#define TO_ALT TD(TDK_ALT_LAYER)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {

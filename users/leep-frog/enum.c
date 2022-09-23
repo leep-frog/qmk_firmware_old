@@ -37,6 +37,8 @@ enum td_keys { // prefix TDK
     TDK_U,
     TDK_V,
     TDK_Y,
+    TDK_SHIFT_LAYER,
+    TDK_ALT_LAYER,
     // One hand keys
     TDK_OH_COPY,
     TDK_OH_PASTE,
@@ -98,7 +100,6 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
 #define TO_OTLK LT(LR_OUTLOOK, KC_SCLN)
 #define TO_SHCT LT(LR_SHORTCUTS, KC_NO)
 #define TO_SYMB LT(LR_SYMB, KC_ENTER)
-#define TO_ALT LT(LR_ALT, KC_TAB)
 #define TO_CTL LT(LR_CTRL, KC_TAB)
 
 #endif
