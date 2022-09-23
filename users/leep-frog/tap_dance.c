@@ -228,17 +228,12 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
     [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, shift_finished, shift_reset),
     [TDK_ALT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, alt_finished, alt_reset),
-
-    /*[TDK_BACKSPACE] = ACTION_TAP_DANCE_FN_ADVANCED(backspace_tapped, backspace_finished, backspace_reset),
-    [TDK_DELETE] = ACTION_TAP_DANCE_FN_ADVANCED(delete_tapped, delete_finished, delete_reset),*/
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
 #define CK_KILL TD(TDK_KILL_LINE)
 #define CK_MCR1 TD(TDK_MACRO_1)
 #define CK_MCR2 TD(TDK_MACRO_2)
-/*#define CK_UNIVERSAL_BACKSPACE TD(TDK_BACKSPACE)
-#define CK_DEL_WORD TD(TDK_DELETE)*/
 #define CK_DEL_WORD RCTL(KC_DELETE)
 #define CK_MDPS TD(TDK_MARKDOWN_PASTE)
 #define CK_OLRL TD(TDK_OUTLOOK_RELOAD)

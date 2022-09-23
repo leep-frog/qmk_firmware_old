@@ -101,5 +101,8 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
 #define TO_SHCT LT(LR_SHORTCUTS, KC_NO)
 #define TO_SYMB LT(LR_SYMB, KC_ENTER)
 #define TO_CTL LT(LR_CTRL, KC_TAB)
+#define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
+#define TO_CTAL MO(LR_CTRL_ALT)
+#define TO_CTLX OSL(LR_CTRL_X)
 
 #endif

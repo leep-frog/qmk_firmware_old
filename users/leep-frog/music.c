@@ -76,7 +76,8 @@ bool _mute_2(bool activated) {
 
 #else // ifdef ENABLE_LEEP_MUSIC
 
-
+#define LEEP_PLAY_SONG(sng)
+#define LEEP_PLAY_LOOP(sng)
 
 #endif // ifdef ENABLE_LEEP_MUSIC
 

@@ -6,8 +6,6 @@
 // #include "g/keymap_combo.h"
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_combo.md#dictionary-management
 
-#define CK_LOCK LGUI(KC_L)
-
 // Combos
 enum combos {
   JI_ESC,

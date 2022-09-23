@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "interface.c"
 #include "enum.c"
+#include "define_keys.c"
 #include "color.c"
 #include "music.c"
 #include "google.c"
@@ -36,11 +37,6 @@ void print_int(int k) {
 #define PRINT_INT(i)
 
 #endif
-
-// TODO: enums should be CK_*, defined should be DK_*
-
-// TODO: move these to separate files
-#define CTRL_W RCTL(KC_W)
 
 bool _ctrl_w_new(void) {
     if (!shift_toggled) {
@@ -112,33 +108,6 @@ bool _safe_layer(bool activated) {
   clear_mods();
   return false;
 }
-
-// Custom commands
-// Note: we use page down and page up because that works with chrome
-// and "tab" is a special character in some terminals and sometimes gets
-// modified or ignored when passed to processes inside of the terminal.
-#define CK_TABF RCTL(KC_PGDOWN)  // Next tab in chrome
-#define CK_TABB LCTL(KC_PGUP)    // Previous tab in chrome
-#define CK_WWWF LALT(KC_RIGHT)   // Next page in chrome
-#define CK_WWWB LALT(KC_LEFT)    // Previous page in chrome
-
-// Mouse movements
-#define MS_LEFT KC_MS_BTN1
-#define MS_RGHT KC_MS_BTN2
-#define MS_MID KC_MS_BTN3
-#define MS_SMID RSFT(KC_MS_BTN3)
-
-#define CK_NEW RCTL(RSFT(KC_N))
-// Copy with ctrl+c (instead of ctrl+<insert>) so ctrl+c functionality
-// still works (like cancelling in bash terminal).
-#define CK_COPY RCTL(KC_C)
-#define CK_PSTE RSFT(KC_INSERT)
-// These use IFTTT and use custom keyboard shortcuts under the hood.
-#define LGHT_ON RCTL(RALT(RSFT(KC_8)))
-#define LGHT_OF RCTL(RALT(RSFT(KC_9)))
-
-#define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
-#define TO_CTAL MO(LR_CTRL_ALT)
 
 // Runs just once when the keyboard initializes.
 void keyboard_post_init_user(void) {
