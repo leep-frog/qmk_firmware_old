@@ -93,9 +93,6 @@ void alt_reset(qk_tap_dance_state_t *state, void *user_data) {
     case SINGLE_HOLD:
       layer_off(LR_ALT);
       break;
-    case SINGLE_TAP:
-      layer_off(LR_ONE_HAND);
-      break;
   }
   alt_state = 0;
 }
