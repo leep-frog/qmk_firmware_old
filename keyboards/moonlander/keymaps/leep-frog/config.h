@@ -33,7 +33,8 @@
 
 // Override built-ins:
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md#songs
-//#define STARTUP_SONG SONG(ZELDA_DISCOVERY)
+// We define our own start-up song (see SNG_STARTUP)
+// so we can add logic that allows for disabling it from being played.
 #define STARTUP_SONG SONG()
 #define GOODBYE_SONG SONG()
 
@@ -59,7 +60,7 @@
 #define DISABLE_RGB_MATRIX_DUAL_BEACON         // Full gradient spinning around center of keyboard
 #define DISABLE_RGB_MATRIX_RAINBOW_BEACON      // Full tighter gradient spinning around center of keyboard
 //#define DISABLE_RGB_MATRIX_RAINBOW_PINWHEELS   // Full dual gradients spinning two halfs of keyboard
-#define DISABLE_RGB_MATRIX_RAINDROPS           // Randomly changes a single key's hue
+//#define DISABLE_RGB_MATRIX_RAINDROPS           // Randomly changes a single key's hue
 #define DISABLE_RGB_MATRIX_JELLYBEAN_RAINDROPS // Randomly changes a single key's hue and saturation
 #define DISABLE_RGB_MATRIX_HUE_BREATHING       // Hue shifts up a slight ammount at the same time, then shifts back
 #define DISABLE_RGB_MATRIX_HUE_PENDULUM        // Hue shifts up a slight ammount in a wave to the right, then back to the left

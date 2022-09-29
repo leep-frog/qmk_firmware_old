@@ -43,6 +43,9 @@ DEFINE_SONG_WITH_TEMPO(mario_game_over_song, SONG(MARIO_GAME_OVER), 100);
 DEFINE_SONG(mario_uw_1, SONG(MARIO_UNDERWORLD_1));
 DEFINE_SONG(mario_uw_2, SONG(MARIO_UNDERWORLD_2));
 
+// We define our own start-up song (instead of using STARTUP_SONG)
+// so we can add logic that disables the custom startup song.
+#define SNG_STARTUP LEEP_PLAY_SONG(zelda_discovery_song)
 #define SNG_RESET LEEP_PLAY_SONG(mario_game_over_song)
 #define SNG_MUTE LEEP_PLAY_SONG(mario_lost_a_life_song)
 #define SNG_UNMUTE LEEP_PLAY_SONG(mario_1_up_song)

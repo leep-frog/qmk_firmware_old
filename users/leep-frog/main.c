@@ -109,16 +109,6 @@ bool _safe_layer(bool activated) {
   return false;
 }
 
-// Runs just once when the keyboard initializes.
-void keyboard_post_init_user(void) {
-  // Customise these values to desired behaviour
-  /*debug_enable=true;
-  debug_matrix=true;
-  debug_keyboard=true;
-  LEBUG("initted")
-  //debug_mouse=true;*/
-}
-
 #define KEY_PROCESSOR_OFFSET(v) C__OFFSET(CK_ENUM_START, v)
 
 typedef bool (*processor_action_t)(bool activated);
@@ -211,13 +201,6 @@ OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 6, -1, layer, , NULL,
   LR_SAFE, &_safe_layer
 )
 
-// https://beta.docs.qmk.fm/using-qmk/guides/custom_quantum_functions#matrix_scan_-function-documentation
-// This gets run at every matrix scan (many times per second), so be careful
-// not to put too many things in here, otherwise you may notice performance issues.
-//void matrix_scan_user(void) {
-    //recording_blinker();
-//}
-
 bool layers_status[NUM_LAYERS] = {
   [0] = true,
   [1 ... NUM_LAYERS - 1] = false,
@@ -225,7 +208,33 @@ bool layers_status[NUM_LAYERS] = {
 
 #define LEEP_CASE(kc, fn) case (kc): return fn();
 
+bool played_startup_song = false;
+
+void keyboard_post_init_user(void) {
+  if (!played_startup_song) {
+    LEEP_COLOR_MODE(GREEN, RGB_MATRIX_RAINDROPS);
+  }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+  if (!played_startup_song) {
+    if (record->event.pressed) {
+      return false;
+    }
+    switch (keycode) {
+      case KC_J:
+      case KC_F:
+        SNG_STARTUP;
+      case KC_K:
+      case KC_D:
+        played_startup_song = true;
+        LEEP_LAYER_COLOR(LR_BASE);
+        break;
+      default:
+        return false;
+    }
+  }
+
   // Return if this is being run on key un-pressed.
   if (!record->event.pressed) {
 
@@ -289,7 +298,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
   }
 
-  if (!recording && !shift_toggled) {
+  if (!recording && !shift_toggled && played_startup_song) {
     LEEP_LAYER_COLOR(get_highest_layer(state));
   }
 

@@ -15,7 +15,7 @@ enum {
   TRIPLE_HOLD = 7
 };
 
-int cur_dance (qk_tap_dance_state_t *state) {
+int cur_dance(qk_tap_dance_state_t *state) {
   if (state->count == 1) {
     if (state->interrupted || !state->pressed)  return SINGLE_TAP;
     //key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
@@ -43,7 +43,7 @@ int cur_dance (qk_tap_dance_state_t *state) {
 // SHIFT STATE
 int shift_state = 0;
 
-void shift_finished (qk_tap_dance_state_t *state, void *user_data) {
+void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
   shift_state = cur_dance(state);
   switch (shift_state) {
     case SINGLE_HOLD:
@@ -60,7 +60,7 @@ void shift_finished (qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
-void shift_reset (qk_tap_dance_state_t *state, void *user_data) {
+void shift_reset(qk_tap_dance_state_t *state, void *user_data) {
   switch (shift_state) {
     case SINGLE_HOLD:
       unregister_code(KC_RSFT);
@@ -76,9 +76,9 @@ void shift_reset (qk_tap_dance_state_t *state, void *user_data) {
 // ALT DANCE
 int alt_state = 0;
 
-void alt_finished (qk_tap_dance_state_t *state, void *user_data) {
+void alt_finished(qk_tap_dance_state_t *state, void *user_data) {
   alt_state = cur_dance(state);
-  switch (shift_state) {
+  switch (alt_state) {
     case SINGLE_HOLD:
       layer_on(LR_ALT);
       break;
@@ -88,8 +88,8 @@ void alt_finished (qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
-void alt_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (shift_state) {
+void alt_reset(qk_tap_dance_state_t *state, void *user_data) {
+  switch (alt_state) {
     case SINGLE_HOLD:
       layer_off(LR_ALT);
       break;
