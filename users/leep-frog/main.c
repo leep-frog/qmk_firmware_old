@@ -134,6 +134,8 @@ typedef bool (*processor_action_t)(bool activated);
 
 #define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) OPTIONAL_PROCESSOR_MACRO(_type_, num, num, e_start, prefix, suffix, dflt, __VA_ARGS__)
 
+bool leep_toggling_alt = false;
+
 PROCESSOR_MACRO(char, 5, CS_ENUM_START, cs, [MAX_STRING_LEN+1], "",
   TGL_ALT, SS_DOWN(X_RALT) SS_TAP(X_TAB),
   TGL_SLT, SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)),
@@ -243,6 +245,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
 
     return true;
+  }
+
+  bool alt_key_pressed = (keycode == TGL_ALT) || (keycode == TGL_SLT);
+  if (alt_key_pressed) {
+    leep_toggling_alt = true;
+  }
+  // End alt layer if any key other than alt togglers.
+  if (leep_toggling_alt && !alt_key_pressed) {
+    leep_toggling_alt = false;
+    SEND_STRING(SS_UP(X_RALT));
+    return false;
   }
 
   // Untoggle shift the layer for all non-movement keys
