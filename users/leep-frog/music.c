@@ -57,7 +57,11 @@ DEFINE_SONG(mario_uw_2, SONG(MARIO_UNDERWORLD_2));
 #define SNG_EYE_START LEEP_PLAY_SONG(mario_uw_1)
 #define SNG_EYE_END LEEP_PLAY_SONG(mario_uw_2)
 
-bool _mute_1(bool activated) {
+void _mute_1(bool pressed) {
+  if (!pressed) {
+    return;
+  }
+
   if (_leep_mute) {
     _leep_mute = false;
     SNG_UNMUTE;
@@ -65,10 +69,13 @@ bool _mute_1(bool activated) {
     SNG_MUTE;
     _leep_mute = true;
   }
-  return false;
 }
 
-bool _mute_2(bool activated) {
+void _mute_2(bool pressed) {
+  if (!pressed) {
+    return;
+  }
+
   if (_leep_mute) {
     _leep_mute = false;
     LEEP_SOLID_COLOR(GREEN);
@@ -76,7 +83,6 @@ bool _mute_2(bool activated) {
     LEEP_SOLID_COLOR(ORANGE);
     _leep_mute = true;
   }
-  return false;
 }
 
 #else // ifdef ENABLE_LEEP_MUSIC

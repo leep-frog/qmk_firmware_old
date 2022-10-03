@@ -52,13 +52,14 @@ void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
     SEND_STRING(SS_RCTL("c") SS_TAP(X_DELETE));
 }
 
-bool _ctrl_g_new(bool activated) {
+void _ctrl_g_new(bool pressed) {
+  if (pressed) {
     if (shift_toggled) {
-        ToggleShift();
+      ToggleShift();
     } else {
-        SEND_STRING(SS_RCTL("g"));
+      SEND_STRING(SS_RCTL("g"));
     }
-    return true;
+  }
 }
 
 #endif

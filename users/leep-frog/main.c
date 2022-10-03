@@ -51,67 +51,72 @@ bool _ctrl_w_new(void) {
     return false;
 }
 
-bool _rgb_off(bool activated) {
-  LEEP_SOLID_COLOR(OFF);
-  return false;
+void _rgb_off(bool pressed) {
+  if (pressed) {
+    // TODO: Also go into keyboard lock mode?
+    LEEP_SOLID_COLOR(OFF);
+  }
 }
 
-bool _alt_t_new(bool activated) {
-    if (get_mods() & MOD_MASK_SHIFT) {
-        // If holding shift, then actually send alt+shift+t
-        // shift is already being held so we don't need to specify that here.
-        // In fact, we shouldn't, otherwise we would un-tap the shift key, even
-        // though it could still be held for more alt+shift keys.
-        SEND_STRING(SS_RALT("t"));
-    } else {
-        // Otherwise, send new tab command (ctrl+shift+t)
-        SEND_STRING(SS_RCTL(SS_RSFT("t")));
-    }
-    return false;
+void _alt_t_new(bool pressed) {
+  if (!pressed) {
+    return;
+  }
+
+  if (get_mods() & MOD_MASK_SHIFT) {
+      // If holding shift, then actually send alt+shift+t
+      // shift is already being held so we don't need to specify that here.
+      // In fact, we shouldn't, otherwise we would un-tap the shift key, even
+      // though it could still be held for more alt+shift keys.
+      SEND_STRING(SS_RALT("t"));
+  } else {
+      // Otherwise, send new tab command (ctrl+shift+t)
+      SEND_STRING(SS_RCTL(SS_RSFT("t")));
+  }
 }
 
-bool _ctrl_click(bool activated) {
-    // Used to have the following line
-    // #define MS_CTRL RCTL(KC_MS_BTN1)
-    // but in my work Windows laptop, the ctrl and click would be too
-    // close together and sometimes wouldn't work properly.
-    SEND_STRING(SS_DOWN(X_RCTL));
-    wait_ms(50);
-    SEND_STRING(SS_TAP(X_MS_BTN1));
-    SEND_STRING(SS_UP(X_RCTL));
-    return false;
+void _ctrl_click(bool pressed) {
+  if (!pressed) {
+    return;
+  }
+  // Used to have the following line
+  // #define MS_CTRL RCTL(KC_MS_BTN1)
+  // but in my work Windows laptop, the ctrl and click would be too
+  // close together and sometimes wouldn't work properly.
+  SEND_STRING(SS_DOWN(X_RCTL));
+  wait_ms(50);
+  SEND_STRING(SS_TAP(X_MS_BTN1));
+  SEND_STRING(SS_UP(X_RCTL));
 }
 
-bool _eye_care_down(bool activated) {
-  // The color change takes effect after the keycode is processed, so we can't
-  // change the color twice in the _eye_care function.
-  // Instead we set the first color on key down.
-  LEEP_SOLID_COLOR(RED);
-  SNG_EYE_START;
-  return false;
+void _eye_care(bool pressed) {
+  if (pressed) {
+    // The color change takes effect after the keycode is processed, so we can't
+    // change the color twice in the _eye_care function.
+    // Instead we set the first color on key down.
+    LEEP_SOLID_COLOR(RED);
+    SNG_EYE_START;
+  } else {
+    wait_ms(20 * 1000);
+    LEEP_SOLID_COLOR(GREEN);
+    SNG_EYE_END;
+  }
 }
 
-void _eye_care_up(void) {
-  wait_ms(20 * 1000);
-  LEEP_SOLID_COLOR(GREEN);
-  SNG_EYE_END;
-}
-
-bool _safe_layer(bool activated) {
+void _safe_layer(bool activated) {
   if (!activated) {
-    return false;
+    return;
   }
 
   if (shift_toggled) {
       ToggleShift();
   }
   clear_mods();
-  return false;
 }
 
 #define KEY_PROCESSOR_OFFSET(v) C__OFFSET(CK_ENUM_START, v)
 
-typedef bool (*processor_action_t)(bool activated);
+typedef void (*processor_action_t)(bool activated);
 
 #define PRC_ACTION(user_fn) user_fn
 
@@ -163,31 +168,28 @@ PROCESSOR_MACRO(processor_action_t, 7, CK_ENUM_START, ck, , NULL,
   CK_MUT2, &_mute_2,
   CK_ALTT, &_alt_t_new,
   MS_CTRL, &_ctrl_click,
-  CK_EYE, &_eye_care_down,
+  CK_EYE, &_eye_care,
   CK_RGBF, &_rgb_off
 )
 
-bool deactivate_alt(bool activated) {
+void deactivate_alt(bool activated) {
   if (!activated) {
     SEND_STRING(SS_UP(X_RALT));
   }
-  return true;
 }
 
-bool ctrl_x_layer(bool activated) {
+void ctrl_x_layer(bool activated) {
   if (activated) {
     SEND_STRING(SS_RCTL(SS_TAP(X_X)));
   }
-  return true;
 }
 
-bool ctrl_alt_layer(bool activated) {
+void ctrl_alt_layer(bool activated) {
   if (activated) {
     SEND_STRING(SS_DOWN(X_RCTL) SS_DOWN(X_RALT));
   } else {
     SEND_STRING(SS_UP(X_RCTL) SS_UP(X_RALT));
   }
-  return true;
 }
 
 #define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
@@ -238,9 +240,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
   // Return if this is being run on key un-pressed.
   if (!record->event.pressed) {
-
-    if (keycode == CK_EYE) {
-      _eye_care_up();
+    // Run unpress events for custom keycodes
+    switch (keycode) {
+    case LEEP_ENUM_CASE(CK):
+      if (ck_processors[LEEP_ENUM_OFFSET(CK, keycode)]) {
+        ck_processors[LEEP_ENUM_OFFSET(CK, keycode)](false);
+      }
+      return false;
     }
 
     return true;
