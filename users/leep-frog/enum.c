@@ -60,9 +60,6 @@ LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
   TGL_ALT,
   // Toggle shift-alt tab
   TGL_SLT,
-  // End alt tab
-  // TODO: Remove this
-  TGL_ELT,
 
   // Universal backspace
   CK_UNBS,

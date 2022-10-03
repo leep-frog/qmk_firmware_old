@@ -104,7 +104,7 @@ LT(LR_SHORTCUTS, KC_TAB), LT(LR_SYMB, KC_ENTER), LT(LR_ALT, KC_DELETE),  LT(LR_C
 [LR_NAVIGATION] = LAYOUT_ergodox_pretty(
     _______, _______, _______, _______, _______,        _______,          _______,     _______, _______,          _______, _______,    _______, _______,     TO(LR_SAFE),
     _______, _______, CK_WWWB, _______, RESET,          RCTL(RALT(KC_T)), _______,     _______, RCTL(KC_T),       CK_TABB, RCTL(KC_W), CK_TABF, RGUI(KC_UP), TGL_ALT,
-    _______, _______, _______, _______, RGUI(KC_RIGHT), _______,                                RCTL(RSFT(KC_T)), WS_LEFT, CODE_WS,    WS_RGHT, MISC_WS,     TGL_ELT,
+    _______, _______, _______, _______, RGUI(KC_RIGHT), _______,                                RCTL(RSFT(KC_T)), WS_LEFT, CODE_WS,    WS_RGHT, MISC_WS,     _______,
     _______, _______, _______, _______, _______,        RGUI(KC_LEFT),    _______,     _______, RGUI(KC_DOWN),    _______, WS_UP,      WS_DOWN, _______,     _______,
     _______, _______, _______, _______, _______,                                                _______,          _______, _______,    _______, _______,
 

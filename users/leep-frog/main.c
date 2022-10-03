@@ -136,10 +136,9 @@ typedef bool (*processor_action_t)(bool activated);
 
 bool leep_toggling_alt = false;
 
-PROCESSOR_MACRO(char, 5, CS_ENUM_START, cs, [MAX_STRING_LEN+1], "",
+PROCESSOR_MACRO(char, 4, CS_ENUM_START, cs, [MAX_STRING_LEN+1], "",
   TGL_ALT, SS_DOWN(X_RALT) SS_TAP(X_TAB),
   TGL_SLT, SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)),
-  TGL_ELT, SS_UP(X_RALT),
   // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
   // Maybe it's something to do with KC_GESC overlapping or something?
   // Who knows why, but we do need this custom keycode regardless to get around that.
