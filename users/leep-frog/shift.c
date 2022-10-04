@@ -53,13 +53,13 @@ void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void _ctrl_g_new(bool pressed) {
-  if (pressed) {
-    if (shift_toggled) {
-      ToggleShift();
-    } else {
-      SEND_STRING(SS_RCTL("g"));
+    if (pressed) {
+        if (shift_toggled) {
+            ToggleShift();
+        } else {
+            SEND_STRING(SS_RCTL("g"));
+        }
     }
-  }
 }
 
 #endif

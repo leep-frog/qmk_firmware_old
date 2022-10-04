@@ -6,79 +6,88 @@
 // See below link for following functions
 // https://github.com/samhocevar-forks/qmk-firmware/blob/master/docs/feature_tap_dance.md#setup
 enum {
-  SINGLE_TAP = 1,
-  SINGLE_HOLD = 2,
-  DOUBLE_TAP = 3,
-  DOUBLE_HOLD = 4,
-  DOUBLE_SINGLE_TAP = 5, //send two single taps
-  TRIPLE_TAP = 6,
-  TRIPLE_HOLD = 7
+    SINGLE_TAP        = 1,
+    SINGLE_HOLD       = 2,
+    DOUBLE_TAP        = 3,
+    DOUBLE_HOLD       = 4,
+    DOUBLE_SINGLE_TAP = 5,  // send two single taps
+    TRIPLE_TAP        = 6,
+    TRIPLE_HOLD       = 7
 };
 
 int cur_dance(qk_tap_dance_state_t *state) {
-  if (state->count == 1) {
-    // NOTE: This line has been modified from the copied version (only check state->pressed, not state->interrupted)
-    //       Specifically for the shift and alt layers
-    if (!state->pressed) return SINGLE_TAP;
-    //key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
-    else return SINGLE_HOLD;
-  }
-  else if (state->count == 2) {
-    // DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
-    // action when hitting 'pp'. Suggested use case for this return value is when you want to send two
-    // keystrokes of the key, and not the 'double tap' action/macro.
+    if (state->count == 1) {
+        // NOTE: This line has been modified from the copied version (only check state->pressed, not state->interrupted)
+        //       Specifically for the shift and alt layers
+        if (!state->pressed) {
+            return SINGLE_TAP;
+        // key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
+        } else {
+            return SINGLE_HOLD;
+        }
+    } else if (state->count == 2) {
+        // DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
+        // action when hitting 'pp'. Suggested use case for this return value is when you want to send two
+        // keystrokes of the key, and not the 'double tap' action/macro.
 
-    // NOTE: These lines have also been changed (check state->pressed before checking state->interrupted)
-    if (state->pressed) return DOUBLE_HOLD;
-    else if (state->interrupted) return DOUBLE_SINGLE_TAP;
-    else return DOUBLE_TAP;
-  }
-  //Assumes no one is trying to type the same letter three times (at least not quickly).
-  //If your tap dance key is 'KC_W', and you want to type "www." quickly - then you will need to add
-  //an exception here to return a 'TRIPLE_SINGLE_TAP', and define that enum just like 'DOUBLE_SINGLE_TAP'
-  if (state->count == 3) {
-    if (state->interrupted || !state->pressed)  return TRIPLE_TAP;
-    else return TRIPLE_HOLD;
-  }
-  else return 8; //magic number. At some point this method will expand to work for more presses
+        // NOTE: These lines have also been changed (check state->pressed before checking state->interrupted)
+        if (state->pressed) {
+            return DOUBLE_HOLD;
+        } else if (state->interrupted) {
+            return DOUBLE_SINGLE_TAP;
+        } else {
+            return DOUBLE_TAP;
+        }
+    }
+    // Assumes no one is trying to type the same letter three times (at least not quickly).
+    // If your tap dance key is 'KC_W', and you want to type "www." quickly - then you will need to add
+    // an exception here to return a 'TRIPLE_SINGLE_TAP', and define that enum just like 'DOUBLE_SINGLE_TAP'
+    if (state->count == 3) {
+        if (state->interrupted || !state->pressed) {
+            return TRIPLE_TAP;
+        } else {
+            return TRIPLE_HOLD;
+        }
+    } else {
+        return 8;  // magic number. At some point this method will expand to work for more presses
+    }
 }
 // End copy
 
 // SHIFT STATE
 int shift_state = 0;
 
-void shift_each(qk_tap_dance_state_t *state, void *user_data) { }
+void shift_each(qk_tap_dance_state_t *state, void *user_data) {}
 
 void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
-  shift_state = cur_dance(state);
-  switch (shift_state) {
-    case SINGLE_HOLD:
-      SEND_STRING(SS_DOWN(X_RSFT));
-      LEEP_SOLID_COLOR(BLUE);
-      break;
-    case DOUBLE_HOLD:
-      layer_on(LR_ONE_HAND);
-      break;
-    default:
-    for (int i = 0; i < state->count; i++) {
-      tap_code16(KC_SPACE);
+    shift_state = cur_dance(state);
+    switch (shift_state) {
+        case SINGLE_HOLD:
+            SEND_STRING(SS_DOWN(X_RSFT));
+            LEEP_SOLID_COLOR(BLUE);
+            break;
+        case DOUBLE_HOLD:
+            layer_on(LR_ONE_HAND);
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(KC_SPACE);
+            }
     }
-  }
 }
 
 void shift_reset(qk_tap_dance_state_t *state, void *user_data) {
-  switch (shift_state) {
-    case SINGLE_HOLD:
-      SEND_STRING(SS_UP(X_RSFT));
-      LEEP_LAYER_COLOR(LR_BASE);
-      break;
-    case DOUBLE_HOLD:
-      layer_off(LR_ONE_HAND);
-      break;
-  }
-  shift_state = 0;
+    switch (shift_state) {
+        case SINGLE_HOLD:
+            SEND_STRING(SS_UP(X_RSFT));
+            LEEP_LAYER_COLOR(LR_BASE);
+            break;
+        case DOUBLE_HOLD:
+            layer_off(LR_ONE_HAND);
+            break;
+    }
+    shift_state = 0;
 }
-
 
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));
 // Removed ctrl+alt+h. That was used for bash backspace, but realized
@@ -97,8 +106,8 @@ void TDMarkdownPaste(qk_tap_dance_state_t *state, void *user_data) {
 
     // Finish markdown link
     if (state->count == 2) {
-      SEND_STRING("](" SS_PASTE ")");
-      return;
+        SEND_STRING("](" SS_PASTE ")");
+        return;
     }
 
     SEND_STRING(">>" SS_PASTE "]]");
@@ -119,93 +128,80 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void tda(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING("a");
-    return;
-  }
+    if (state->count == 1) {
+        SEND_STRING("a");
+        return;
+    }
 
-  // Else select all
-  SEND_STRING(SS_RCTL(SS_TAP(X_A)));
+    // Else select all
+    SEND_STRING(SS_RCTL(SS_TAP(X_A)));
 }
 
 void tdu(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING("u");
-    return;
-  }
+    if (state->count == 1) {
+        SEND_STRING("u");
+        return;
+    }
 
-  // Else copy the url
-  URL_COPY();
+    // Else copy the url
+    URL_COPY();
 }
 
 void tdv(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING("v");
-    return;
-  }
+    if (state->count == 1) {
+        SEND_STRING("v");
+        return;
+    }
 
-  // Else paste
-  SEND_STRING(SS_PASTE);
+    // Else paste
+    SEND_STRING(SS_PASTE);
 }
 
 void tdy(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING("y");
-    return;
-  }
+    if (state->count == 1) {
+        SEND_STRING("y");
+        return;
+    }
 
-  if (state->count == 2) {
-    SEND_STRING(SS_PASTE);
-    return;
-  }
+    if (state->count == 2) {
+        SEND_STRING(SS_PASTE);
+        return;
+    }
 
-  URL_PASTE();
+    URL_PASTE();
 }
 
 void oh_copy(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING(SS_COPY);
-    return;
-  }
+    if (state->count == 1) {
+        SEND_STRING(SS_COPY);
+        return;
+    }
 
-  URL_COPY();
+    URL_COPY();
 }
 
 void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    SEND_STRING(SS_PASTE);
-    return;
-  }
+    if (state->count == 1) {
+        SEND_STRING(SS_PASTE);
+        return;
+    }
 
-  URL_PASTE();
+    URL_PASTE();
 }
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
-  LEEP_SOLID_COLOR(RED);
-  if (state->count == 1) {
-    SNG_RESET;
-    while (is_playing_notes()) {
-      wait_ms(150);
+    LEEP_SOLID_COLOR(RED);
+    if (state->count == 1) {
+        SNG_RESET;
+        while (is_playing_notes()) {
+            wait_ms(150);
+        }
     }
-  }
-  reset_keyboard();
+    reset_keyboard();
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TDK_SHIFT_TOGGLE]  = ACTION_TAP_DANCE_FN(TDToggleShift),
-    [TDK_KILL_LINE]     = ACTION_TAP_DANCE_FN(TDKillLine),
-    [TDK_MACRO_1]       = ACTION_TAP_DANCE_FN(recorder_1),
-    [TDK_MACRO_2]       = ACTION_TAP_DANCE_FN(recorder_2),
-    [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste),
-    [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload),
-    [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset),
-    [TDK_A] = ACTION_TAP_DANCE_FN(tda),
-    [TDK_U] = ACTION_TAP_DANCE_FN(tdu),
-    [TDK_V] = ACTION_TAP_DANCE_FN(tdv),
-    [TDK_Y] = ACTION_TAP_DANCE_FN(tdy),
-    [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy),
-    [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
-    [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
+    [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
@@ -227,13 +223,13 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-      case TD_RST:
-      case CK_MCR1:
-      case CK_MCR2:
-        // If not recording give extra time to double tap to start recording.
-        if (!recording) {
-          return TAPPING_TERM + 200;
-        }
+        case TD_RST:
+        case CK_MCR1:
+        case CK_MCR2:
+            // If not recording give extra time to double tap to start recording.
+            if (!recording) {
+                return TAPPING_TERM + 200;
+            }
     }
     return TAPPING_TERM;
 }

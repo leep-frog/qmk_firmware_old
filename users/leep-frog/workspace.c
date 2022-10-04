@@ -1,8 +1,8 @@
 #ifndef LEEP_WORKSPACE
 #define LEEP_WORKSPACE
 
-#define WS_RGHT RCTL(RGUI(KC_RGHT))    // Slide to next workspace
-#define WS_LEFT LCTL(LGUI(KC_LEFT))    // Slide to previous workspace
+#define WS_RGHT RCTL(RGUI(KC_RGHT))  // Slide to next workspace
+#define WS_LEFT LCTL(LGUI(KC_LEFT))  // Slide to previous workspace
 #define WS_BACK RGUI(KC_B)
 
 #define WS_1 RCTL(RALT(RSFT(KC_1)))
@@ -15,11 +15,11 @@
 #define WS_DOWN RCTL(RALT(KC_DOWN))
 
 // Layer swaps (see NAVIGATION layer).
-#define MAIL_WS WS_1 // i key for inbox
-#define CHAT_WS WS_2 // y for yap
-#define CAL_WS WS_3  // m key for meetings
-#define CODE_WS WS_4 // k for code
-#define GIT_WS WS_5  // p for preview
-#define MISC_WS WS_6 // ; cuz it's random
+#define MAIL_WS WS_1  // i key for inbox
+#define CHAT_WS WS_2  // y for yap
+#define CAL_WS WS_3   // m key for meetings
+#define CODE_WS WS_4  // k for code
+#define GIT_WS WS_5   // p for preview
+#define MISC_WS WS_6  // ; cuz it's random
 
 #endif
