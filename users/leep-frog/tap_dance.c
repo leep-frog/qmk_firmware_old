@@ -47,9 +47,7 @@ int cur_dance(qk_tap_dance_state_t *state) {
 // SHIFT STATE
 int shift_state = 0;
 
-void shift_each(qk_tap_dance_state_t *state, void *user_data) {
-  //SEND_STRING("X");
-}
+void shift_each(qk_tap_dance_state_t *state, void *user_data) { }
 
 void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
   shift_state = cur_dance(state);
