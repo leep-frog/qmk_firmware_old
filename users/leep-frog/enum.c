@@ -38,7 +38,6 @@ enum td_keys { // prefix TDK
     TDK_V,
     TDK_Y,
     TDK_SHIFT_LAYER,
-    TDK_ALT_LAYER,
     // One hand keys
     TDK_OH_COPY,
     TDK_OH_PASTE,
@@ -90,6 +89,7 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
   MS_CTRL,
   CK_EYE,
   CK_RGBF,
+  TO_ALT,
 )
 
 // Layer toggling

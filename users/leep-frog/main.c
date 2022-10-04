@@ -103,6 +103,32 @@ void _eye_care(bool pressed) {
   }
 }
 
+static uint16_t ck_timer;
+
+void _ck_timer(bool pressed) {
+  if (pressed) {
+    ck_timer = timer_read();
+  } else {
+    PRINT_INT(timer_elapsed(ck_timer));
+  }
+}
+
+static uint16_t alt_timer;
+bool leep_alt_interrupted = false;
+
+void _to_alt_fn(bool pressed) {
+  if (pressed) {
+    leep_alt_interrupted = false;
+    alt_timer = timer_read();
+    layer_on(LR_ALT);
+  } else {
+    layer_off(LR_ALT);
+    if (!leep_alt_interrupted && timer_elapsed(alt_timer) < TAPPING_TERM) {
+      layer_on(LR_ONE_HAND);
+    }
+  }
+}
+
 void _safe_layer(bool activated) {
   if (!activated) {
     return;
@@ -131,6 +157,7 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_VALUE5(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE4(start, __VA_ARGS__)
 #define PROCESSOR_VALUE6(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE5(start, __VA_ARGS__)
 #define PROCESSOR_VALUE7(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE6(start, __VA_ARGS__)
+#define PROCESSOR_VALUE8(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE7(start, __VA_ARGS__)
 
 #define OPTIONAL_PROCESSOR_MACRO(_type_, sz, num_provided, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix ## _processors[sz] suffix = {\
   [0 ... sz - 1] = dflt,\
@@ -162,18 +189,20 @@ PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN+1], "",
   CK_MOMA, "moma " SS_TAP(X_ENTER)
 )
 
-PROCESSOR_MACRO(processor_action_t, 7, CK_ENUM_START, ck, , NULL,
+PROCESSOR_MACRO(processor_action_t, 8, CK_ENUM_START, ck, , NULL,
   CK_CTLG, &_ctrl_g_new,
   CK_MUT1, &_mute_1,
   CK_MUT2, &_mute_2,
   CK_ALTT, &_alt_t_new,
   MS_CTRL, &_ctrl_click,
   CK_EYE, &_eye_care,
-  CK_RGBF, &_rgb_off
+  CK_RGBF, &_rgb_off,
+  TO_ALT, &_to_alt_fn
 )
 
 void deactivate_alt(bool activated) {
   if (!activated) {
+    leep_toggling_alt = false;
     SEND_STRING(SS_UP(X_RALT));
   }
 }
@@ -238,6 +267,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
   }
 
+  if (keycode != TO_ALT) {
+    leep_alt_interrupted = true;
+  }
+
   // Return if this is being run on key un-pressed.
   if (!record->event.pressed) {
     // Run unpress events for custom keycodes
@@ -254,6 +287,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
   bool alt_key_pressed = (keycode == TGL_ALT) || (keycode == TGL_SLT);
   if (alt_key_pressed) {
+    // TODO: move all local variables into a single, static setting object
+    // so we don't have to worry about naming issues.
     leep_toggling_alt = true;
   }
   // End alt layer if any key other than alt togglers.

@@ -47,11 +47,15 @@ int cur_dance(qk_tap_dance_state_t *state) {
 // SHIFT STATE
 int shift_state = 0;
 
+void shift_each(qk_tap_dance_state_t *state, void *user_data) {
+  //SEND_STRING("X");
+}
+
 void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
   shift_state = cur_dance(state);
   switch (shift_state) {
     case SINGLE_HOLD:
-      register_code(KC_RSFT);
+      SEND_STRING(SS_DOWN(X_RSFT));
       LEEP_SOLID_COLOR(BLUE);
       break;
     case DOUBLE_HOLD:
@@ -67,7 +71,7 @@ void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
 void shift_reset(qk_tap_dance_state_t *state, void *user_data) {
   switch (shift_state) {
     case SINGLE_HOLD:
-      unregister_code(KC_RSFT);
+      SEND_STRING(SS_UP(X_RSFT));
       LEEP_LAYER_COLOR(LR_BASE);
       break;
     case DOUBLE_HOLD:
@@ -75,30 +79,6 @@ void shift_reset(qk_tap_dance_state_t *state, void *user_data) {
       break;
   }
   shift_state = 0;
-}
-
-// ALT DANCE
-int alt_state = 0;
-
-void alt_finished(qk_tap_dance_state_t *state, void *user_data) {
-  alt_state = cur_dance(state);
-  switch (alt_state) {
-    case SINGLE_HOLD:
-      layer_on(LR_ALT);
-      break;
-    case SINGLE_TAP:
-      layer_on(LR_ONE_HAND);
-      break;
-  }
-}
-
-void alt_reset(qk_tap_dance_state_t *state, void *user_data) {
-  switch (alt_state) {
-    case SINGLE_HOLD:
-      layer_off(LR_ALT);
-      break;
-  }
-  alt_state = 0;
 }
 
 
@@ -227,8 +207,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_Y] = ACTION_TAP_DANCE_FN(tdy),
     [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy),
     [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
-    [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, shift_finished, shift_reset),
-    [TDK_ALT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, alt_finished, alt_reset),
+    [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
@@ -247,7 +226,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define OH_PSTE TD(TDK_OH_PASTE)
 
 #define TO_SFT TD(TDK_SHIFT_LAYER)
-#define TO_ALT TD(TDK_ALT_LAYER)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
