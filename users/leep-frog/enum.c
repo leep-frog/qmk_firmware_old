@@ -77,7 +77,7 @@ LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
 
           CK_CL, CK_MOMA, )
 
-LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END, CK_CTLG, CK_ALTT, CK_MUT1, CK_MUT2, MS_CTRL, CK_EYE, CK_RGBF, TO_ALT, )
+LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END, CK_CTLG, CK_ALTT, CK_MUT1, CK_MUT2, MS_CTRL, CK_EYE, TO_ALT, CK_LOCK, KB_OFF, )
 
 // Layer toggling
 // Defined here because needed by combo.c

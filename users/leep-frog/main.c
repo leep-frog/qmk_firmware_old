@@ -51,10 +51,19 @@ bool _ctrl_w_new(void) {
     return false;
 }
 
-void _rgb_off(bool pressed) {
+bool played_startup_song = false;
+
+void _leep_keyboard_off(bool pressed) {
     if (pressed) {
-        // TODO: Also go into keyboard lock mode?
         LEEP_SOLID_COLOR(OFF);
+        played_startup_song = false;
+    }
+}
+
+void _leep_lock(bool pressed) {
+    if (pressed) {
+        SEND_STRING(SS_LGUI("l"));
+        _leep_keyboard_off(pressed);
     }
 }
 
@@ -158,6 +167,7 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_VALUE6(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE5(start, __VA_ARGS__)
 #define PROCESSOR_VALUE7(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE6(start, __VA_ARGS__)
 #define PROCESSOR_VALUE8(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE7(start, __VA_ARGS__)
+#define PROCESSOR_VALUE9(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE8(start, __VA_ARGS__)
 
 #define OPTIONAL_PROCESSOR_MACRO(_type_, sz, num_provided, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix##_processors[sz] suffix = {[0 ... sz - 1] = dflt, PROCESSOR_VALUE##num_provided(e_start, __VA_ARGS__)};
 
@@ -175,7 +185,7 @@ PROCESSOR_MACRO(char, 2, CU_ENUM_START, cu, [MAX_STRING_LEN + 1], "", URL_COPY, 
 
 PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN + 1], "", URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER), CK_CL, "cl/" SS_TAP(X_ENTER), CK_MOMA, "moma " SS_TAP(X_ENTER))
 
-PROCESSOR_MACRO(processor_action_t, 8, CK_ENUM_START, ck, , NULL, CK_CTLG, &_ctrl_g_new, CK_MUT1, &_mute_1, CK_MUT2, &_mute_2, CK_ALTT, &_alt_t_new, MS_CTRL, &_ctrl_click, CK_EYE, &_eye_care, CK_RGBF, &_rgb_off, TO_ALT, &_to_alt_fn)
+PROCESSOR_MACRO(processor_action_t, 9, CK_ENUM_START, ck, , NULL, CK_CTLG, &_ctrl_g_new, CK_MUT1, &_mute_1, CK_MUT2, &_mute_2, CK_ALTT, &_alt_t_new, MS_CTRL, &_ctrl_click, CK_EYE, &_eye_care, KB_OFF, &_leep_keyboard_off, TO_ALT, &_to_alt_fn, CK_LOCK, &_leep_lock)
 
 void deactivate_alt(bool activated) {
     if (!activated) {
@@ -213,11 +223,11 @@ bool layers_status[NUM_LAYERS] = {
     case (kc):            \
         return fn();
 
-bool played_startup_song = false;
+#define LEEP_STARTUP_COLOR_MODE() LEEP_COLOR_MODE(GREEN, RGB_MATRIX_RAINDROPS)
 
 void keyboard_post_init_user(void) {
     if (!played_startup_song) {
-        LEEP_COLOR_MODE(GREEN, RGB_MATRIX_RAINDROPS);
+        LEEP_STARTUP_COLOR_MODE();
     }
 }
 
@@ -235,7 +245,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
                 played_startup_song = true;
                 LEEP_LAYER_COLOR(LR_BASE);
                 break;
+            case KB_OFF:
+            case CK_LOCK:
+                break;
             default:
+                LEEP_STARTUP_COLOR_MODE();
                 return false;
         }
     }

@@ -21,8 +21,6 @@
 
 #define CK_NEW RCTL(RSFT(KC_N))
 
-#define CK_LOCK LGUI(KC_L)
-
 // Copy with ctrl+c (instead of ctrl+<insert>) so ctrl+c functionality
 // still works (like cancelling in bash terminal).
 #define CK_COPY RCTL(KC_C)

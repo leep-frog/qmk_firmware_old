@@ -9,7 +9,7 @@
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
 #define ML_LAYOUT(...) LAYOUT_moonlander(__VA_ARGS__)
-#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND), _______, _______, CK_RGBF, CK_EYE
+#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND), _______, _______, CK_EYE, KB_OFF
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
