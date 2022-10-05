@@ -21,7 +21,7 @@ int cur_dance(qk_tap_dance_state_t *state) {
         //       Specifically for the shift and alt layers
         if (!state->pressed) {
             return SINGLE_TAP;
-        // key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
+            // key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
         } else {
             return SINGLE_HOLD;
         }
@@ -128,13 +128,17 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void tda(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        SEND_STRING("a");
-        return;
+    switch (cur_dance(state)) {
+        case DOUBLE_TAP:
+            // Select all and copy
+            SEND_STRING(SS_RCTL("ac"));
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(KC_A);
+            }
+            break;
     }
-
-    // Else select all
-    SEND_STRING(SS_RCTL(SS_TAP(X_A)));
 }
 
 void tdu(qk_tap_dance_state_t *state, void *user_data) {
