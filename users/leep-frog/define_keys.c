@@ -5,6 +5,8 @@
 
 #define CTRL_W RCTL(KC_W)
 
+#define CK_UNDO CL(Z)
+
 // Note: we use page down and page up because that works with chrome
 // and "tab" is a special character in some terminals and sometimes gets
 // modified or ignored when passed to processes inside of the terminal.
