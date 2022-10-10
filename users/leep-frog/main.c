@@ -286,16 +286,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
 
     // Untoggle shift the layer for all non-movement keys
-    switch (keycode & QK_BASIC_MAX) {
-        case KC_HOME ... KC_UP:
-        case KC_BSPACE:
-            break;
-        default:
-            // Don't untoggle for ctrl g since that should *only* deactivate the shift layer
-            // (and not send ctrl+g afterwards too)
-            if (keycode != CK_CTLG) {
-                UntoggleShift();
-            }
+    bool untoggle_shift = false;
+    if (keycode >= CK_ENUM_START && keycode <= CK_ENUM_END) {
+        switch (keycode) {
+            case TO_ALT:
+            case CK_CTLG:
+                break;
+            default:
+                untoggle_shift = true;
+        }
+    } else if (keycode != TO_CTL) {
+        switch (keycode & QK_BASIC_MAX) {
+            case KC_HOME ... KC_UP:
+                break;
+            default:
+                // Don't untoggle for ctrl g since that should *only* deactivate the shift layer
+                // (and not send ctrl+g afterwards too)
+                untoggle_shift = true;
+        }
+    }
+    if (untoggle_shift) {
+        UntoggleShift();
     }
 
     // We explicitly want all keycodes to return something to

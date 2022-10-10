@@ -124,7 +124,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
     [LR_ONE_HAND] = ML_LAYOUT(
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______, _______, _______, TO_SFTY,
        KC_TAB,   KC_BSPC, CL(W),   TGL_SLT, TGL_ALT, CL(T),   _______,           _______, CL(W),   TGL_SLT, TGL_ALT, CL(T),   KC_BSPC, KC_TAB,
-       KC_ENTER, WS_LEFT, _______, CK_TABB, CK_TABF, WS_RGHT, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, _______, WS_RGHT, KC_ENTER,
+       KC_ENTER, WS_LEFT, CL(R),   CK_TABB, CK_TABF, WS_RGHT, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, CL(R),   WS_RGHT, KC_ENTER,
         _______, CK_WWWB, CK_WWWF, OH_COPY, OH_PSTE, _______,                             _______, OH_COPY, OH_PSTE, CK_WWWB, CK_WWWF, _______,
 
                                                                       BOTTOM_ROW,
