@@ -34,6 +34,7 @@ enum td_keys {  // prefix TDK
     TDK_OUTLOOK_RELOAD,
     TDK_RESET,
     TDK_A,
+    TDK_C,
     TDK_U,
     TDK_V,
     TDK_Y,

@@ -141,6 +141,40 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void tdc(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state)) {
+        case DOUBLE_TAP:
+            // Copy
+            SEND_STRING(SS_RCTL("c"));
+            break;
+        case TRIPLE_TAP:
+            URL_COPY();
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(KC_C);
+            }
+            break;
+    }
+}
+
+void tdv(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state)) {
+        case DOUBLE_TAP:
+            // Paste
+            SEND_STRING(SS_RCTL("v"));
+            break;
+        case TRIPLE_TAP:
+            URL_PASTE();
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(KC_V);
+            }
+            break;
+    }
+}
+
 void tdu(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         SEND_STRING("u");
@@ -149,16 +183,6 @@ void tdu(qk_tap_dance_state_t *state, void *user_data) {
 
     // Else copy the url
     URL_COPY();
-}
-
-void tdv(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        SEND_STRING("v");
-        return;
-    }
-
-    // Else paste
-    SEND_STRING(SS_PASTE);
 }
 
 void tdy(qk_tap_dance_state_t *state, void *user_data) {
@@ -205,7 +229,7 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
+    [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
@@ -217,6 +241,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_OLRL TD(TDK_OUTLOOK_RELOAD)
 #define TD_RST TD(TDK_RESET)
 #define TD_A TD(TDK_A)
+#define TD_C TD(TDK_C)
 #define TD_U TD(TDK_U)
 #define TD_V TD(TDK_V)
 #define TD_Y TD(TDK_Y)
