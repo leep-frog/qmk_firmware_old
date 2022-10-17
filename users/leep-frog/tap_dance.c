@@ -71,7 +71,7 @@ void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_SPACE);
+                tap_code16(KC_ENTER);
             }
     }
 }
@@ -87,6 +87,39 @@ void shift_reset(qk_tap_dance_state_t *state, void *user_data) {
             break;
     }
     shift_state = 0;
+}
+
+// SYMB STATE
+int symb_state = 0;
+
+void symb_each(qk_tap_dance_state_t *state, void *user_data) {}
+
+void symb_finished(qk_tap_dance_state_t *state, void *user_data) {
+    symb_state = cur_dance(state);
+    switch (symb_state) {
+        case SINGLE_HOLD:
+            layer_on(LR_SYMB);
+            break;
+        case DOUBLE_HOLD:
+            layer_on(LR_ONE_HAND);
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(KC_SPACE);
+            }
+    }
+}
+
+void symb_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (symb_state) {
+        case SINGLE_HOLD:
+            layer_off(LR_SYMB);
+            break;
+        case DOUBLE_HOLD:
+            layer_off(LR_ONE_HAND);
+            break;
+    }
+    symb_state = 0;
 }
 
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));
@@ -229,7 +262,7 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
+    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each, symb_finished, symb_reset), [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
@@ -249,6 +282,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define OH_PSTE TD(TDK_OH_PASTE)
 
 #define TO_SFT TD(TDK_SHIFT_LAYER)
+#define TO_SYMB TD(TDK_SYMB_LAYER)
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {

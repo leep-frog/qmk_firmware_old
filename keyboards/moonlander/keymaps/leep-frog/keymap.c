@@ -20,7 +20,7 @@ TG(LR_ONE_HAND), KC_Q, KC_W, KC_E, KC_R, KC_T, LGHT_ON,       LGHT_OF, TD_Y, TD_
         KC_LCBR, KC_Z, KC_X, TD_C, TD_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
                                                      BOTTOM_ROW,
 
-                              TO_SYMB, TO_ALT, TO_SHCT,       TO_NAV, TO_CTL, TO_SFT
+                              TO_SFT, TO_ALT, TO_SHCT,       TO_NAV, TO_CTL, TO_SYMB
     ),
 
     [LR_SAFE] = ML_LAYOUT(
@@ -31,7 +31,7 @@ TG(LR_ONE_HAND), KC_Q, KC_W, KC_E, KC_R, KC_T, LGHT_ON,       LGHT_OF, TD_Y, TD_
 
                                                      BOTTOM_ROW,
 
-                                TO_SYMB, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SFT
+                                TO_SFT, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SYMB
     ),
 
     [LR_CTRL] = ML_LAYOUT(
