@@ -60,7 +60,7 @@ int cur_dance(qk_tap_dance_state_t *state) {
 // - Do tap dance (DOUBLE_TAP_HOLD let's say) to change layer
 // - press another key before tapping_term is up
 // - the key is pressed in the original layer, not in the layer we are
-//   trying to change to
+//   trying to change to.
 
 // SHIFT TAP DANCE
 int shift_press_count = 0;

@@ -240,8 +240,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             case KC_J:
             case KC_F:
                 SNG_STARTUP;
+                played_startup_song = true;
+                LEEP_LAYER_COLOR(LR_BASE);
+                break;
             case KC_K:
             case KC_D:
+                _leep_mute          = true;
                 played_startup_song = true;
                 LEEP_LAYER_COLOR(LR_BASE);
                 break;
