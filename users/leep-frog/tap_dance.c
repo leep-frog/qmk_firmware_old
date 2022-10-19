@@ -54,72 +54,114 @@ int cur_dance(qk_tap_dance_state_t *state) {
 }
 // End copy
 
-// SHIFT STATE
-int shift_state = 0;
+// The shift and symbol tap dances change layers which requires special logic.
+// If we just use the logic above (SINGLE_TAP, DOUBLE_TAP, etc. cases), then we
+// have the following issue:
+// - Do tap dance (DOUBLE_TAP_HOLD let's say) to change layer
+// - press another key before tapping_term is up
+// - the key is pressed in the original layer, not in the layer we are
+//   trying to change to
 
-void shift_each(qk_tap_dance_state_t *state, void *user_data) {}
+// SHIFT TAP DANCE
+int shift_press_count = 0;
 
-void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
-    shift_state = cur_dance(state);
-    switch (shift_state) {
-        case SINGLE_HOLD:
+void shift_each(qk_tap_dance_state_t *state, void *user_data) {
+    switch (++shift_press_count) {
+        case 1:
             SEND_STRING(SS_DOWN(X_RSFT));
             LEEP_SOLID_COLOR(BLUE);
             break;
-        case DOUBLE_HOLD:
+        case 2:
+            SEND_STRING(SS_UP(X_RSFT));
             layer_on(LR_ONE_HAND);
             break;
+        case 3:
+            layer_off(LR_ONE_HAND);
+            SEND_STRING(SS_TAP(X_ENTER) SS_TAP(X_ENTER) SS_DOWN(X_ENTER));
+            break;
         default:
-            for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_ENTER);
-            }
+            // Undo previous press and then press again.
+            SEND_STRING(SS_UP(X_ENTER) SS_DOWN(X_ENTER));
+            break;
+    }
+}
+
+void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state)) {
+        case SINGLE_TAP:
+            SEND_STRING(SS_TAP(X_ENTER));
+            break;
+        case DOUBLE_TAP:
+        case DOUBLE_SINGLE_TAP:
+            SEND_STRING(SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+            break;
     }
 }
 
 void shift_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (shift_state) {
-        case SINGLE_HOLD:
+    switch (shift_press_count) {
+        case 1:
             SEND_STRING(SS_UP(X_RSFT));
             LEEP_LAYER_COLOR(LR_BASE);
             break;
-        case DOUBLE_HOLD:
+        case 2:
             layer_off(LR_ONE_HAND);
             break;
+        default:
+            SEND_STRING(SS_UP(X_ENTER));
+            break;
     }
-    shift_state = 0;
+    shift_press_count = 0;
 }
 
-// SYMB STATE
-int symb_state = 0;
+// SYMB TAP DANCE
+int symb_press_count = 0;
 
-void symb_each(qk_tap_dance_state_t *state, void *user_data) {}
-
-void symb_finished(qk_tap_dance_state_t *state, void *user_data) {
-    symb_state = cur_dance(state);
-    switch (symb_state) {
-        case SINGLE_HOLD:
+void symb_each(qk_tap_dance_state_t *state, void *user_data) {
+    switch (++symb_press_count) {
+        case 1:
             layer_on(LR_SYMB);
             break;
-        case DOUBLE_HOLD:
+        case 2:
+            layer_off(LR_SYMB);
             layer_on(LR_ONE_HAND);
             break;
+        case 3:
+            layer_off(LR_ONE_HAND);
+            SEND_STRING(SS_TAP(X_SPACE) SS_TAP(X_SPACE) SS_DOWN(X_SPACE));
+            break;
         default:
-            for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_SPACE);
-            }
+            // Undo previous press and then press again.
+            SEND_STRING(SS_UP(X_SPACE) SS_DOWN(X_SPACE));
+            break;
+    }
+}
+
+void symb_finished(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state)) {
+        case SINGLE_TAP:
+            SEND_STRING(SS_TAP(X_SPACE));
+            break;
+        case DOUBLE_TAP:
+        case DOUBLE_SINGLE_TAP:
+            SEND_STRING(SS_TAP(X_SPACE) SS_TAP(X_SPACE));
+            break;
     }
 }
 
 void symb_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (symb_state) {
-        case SINGLE_HOLD:
+    switch (symb_press_count) {
+        case 1:
             layer_off(LR_SYMB);
             break;
-        case DOUBLE_HOLD:
+        case 2:
             layer_off(LR_ONE_HAND);
             break;
+        default:
+            SEND_STRING(SS_UP(X_SPACE));
+            break;
     }
-    symb_state = 0;
+    symb_press_count = 0;
 }
 
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));

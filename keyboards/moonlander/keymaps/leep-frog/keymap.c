@@ -10,6 +10,9 @@
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
 #define ML_LAYOUT(...) LAYOUT_moonlander(__VA_ARGS__)
 #define BOTTOM_ROW CK_MUT1, CK_MUT2, CK_MCR1, CK_MCR2, TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND), CK_MCR1, CK_MCR2, CK_EYE, KB_OFF
+// The tap dances defined for TO_SFT and TO_SYMB require that those keys are at the
+// same spot in all layers. See the tap_dance.c file for more info.
+#define THUMB_ROW(LEFT_MIDDLE, LEFT_RIGHT, RIGHT_LEFT, RIGHT_MIDDLE) TO_SFT, LEFT_MIDDLE, LEFT_RIGHT, RIGHT_LEFT, RIGHT_MIDDLE, TO_SYMB
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -20,7 +23,7 @@ TG(LR_ONE_HAND), KC_Q, KC_W, KC_E, KC_R, KC_T, LGHT_ON,       LGHT_OF, TD_Y, TD_
         KC_LCBR, KC_Z, KC_X, TD_C, TD_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
                                                      BOTTOM_ROW,
 
-                              TO_SFT, TO_ALT, TO_SHCT,       TO_NAV, TO_CTL, TO_SYMB
+                              THUMB_ROW(TO_ALT, TO_SHCT,       TO_NAV, TO_CTL)
     ),
 
     [LR_SAFE] = ML_LAYOUT(
@@ -31,7 +34,7 @@ TG(LR_ONE_HAND), KC_Q, KC_W, KC_E, KC_R, KC_T, LGHT_ON,       LGHT_OF, TD_Y, TD_
 
                                                      BOTTOM_ROW,
 
-                                TO_SFT, TO_ALT, TO_SHCT,   TO_NAV, TO_CTL, TO_SYMB
+                                THUMB_ROW(TO_ALT, TO_SHCT,   TO_NAV, TO_CTL)
     ),
 
     [LR_CTRL] = ML_LAYOUT(
@@ -107,7 +110,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
         KC_TAB,  KC_AMPR, KC_ASTR, KC_DLR,  KC_SLSH, KC_LBRC, _______,           _______, CK_MDPS, KC_4,    KC_5,    KC_6,    KC_0,    KC_PERC,
         _______, KC_TILD, KC_EXLM, KC_AT,   KC_EQL,  KC_BSLS,                             KC_RCBR, KC_1,    KC_2,    KC_3,    KC_0,    _______,
                                                                       BOTTOM_ROW,
-                                            RGB_HUD, KC_ENTER, RGB_HUI, TOGGLE_LAYER_COLOR, KC_SPACE, _______
+                                            THUMB_ROW(KC_ENTER, RGB_HUI, TOGGLE_LAYER_COLOR, KC_SPACE)
     ),
 
     [LR_OUTLOOK] = ML_LAYOUT(
@@ -129,7 +132,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
                                                                       BOTTOM_ROW,
 
-                    TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND),           TG(LR_ONE_HAND), TG(LR_ONE_HAND), TG(LR_ONE_HAND)
+                    THUMB_ROW(TG(LR_ONE_HAND), TG(LR_ONE_HAND),           TG(LR_ONE_HAND), TG(LR_ONE_HAND))
     ),
 
     /*
