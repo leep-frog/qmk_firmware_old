@@ -266,6 +266,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (!record->event.pressed) {
         // Run unpress events for custom keycodes
         switch (keycode) {
+            case TO_SYMB:
+                symb_each_unpress();
+                break;
+            case TO_SFT:
+                shift_each_unpress();
+                break;
             case LEEP_ENUM_CASE(CK):
                 if (ck_processors[LEEP_ENUM_OFFSET(CK, keycode)]) {
                     ck_processors[LEEP_ENUM_OFFSET(CK, keycode)](false);

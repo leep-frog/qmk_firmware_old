@@ -65,23 +65,37 @@ int cur_dance(qk_tap_dance_state_t *state) {
 // SHIFT TAP DANCE
 int shift_press_count = 0;
 
-void shift_each(qk_tap_dance_state_t *state, void *user_data) {
+void shift_each_press(qk_tap_dance_state_t *state, void *user_data) {
     switch (++shift_press_count) {
         case 1:
             SEND_STRING(SS_DOWN(X_RSFT));
             LEEP_SOLID_COLOR(BLUE);
             break;
         case 2:
-            SEND_STRING(SS_UP(X_RSFT));
             layer_on(LR_ONE_HAND);
             break;
         case 3:
-            layer_off(LR_ONE_HAND);
-            SEND_STRING(SS_TAP(X_ENTER) SS_TAP(X_ENTER) SS_DOWN(X_ENTER));
-            break;
+            SEND_STRING(SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+            // Notice no 'break' here, so we just press a third enter
+            // by falling to the default case.
         default:
             // Undo previous press and then press again.
-            SEND_STRING(SS_UP(X_ENTER) SS_DOWN(X_ENTER));
+            SEND_STRING(SS_DOWN(X_ENTER));
+            break;
+    }
+}
+
+void shift_each_unpress(void) {
+    switch (shift_press_count) {
+        case 1:
+            SEND_STRING(SS_UP(X_RSFT));
+            LEEP_LAYER_COLOR(LR_BASE);
+            break;
+        case 2:
+            layer_off(LR_ONE_HAND);
+            break;
+        default:
+            SEND_STRING(SS_UP(X_ENTER));
             break;
     }
 }
@@ -98,41 +112,39 @@ void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void shift_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (shift_press_count) {
-        case 1:
-            SEND_STRING(SS_UP(X_RSFT));
-            LEEP_LAYER_COLOR(LR_BASE);
-            break;
-        case 2:
-            layer_off(LR_ONE_HAND);
-            break;
-        default:
-            SEND_STRING(SS_UP(X_ENTER));
-            break;
-    }
-    shift_press_count = 0;
-}
+void shift_reset(qk_tap_dance_state_t *state, void *user_data) { shift_press_count = 0; }
 
 // SYMB TAP DANCE
 int symb_press_count = 0;
 
-void symb_each(qk_tap_dance_state_t *state, void *user_data) {
+void symb_each_press(qk_tap_dance_state_t *state, void *user_data) {
     switch (++symb_press_count) {
         case 1:
             layer_on(LR_SYMB);
             break;
         case 2:
-            layer_off(LR_SYMB);
             layer_on(LR_ONE_HAND);
             break;
         case 3:
+            SEND_STRING(SS_TAP(X_SPACE) SS_TAP(X_SPACE));
+            // Notice no 'break' here, so we just press a third space
+            // by falling to the default case.
+        default:
+            SEND_STRING(SS_DOWN(X_SPACE));
+            break;
+    }
+}
+
+void symb_each_unpress(void) {
+    switch (symb_press_count) {
+        case 1:
+            layer_off(LR_SYMB);
+            break;
+        case 2:
             layer_off(LR_ONE_HAND);
-            SEND_STRING(SS_TAP(X_SPACE) SS_TAP(X_SPACE) SS_DOWN(X_SPACE));
             break;
         default:
-            // Undo previous press and then press again.
-            SEND_STRING(SS_UP(X_SPACE) SS_DOWN(X_SPACE));
+            SEND_STRING(SS_UP(X_SPACE));
             break;
     }
 }
@@ -149,20 +161,7 @@ void symb_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void symb_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (symb_press_count) {
-        case 1:
-            layer_off(LR_SYMB);
-            break;
-        case 2:
-            layer_off(LR_ONE_HAND);
-            break;
-        default:
-            SEND_STRING(SS_UP(X_SPACE));
-            break;
-    }
-    symb_press_count = 0;
-}
+void symb_reset(qk_tap_dance_state_t *state, void *user_data) { symb_press_count = 0; }
 
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));
 // Removed ctrl+alt+h. That was used for bash backspace, but realized
@@ -304,7 +303,7 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each, symb_finished, symb_reset), [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each, shift_finished, shift_reset),
+    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset), [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_finished, shift_reset),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
