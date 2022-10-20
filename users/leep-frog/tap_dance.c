@@ -293,10 +293,10 @@ void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
     LEEP_SOLID_COLOR(RED);
-    if (state->count == 1) {
+    if (cur_dance(state) == SINGLE_TAP) {
         SNG_RESET;
         while (is_playing_notes()) {
-            wait_ms(150);
+            wait_ms(75);
         }
     }
     reset_keyboard();
