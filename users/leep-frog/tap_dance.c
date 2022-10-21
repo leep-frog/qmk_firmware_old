@@ -17,9 +17,7 @@ enum {
 
 int cur_dance(qk_tap_dance_state_t *state) {
     if (state->count == 1) {
-        // NOTE: This line has been modified from the copied version (only check state->pressed, not state->interrupted)
-        //       Specifically for the shift and alt layers
-        if (!state->pressed) {
+        if (state->interrupted || !state->pressed) {
             return SINGLE_TAP;
             // key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
         } else {
@@ -203,7 +201,7 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
 
 void tda(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state)) {
-        case DOUBLE_TAP:
+        case SINGLE_HOLD:
             // Select all and copy
             SEND_STRING(SS_RCTL("ac"));
             break;
@@ -217,11 +215,11 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
 
 void tdc(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state)) {
-        case DOUBLE_TAP:
+        case SINGLE_HOLD:
             // Copy
-            SEND_STRING(SS_RCTL("c"));
+            SEND_STRING(SS_RCTL("c") SS_TAP(X_ESCAPE));
             break;
-        case TRIPLE_TAP:
+        case DOUBLE_HOLD:
             URL_COPY();
             break;
         default:
@@ -232,46 +230,41 @@ void tdc(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void tdv(qk_tap_dance_state_t *state, void *user_data) {
+void tdu(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state)) {
+        case SINGLE_HOLD:
         case DOUBLE_TAP:
-            // Paste
-            SEND_STRING(SS_RCTL("v"));
-            break;
-        case TRIPLE_TAP:
-            URL_PASTE();
+            URL_COPY();
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_V);
+                tap_code16(KC_U);
             }
             break;
     }
 }
 
-void tdu(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        SEND_STRING("u");
-        return;
+void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycode) {
+    switch (cur_dance(state)) {
+        case SINGLE_HOLD:
+        case DOUBLE_TAP:
+            SEND_STRING(SS_PASTE);
+            break;
+        case DOUBLE_HOLD:
+        case TRIPLE_TAP:
+            URL_PASTE();
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(keycode);
+            }
+            break;
     }
-
-    // Else copy the url
-    URL_COPY();
 }
 
-void tdy(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        SEND_STRING("y");
-        return;
-    }
+void tdv(qk_tap_dance_state_t *state, void *user_data) { paste_or_type(state, user_data, KC_V); }
 
-    if (state->count == 2) {
-        SEND_STRING(SS_PASTE);
-        return;
-    }
-
-    URL_PASTE();
-}
+void tdy(qk_tap_dance_state_t *state, void *user_data) { paste_or_type(state, user_data, KC_Y); }
 
 void oh_copy(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {

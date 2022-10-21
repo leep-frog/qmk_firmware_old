@@ -45,6 +45,8 @@ DEFINE_SONG_WITH_TEMPO(mario_game_over_song, SONG(MARIO_GAME_OVER), 100);
 DEFINE_SONG(mario_uw_1, SONG(MARIO_UNDERWORLD_1));
 DEFINE_SONG(mario_uw_2, SONG(MARIO_UNDERWORLD_2));
 
+DEFINE_SONG(leep_low_beep, SONG(LEEP_LOW_BEEP));
+
 // We define our own start-up song (instead of using STARTUP_SONG)
 // so we can add logic that disables the custom startup song.
 #    define SNG_STARTUP LEEP_PLAY_SONG(zelda_discovery_song)
@@ -58,6 +60,7 @@ DEFINE_SONG(mario_uw_2, SONG(MARIO_UNDERWORLD_2));
 #    define SNG_REC_2_PLAY LEEP_PLAY_SONG(zelda_discovery_song)
 #    define SNG_EYE_START LEEP_PLAY_SONG(mario_uw_1)
 #    define SNG_EYE_END LEEP_PLAY_SONG(mario_uw_2)
+#    define SNG_LOW_BEEP LEEP_PLAY_SONG(leep_low_beep)
 
 void _mute_1(bool pressed) {
     if (!pressed) {
