@@ -15,9 +15,9 @@ enum {
     TRIPLE_HOLD       = 7
 };
 
-int cur_dance(qk_tap_dance_state_t *state) {
+int cur_dance(qk_tap_dance_state_t *state, bool interrupt_matters) {
     if (state->count == 1) {
-        if (state->interrupted || !state->pressed) {
+        if ((interrupt_matters && state->interrupted) || !state->pressed) {
             return SINGLE_TAP;
             // key has not been interrupted, but they key is still held. Means you want to send a 'HOLD'.
         } else {
@@ -99,7 +99,7 @@ void shift_each_unpress(void) {
 }
 
 void shift_finished(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state)) {
+    switch (cur_dance(state, false)) {
         case SINGLE_TAP:
             SEND_STRING(SS_TAP(X_ENTER));
             break;
@@ -148,7 +148,7 @@ void symb_each_unpress(void) {
 }
 
 void symb_finished(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state)) {
+    switch (cur_dance(state, false)) {
         case SINGLE_TAP:
             SEND_STRING(SS_TAP(X_SPACE));
             break;
@@ -200,7 +200,7 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void tda(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state)) {
+    switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
             // Select all and copy
             SEND_STRING(SS_RCTL("ac"));
@@ -214,7 +214,7 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void tdc(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state)) {
+    switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
             // Copy
             SEND_STRING(SS_RCTL("c") SS_TAP(X_ESCAPE));
@@ -231,7 +231,7 @@ void tdc(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void tdu(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state)) {
+    switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
         case DOUBLE_TAP:
             URL_COPY();
@@ -245,7 +245,7 @@ void tdu(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycode) {
-    switch (cur_dance(state)) {
+    switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
         case DOUBLE_TAP:
             SEND_STRING(SS_PASTE);
@@ -286,7 +286,7 @@ void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
     LEEP_SOLID_COLOR(RED);
-    if (cur_dance(state) == SINGLE_TAP) {
+    if (cur_dance(state, true) == SINGLE_TAP) {
         SNG_RESET;
         while (is_playing_notes()) {
             wait_ms(75);

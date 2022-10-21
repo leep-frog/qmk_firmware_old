@@ -67,6 +67,12 @@ void _leep_lock(bool pressed) {
     }
 }
 
+void _leep_wait(bool pressed) {
+    if (pressed) {
+        wait_ms(100);
+    }
+}
+
 void _alt_t_new(bool pressed) {
     if (!pressed) {
         return;
@@ -168,6 +174,7 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_VALUE7(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE6(start, __VA_ARGS__)
 #define PROCESSOR_VALUE8(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE7(start, __VA_ARGS__)
 #define PROCESSOR_VALUE9(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE8(start, __VA_ARGS__)
+#define PROCESSOR_VALUE10(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE9(start, __VA_ARGS__)
 
 #define OPTIONAL_PROCESSOR_MACRO(_type_, sz, num_provided, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix##_processors[sz] suffix = {[0 ... sz - 1] = dflt, PROCESSOR_VALUE##num_provided(e_start, __VA_ARGS__)};
 
@@ -185,7 +192,7 @@ PROCESSOR_MACRO(char, 2, CU_ENUM_START, cu, [MAX_STRING_LEN + 1], "", URL_COPY, 
 
 PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN + 1], "", URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER), CK_CL, "cl/" SS_TAP(X_ENTER), CK_MOMA, "moma " SS_TAP(X_ENTER))
 
-PROCESSOR_MACRO(processor_action_t, 9, CK_ENUM_START, ck, , NULL, CK_CTLG, &_ctrl_g_new, CK_MUT1, &_mute_1, CK_MUT2, &_mute_2, CK_ALTT, &_alt_t_new, MS_CTRL, &_ctrl_click, CK_EYE, &_eye_care, KB_OFF, &_leep_keyboard_off, TO_ALT, &_to_alt_fn, CK_LOCK, &_leep_lock)
+PROCESSOR_MACRO(processor_action_t, 10, CK_ENUM_START, ck, , NULL, CK_CTLG, &_ctrl_g_new, CK_MUT1, &_mute_1, CK_MUT2, &_mute_2, CK_ALTT, &_alt_t_new, MS_CTRL, &_ctrl_click, CK_EYE, &_eye_care, KB_OFF, &_leep_keyboard_off, TO_ALT, &_to_alt_fn, CK_LOCK, &_leep_lock, CK_WAIT, &_leep_wait)
 
 void deactivate_alt(bool activated) {
     if (!activated) {
