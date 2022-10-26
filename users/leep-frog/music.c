@@ -62,20 +62,6 @@ DEFINE_SONG(leep_low_beep, SONG(LEEP_LOW_BEEP));
 #    define SNG_EYE_END LEEP_PLAY_SONG(mario_uw_2)
 #    define SNG_LOW_BEEP LEEP_PLAY_SONG(leep_low_beep)
 
-void _mute_1(bool pressed) {
-    if (!pressed) {
-        return;
-    }
-
-    if (_leep_mute) {
-        _leep_mute = false;
-        SNG_UNMUTE;
-    } else {
-        SNG_MUTE;
-        _leep_mute = true;
-    }
-}
-
 void _mute_2(bool pressed) {
     if (!pressed) {
         return;
@@ -86,6 +72,23 @@ void _mute_2(bool pressed) {
         LEEP_SOLID_COLOR(GREEN);
     } else {
         LEEP_SOLID_COLOR(ORANGE);
+        _leep_mute = true;
+    }
+}
+
+void _mute_1(bool pressed) {
+    // We want to update light color here too.
+    _mute_2(pressed);
+
+    if (!pressed) {
+        return;
+    }
+
+    if (_leep_mute) {
+        _leep_mute = false;
+        SNG_UNMUTE;
+    } else {
+        SNG_MUTE;
         _leep_mute = true;
     }
 }

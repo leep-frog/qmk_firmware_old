@@ -1,6 +1,8 @@
 #ifndef LEEP_MAIN
 #define LEEP_MAIN
 
+bool leep_toggling_alt = false;
+
 #include <stdio.h>
 #include "interface.c"
 #include "enum.c"
@@ -180,8 +182,6 @@ typedef void (*processor_action_t)(bool activated);
 
 #define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) OPTIONAL_PROCESSOR_MACRO(_type_, num, num, e_start, prefix, suffix, dflt, __VA_ARGS__)
 
-bool leep_toggling_alt = false;
-
 PROCESSOR_MACRO(char, 4, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "", TGL_ALT, SS_DOWN(X_RALT) SS_TAP(X_TAB), TGL_SLT, SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)),
                 // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
                 // Maybe it's something to do with KC_GESC overlapping or something?
@@ -238,31 +238,39 @@ void keyboard_post_init_user(void) {
     }
 }
 
+// Returns whether or not the key should be processed as normal or if we should just return
+bool leep_startup_mode(uint16_t keycode, keyrecord_t* record) {
+    if (played_startup_song || keycode == KB_OFF || keycode == CK_LOCK) {
+        return true;
+    }
+
+    if (record->event.pressed) {
+        return false;
+    }
+
+    switch (keycode) {
+        case KC_J:
+        case KC_F:
+            SNG_STARTUP;
+            played_startup_song = true;
+            LEEP_LAYER_COLOR(LR_BASE);
+            break;
+        case KC_K:
+        case KC_D:
+            _leep_mute          = true;
+            played_startup_song = true;
+            LEEP_LAYER_COLOR(LR_BASE);
+            break;
+        default:
+            LEEP_STARTUP_COLOR_MODE();
+            break;
+    }
+    return false;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    if (!played_startup_song) {
-        if (record->event.pressed) {
-            return false;
-        }
-        switch (keycode) {
-            case KC_J:
-            case KC_F:
-                SNG_STARTUP;
-                played_startup_song = true;
-                LEEP_LAYER_COLOR(LR_BASE);
-                break;
-            case KC_K:
-            case KC_D:
-                _leep_mute          = true;
-                played_startup_song = true;
-                LEEP_LAYER_COLOR(LR_BASE);
-                break;
-            case KB_OFF:
-            case CK_LOCK:
-                break;
-            default:
-                LEEP_STARTUP_COLOR_MODE();
-                return false;
-        }
+    if (!leep_startup_mode(keycode, record)) {
+        return false;
     }
 
     if (keycode != TO_ALT) {
@@ -295,8 +303,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         // so we don't have to worry about naming issues.
         leep_toggling_alt = true;
     }
+    bool td_alt_key_pressed = (keycode == TD_ATAB);
     // End alt layer if any key other than alt togglers.
-    if (leep_toggling_alt && !alt_key_pressed) {
+    if (leep_toggling_alt && !alt_key_pressed && !td_alt_key_pressed) {
         leep_toggling_alt = false;
         SEND_STRING(SS_UP(X_RALT));
         return false;

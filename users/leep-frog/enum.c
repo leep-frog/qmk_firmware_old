@@ -43,6 +43,7 @@ enum td_keys {  // prefix TDK
     // One hand keys
     TDK_OH_COPY,
     TDK_OH_PASTE,
+    TDK_ALT_TAB,
 };
 
 // Custom keycode enums
