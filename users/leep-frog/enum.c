@@ -59,11 +59,6 @@ enum td_keys {  // prefix TDK
 #define LEEP_ENUM_CASE(prefix) prefix##_ENUM_START + 1 ... prefix##_ENUM_END - 1
 
 LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
-          // Toggle alt tab
-          TGL_ALT,
-          // Toggle shift-alt tab
-          TGL_SLT,
-
           // Universal backspace
           CK_UNBS,
           // Escape

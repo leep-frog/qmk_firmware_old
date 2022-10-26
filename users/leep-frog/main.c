@@ -182,7 +182,7 @@ typedef void (*processor_action_t)(bool activated);
 
 #define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) OPTIONAL_PROCESSOR_MACRO(_type_, num, num, e_start, prefix, suffix, dflt, __VA_ARGS__)
 
-PROCESSOR_MACRO(char, 4, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "", TGL_ALT, SS_DOWN(X_RALT) SS_TAP(X_TAB), TGL_SLT, SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)),
+PROCESSOR_MACRO(char, 2, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "",
                 // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
                 // Maybe it's something to do with KC_GESC overlapping or something?
                 // Who knows why, but we do need this custom keycode regardless to get around that.
@@ -218,7 +218,7 @@ void ctrl_alt_layer(bool activated) {
 #define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
 
 OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 6, -1, layer, , NULL, LR_CTRL_X, &ctrl_x_layer,
-                         // Needed to undo SS_DOWN from TGL_ALT and TGL_SLT.
+                         // Needed to undo SS_DOWN from [shift+]alt+tab logic (TD_ATAB/TD_STAB).
                          LR_ALT, &deactivate_alt, LR_NAVIGATION, &deactivate_alt, LR_ONE_HAND, &deactivate_alt, LR_CTRL_ALT, &ctrl_alt_layer, LR_SAFE, &_safe_layer)
 
 bool layers_status[NUM_LAYERS] = {
@@ -297,15 +297,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         return true;
     }
 
-    bool alt_key_pressed = (keycode == TGL_ALT) || (keycode == TGL_SLT);
-    if (alt_key_pressed) {
-        // TODO: move all local variables into a single, static setting object
-        // so we don't have to worry about naming issues.
-        leep_toggling_alt = true;
-    }
+    // TODO: move all local variables into a single, static setting object
     bool td_alt_key_pressed = (keycode == TD_ATAB) || (keycode == TD_STAB);
     // End alt layer if any key other than alt togglers.
-    if (leep_toggling_alt && !alt_key_pressed && !td_alt_key_pressed) {
+    if (leep_toggling_alt && !td_alt_key_pressed) {
         leep_toggling_alt = false;
         SEND_STRING(SS_UP(X_RALT));
         return false;
