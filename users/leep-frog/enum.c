@@ -44,6 +44,7 @@ enum td_keys {  // prefix TDK
     TDK_OH_COPY,
     TDK_OH_PASTE,
     TDK_ALT_TAB,
+    TDK_SALT_TAB,
 };
 
 // Custom keycode enums

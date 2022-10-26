@@ -303,7 +303,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         // so we don't have to worry about naming issues.
         leep_toggling_alt = true;
     }
-    bool td_alt_key_pressed = (keycode == TD_ATAB);
+    bool td_alt_key_pressed = (keycode == TD_ATAB) || (keycode == TD_STAB);
     // End alt layer if any key other than alt togglers.
     if (leep_toggling_alt && !alt_key_pressed && !td_alt_key_pressed) {
         leep_toggling_alt = false;

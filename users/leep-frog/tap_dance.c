@@ -203,6 +203,47 @@ void alt_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 void alt_tab_reset(qk_tap_dance_state_t *state, void *user_data) { alt_tab_press_count = 0; }
 
+// SALT_TAB TAP DANCE
+int salt_tab_press_count = 0;
+
+void salt_tab_each_press(qk_tap_dance_state_t *state, void *user_data) {
+    salt_tab_press_count++;
+    if (leep_toggling_alt) {
+        SEND_STRING(SS_RSFT(SS_TAP(X_TAB)));
+        return;
+    }
+
+    if (salt_tab_press_count == 1) {
+        return;
+    }
+
+    leep_toggling_alt = true;
+    SEND_STRING(SS_DOWN(X_RALT));
+    if (salt_tab_press_count == 2) {
+        // Press an extra one for the first press.
+        SEND_STRING(SS_RSFT(SS_TAP(X_TAB)));
+    }
+    SEND_STRING(SS_RSFT(SS_TAP(X_TAB)));
+}
+
+void salt_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state, false)) {
+        case SINGLE_TAP:
+            if (!leep_toggling_alt) {
+                SEND_STRING(SS_RALT(SS_RSFT(SS_TAP(X_TAB))));
+            }
+            break;
+        case SINGLE_HOLD:
+            if (!leep_toggling_alt) {
+                leep_toggling_alt = true;
+                SEND_STRING(SS_DOWN(X_RALT) SS_RSFT(SS_TAP(X_TAB)));
+            }
+            break;
+    }
+}
+
+void salt_tab_reset(qk_tap_dance_state_t *state, void *user_data) { salt_tab_press_count = 0; }
+
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));
 // Removed ctrl+alt+h. That was used for bash backspace, but realized
 // that we can use 'bind' or 'bindkey' in bash environments to bind
@@ -338,7 +379,8 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset), [TDK_ALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(alt_tab_each_press, alt_tab_finished, alt_tab_reset), [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste), [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_finished, shift_reset),
+    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset),     [TDK_ALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(alt_tab_each_press, alt_tab_finished, alt_tab_reset), [TDK_SALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(salt_tab_each_press, salt_tab_finished, salt_tab_reset), [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
+    [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_finished, shift_reset),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
@@ -358,6 +400,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define OH_PSTE TD(TDK_OH_PASTE)
 
 #define TD_ATAB TD(TDK_ALT_TAB)
+#define TD_STAB TD(TDK_SALT_TAB)
 
 #define TO_SFT TD(TDK_SHIFT_LAYER)
 #define TO_SYMB TD(TDK_SYMB_LAYER)
