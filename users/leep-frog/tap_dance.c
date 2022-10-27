@@ -389,7 +389,14 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_MCR2 TD(TDK_MACRO_2)
 #define CK_DEL_WORD RCTL(KC_DELETE)
 #define CK_MDPS TD(TDK_MARKDOWN_PASTE)
-#define CK_OLRL TD(TDK_OUTLOOK_RELOAD)
+// See here for outlook keyboard shortcuts:
+// https://support.microsoft.com/en-us/office/keyboard-shortcuts-for-outlook-3cdeb221-7ae5-4c1d-8c1d-9e63216c1efd#PickTab=Windows
+// Outlook reload
+#define OL_RLD TD(TDK_OUTLOOK_RELOAD)
+// Outlook move left pane
+#define OL_LEFT RCTL(SH(TAB))
+// Outlook move right pane
+#define OL_RGHT KC_F6
 #define TD_RST TD(TDK_RESET)
 #define TD_A TD(TDK_A)
 #define TD_C TD(TDK_C)
