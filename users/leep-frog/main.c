@@ -17,6 +17,7 @@ bool leep_toggling_alt = false;
 #include "tap_dance.c"
 #include "shift.c"
 #include "ctrl.c"
+#include "slack.c"
 
 // Note: wally sometimes crashes if the keyboard is plugged into the workstation,
 // but behaves fine if the keyboard is plugged directly into the laptop.
