@@ -15,10 +15,10 @@
 
 bool _leep_mute = false;
 
-#    define LEEP_PLAY_SONG(sng)     \
-        if (!_leep_mute) {          \
-            set_tempo(sng##_tempo); \
-            PLAY_SONG(sng##_song);  \
+#    define LEEP_PLAY_SONG(sng, force) \
+        if (!_leep_mute || force) {    \
+            set_tempo(sng##_tempo);    \
+            PLAY_SONG(sng##_song);     \
         }
 
 #    define LEEP_PLAY_LOOP(sng)     \
@@ -50,19 +50,19 @@ DEFINE_SONG(leep_dud, SONG(LEEP_DUD));
 
 // We define our own start-up song (instead of using STARTUP_SONG)
 // so we can add logic that disables the custom startup song.
-#    define SNG_STARTUP LEEP_PLAY_SONG(zelda_discovery_song)
-#    define SNG_RESET LEEP_PLAY_SONG(mario_game_over_song)
-#    define SNG_MUTE LEEP_PLAY_SONG(mario_lost_a_life_song)
-#    define SNG_UNMUTE LEEP_PLAY_SONG(mario_1_up_song)
-#    define SNG_REC_START LEEP_PLAY_SONG(rec_start_song)
-#    define SNG_REC_1_END LEEP_PLAY_SONG(zelda_item_found_song)
-#    define SNG_REC_2_END LEEP_PLAY_SONG(mario_1_up_song)
-#    define SNG_REC_1_PLAY LEEP_PLAY_SONG(zelda_spirit_orb_song)
-#    define SNG_REC_2_PLAY LEEP_PLAY_SONG(zelda_discovery_song)
-#    define SNG_EYE_START LEEP_PLAY_SONG(mario_uw_1)
-#    define SNG_EYE_END LEEP_PLAY_SONG(mario_uw_2)
-#    define SNG_LOW_BEEP LEEP_PLAY_SONG(leep_low_beep)
-#    define SNG_DUD LEEP_PLAY_SONG(leep_dud)
+#    define SNG_STARTUP LEEP_PLAY_SONG(zelda_discovery_song, false)
+#    define SNG_RESET LEEP_PLAY_SONG(mario_game_over_song, false)
+#    define SNG_MUTE LEEP_PLAY_SONG(mario_lost_a_life_song, false)
+#    define SNG_UNMUTE LEEP_PLAY_SONG(mario_1_up_song, false)
+#    define SNG_REC_START LEEP_PLAY_SONG(rec_start_song, true)
+#    define SNG_REC_1_END LEEP_PLAY_SONG(zelda_item_found_song, false)
+#    define SNG_REC_2_END LEEP_PLAY_SONG(mario_1_up_song, false)
+#    define SNG_REC_1_PLAY LEEP_PLAY_SONG(zelda_spirit_orb_song, false)
+#    define SNG_REC_2_PLAY LEEP_PLAY_SONG(zelda_discovery_song, false)
+#    define SNG_EYE_START LEEP_PLAY_SONG(mario_uw_1, false)
+#    define SNG_EYE_END LEEP_PLAY_SONG(mario_uw_2, false)
+#    define SNG_LOW_BEEP LEEP_PLAY_SONG(leep_low_beep, false)
+#    define SNG_DUD LEEP_PLAY_SONG(leep_dud, true)
 
 void _mute_2(bool pressed) {
     if (!pressed) {
