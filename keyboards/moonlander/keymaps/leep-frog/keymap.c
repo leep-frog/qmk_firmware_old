@@ -9,7 +9,7 @@
 // Can't evaluate macro in macro, so use this to ignore bottom row of keyboard
 // https://stackoverflow.com/questions/35114050/is-there-a-way-to-force-c-preprocessor-to-evaluate-macro-arguments-before-the-ma
 #define ML_LAYOUT(...) LAYOUT_moonlander(__VA_ARGS__)
-#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, _______, CK_WAIT, CK_MCR1, CK_MCR2, CK_WAIT, _______, _______, CK_EYE, KB_OFF
+#define BOTTOM_ROW CK_MUT1, CK_MUT2, _______, KC_LALT, KC_LCTL, CK_MCR1, CK_MCR2, KC_RCTL, KC_RALT, _______, CK_EYE, KB_OFF
 // The tap dances defined for TO_SFT and TO_SYMB require that those keys are at the
 // same spot in all layers. See the tap_dance.c file for more info.
 #define THUMB_ROW(LEFT_MIDDLE, LEFT_RIGHT, RIGHT_LEFT, RIGHT_MIDDLE) TO_SFT, LEFT_MIDDLE, LEFT_RIGHT, RIGHT_LEFT, RIGHT_MIDDLE, TO_SYMB
@@ -115,9 +115,9 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_OUTLOOK] = ML_LAYOUT(
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______,   _______, _______, TO_SFTY,
-        _______, _______, _______, _______, _______, _______, _______,           _______, CL(U),   CL(Q),   CL(COMMA), OL_RLD,  _______, _______,
-        _______, _______, _______, _______, _______, _______, _______,           _______, KC_DEL,  CL(1),   CL(DOT),   CL(2),   _______, _______,
-        _______, _______, _______, _______, _______, _______,                             _______, CL(U),   _______,   CL(M),   _______, _______,
+        _______, _______, _______, SLK_UP,  _______, _______, _______,           _______, CL(U),   CL(Q),   CL(COMMA), OL_RLD,  _______, _______,
+        _______, _______, _______, SLK_DWN, _______, _______, _______,           _______, KC_DEL,  CL(1),   CL(DOT),   CL(2),   _______, _______,
+        _______, _______, _______, SLK_JMP, _______, _______,                             _______, CL(U),   _______,   CL(M),   _______, _______,
 
                                                                       BOTTOM_ROW,
 
