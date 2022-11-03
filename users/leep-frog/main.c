@@ -11,10 +11,10 @@ bool leep_toggling_alt = false;
 #include "music.c"
 #include "google.c"
 #include "workspace.c"
-#include "record.c"
 #include "url.c"
 #include "combo.c"
 #include "tap_dance.c"
+// #include "record.c" included by tap_dance
 #include "shift.c"
 #include "ctrl.c"
 #include "slack.c"

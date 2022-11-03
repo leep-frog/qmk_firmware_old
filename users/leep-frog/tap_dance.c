@@ -1,7 +1,5 @@
 #ifndef LEEP_TAP_DANCES
 #define LEEP_TAP_DANCES
-#include "record.c"
-#include "shift.c"
 
 // See below link for following functions
 // https://github.com/samhocevar-forks/qmk-firmware/blob/master/docs/feature_tap_dance.md#setup
@@ -51,6 +49,9 @@ int cur_dance(qk_tap_dance_state_t *state, bool interrupt_matters) {
     }
 }
 // End copy
+
+#include "record.c"
+#include "shift.c"
 
 // The shift and symbol tap dances change layers which requires special logic.
 // If we just use the logic above (SINGLE_TAP, DOUBLE_TAP, etc. cases), then we
