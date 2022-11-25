@@ -183,6 +183,7 @@ typedef void (*processor_action_t)(bool activated);
 
 #define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) OPTIONAL_PROCESSOR_MACRO(_type_, num, num, e_start, prefix, suffix, dflt, __VA_ARGS__)
 
+// Be sure to end each with "\0" character (string end character).
 PROCESSOR_MACRO(char, 3, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "",
                 // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
                 // Maybe it's something to do with KC_GESC overlapping or something?
