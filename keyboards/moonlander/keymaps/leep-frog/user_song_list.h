@@ -22,7 +22,7 @@
 #define MARIO_UNDERWORLD_2 FE_6(HD_NOTE, _F4, _F5, _D4, _D5, _DS4, _DS5)
 
 #define LEEP_LOW_BEEP FE_1(Q__NOTE, _C4)
-#define LEEP_DUD FE_1(H__NOTE, _GS4)
+#define LEEP_DUD FE_3(H__NOTE, _A4, _C5, _E5)
 
 // other built-ins:
 // MUSIC_ON_SOUND

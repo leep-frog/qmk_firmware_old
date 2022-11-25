@@ -45,6 +45,7 @@ enum td_keys {  // prefix TDK
     TDK_OH_PASTE,
     TDK_ALT_TAB,
     TDK_SALT_TAB,
+    TDK_CTL_T,
 };
 
 // Custom keycode enums
@@ -61,6 +62,8 @@ enum td_keys {  // prefix TDK
 LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
           // Universal backspace
           CK_UNBS,
+          // Outlook today
+          OL_TDAY,
           // Escape
           CK_ESC, )
 

@@ -31,10 +31,14 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
                 action           = DYN_REC_STOP;
                 kr.event.pressed = true;
                 recording        = false;
-                if (macro_1) {
-                    SNG_REC_1_END;
+                if (_leep_mute) {
+                    SNG_LOW_BEEP;
                 } else {
-                    SNG_REC_2_END;
+                    if (macro_1) {
+                        SNG_REC_1_END;
+                    } else {
+                        SNG_REC_2_END;
+                    }
                 }
                 LEEP_SOLID_COLOR(GREEN);
             }
@@ -51,10 +55,14 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
         case DOUBLE_HOLD:
             if (!recording) {
                 valid = true;
-                if (macro_1) {
-                    SNG_REC_1_PLAY;
+                if (_leep_mute) {
+                    SNG_LOW_BEEP;
                 } else {
-                    SNG_REC_2_PLAY;
+                    if (macro_1) {
+                        SNG_REC_1_PLAY;
+                    } else {
+                        SNG_REC_2_PLAY;
+                    }
                 }
             }
     }

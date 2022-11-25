@@ -142,7 +142,7 @@ void _to_alt_fn(bool pressed) {
     } else {
         layer_off(LR_ALT);
         if (!leep_alt_interrupted && timer_elapsed(alt_timer) < TAPPING_TERM) {
-            layer_on(LR_ONE_HAND);
+            tap_code16(KC_ENTER);
         }
     }
 }
@@ -164,7 +164,7 @@ typedef void (*processor_action_t)(bool activated);
 
 #define PRC_ACTION(user_fn) user_fn
 
-#define MAX_STRING_LEN 12
+#define MAX_STRING_LEN 15
 
 #define C__OFFSET(C__START, v) v - C__START - 1
 
@@ -183,17 +183,41 @@ typedef void (*processor_action_t)(bool activated);
 
 #define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) OPTIONAL_PROCESSOR_MACRO(_type_, num, num, e_start, prefix, suffix, dflt, __VA_ARGS__)
 
-PROCESSOR_MACRO(char, 2, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "",
+PROCESSOR_MACRO(char, 3, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "",
                 // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
                 // Maybe it's something to do with KC_GESC overlapping or something?
                 // Who knows why, but we do need this custom keycode regardless to get around that.
-                CK_ESC, SS_TAP(X_ESC), CK_UNBS, SS_RCTL(SS_TAP(X_BSPACE)))
+                CK_ESC, SS_TAP(X_T) "\0",
+                // Outlook today
+                OL_TDAY, SS_RALT(SS_TAP(X_H)) SS_TAP(X_O) SS_TAP(X_D) "\0",
+                // Universal backspace
+                CK_UNBS, SS_RCTL(SS_TAP(X_BSPACE)) "\0")
 
 PROCESSOR_MACRO(char, 2, CU_ENUM_START, cu, [MAX_STRING_LEN + 1], "", URL_COPY, "c", URL_ICP, SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c")
 
 PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN + 1], "", URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER), CK_CL, "cl/" SS_TAP(X_ENTER), CK_MOMA, "moma " SS_TAP(X_ENTER))
 
-PROCESSOR_MACRO(processor_action_t, 10, CK_ENUM_START, ck, , NULL, CK_CTLG, &_ctrl_g_new, CK_MUT1, &_mute_1, CK_MUT2, &_mute_2, CK_ALTT, &_alt_t_new, MS_CTRL, &_ctrl_click, CK_EYE, &_eye_care, KB_OFF, &_leep_keyboard_off, TO_ALT, &_to_alt_fn, CK_LOCK, &_leep_lock, CK_WAIT, &_leep_wait)
+PROCESSOR_MACRO(processor_action_t, 10, CK_ENUM_START, ck, , NULL,
+                // Ctrl g
+                CK_CTLG, &_ctrl_g_new,
+                // Mute 1
+                CK_MUT1, &_mute_1,
+                // Mute 2
+                CK_MUT2, &_mute_2,
+                // Alt-tab
+                CK_ALTT, &_alt_t_new,
+                // Ctrl-click
+                MS_CTRL, &_ctrl_click,
+                // Look away for 20 seconds
+                CK_EYE, &_eye_care,
+                // Keyboard off
+                KB_OFF, &_leep_keyboard_off,
+                // To the alt layer
+                TO_ALT, &_to_alt_fn,
+                // Lock the keyboard
+                CK_LOCK, &_leep_lock,
+                // Wait for some milliseconds (useful for record).
+                CK_WAIT, &_leep_wait)
 
 void deactivate_alt(bool activated) {
     if (!activated) {

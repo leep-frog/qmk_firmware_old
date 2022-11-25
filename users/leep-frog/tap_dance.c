@@ -301,7 +301,8 @@ void tdc(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
             // Copy
-            SEND_STRING(SS_RCTL("c") SS_TAP(X_ESCAPE));
+            SEND_STRING(SS_RCTL("c"));
+            SNG_LOW_BEEP;
             break;
         case DOUBLE_HOLD:
             URL_COPY();
@@ -309,6 +310,22 @@ void tdc(qk_tap_dance_state_t *state, void *user_data) {
         default:
             for (int i = 0; i < state->count; i++) {
                 tap_code16(KC_C);
+            }
+            break;
+    }
+}
+
+void td_ctrl_t(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state, true)) {
+        case SINGLE_TAP:
+            SEND_STRING(SS_RCTL("t"));
+            break;
+        case DOUBLE_TAP:
+            SEND_STRING(SS_RCTL(SS_RSFT(SS_TAP(X_T))));
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                SEND_STRING(SS_RCTL("t"));
             }
             break;
     }
@@ -333,6 +350,7 @@ void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycod
         case SINGLE_HOLD:
         case DOUBLE_TAP:
             SEND_STRING(SS_PASTE);
+            SNG_LOW_BEEP;
             break;
         case DOUBLE_HOLD:
         case TRIPLE_TAP:
@@ -380,7 +398,43 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset),     [TDK_ALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(alt_tab_each_press, alt_tab_finished, alt_tab_reset), [TDK_SALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(salt_tab_each_press, salt_tab_finished, salt_tab_reset), [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift), [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine), [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1), [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2), [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste), [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload), [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset), [TDK_A] = ACTION_TAP_DANCE_FN(tda), [TDK_C] = ACTION_TAP_DANCE_FN(tdc), [TDK_U] = ACTION_TAP_DANCE_FN(tdu), [TDK_V] = ACTION_TAP_DANCE_FN(tdv), [TDK_Y] = ACTION_TAP_DANCE_FN(tdy), [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy), [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
+    // Symbol layer
+    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset),
+    // Alt tab
+    [TDK_ALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(alt_tab_each_press, alt_tab_finished, alt_tab_reset),
+    // Shift alt tab
+    [TDK_SALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(salt_tab_each_press, salt_tab_finished, salt_tab_reset),
+    // Shift toggle
+    [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift),
+    // Kill line
+    [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine),
+    // Record 1
+    [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1),
+    // Record 2
+    [TDK_MACRO_2] = ACTION_TAP_DANCE_FN(recorder_2),
+    // Markdown paste
+    [TDK_MARKDOWN_PASTE] = ACTION_TAP_DANCE_FN(TDMarkdownPaste),
+    // Outlook reload
+    [TDK_OUTLOOK_RELOAD] = ACTION_TAP_DANCE_FN(TDOutlookReload),
+    // Reset keyboard
+    [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset),
+    // 'A' tap dance
+    [TDK_A] = ACTION_TAP_DANCE_FN(tda),
+    // 'C' tap dance
+    [TDK_C] = ACTION_TAP_DANCE_FN(tdc),
+    // 'U' tap dance
+    [TDK_U] = ACTION_TAP_DANCE_FN(tdu),
+    // 'V' tap dance
+    [TDK_V] = ACTION_TAP_DANCE_FN(tdv),
+    // 'Y' tap dance
+    [TDK_Y] = ACTION_TAP_DANCE_FN(tdy),
+    // Ctrl-t tap dance
+    [TDK_CTL_T] = ACTION_TAP_DANCE_FN(td_ctrl_t),
+    // One hand copy
+    [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy),
+    // One hand paste
+    [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
+    // Shift layer
     [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_finished, shift_reset),
 };
 
@@ -404,6 +458,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define TD_U TD(TDK_U)
 #define TD_V TD(TDK_V)
 #define TD_Y TD(TDK_Y)
+#define TD_CTLT TD(TDK_CTL_T)
 #define OH_COPY TD(TDK_OH_COPY)
 #define OH_PSTE TD(TDK_OH_PASTE)
 

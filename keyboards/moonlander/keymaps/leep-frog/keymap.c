@@ -39,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [LR_CTRL] = ML_LAYOUT(
         CL(EQL),  CL(1),   CL(2),   CL(3),   CL(4),   CL(5),   RCTL(WS_LEFT),  CK_ESC,  CL(6),   CL(7),   CL(8),   CL(9),    CL(0),    TO_SFTY,
-        CL(TAB),  CL(Q),   CTRL_W,  KC_END,  CL(R),   CL(T),   KC_LEFT,        KC_RGHT, CL(Y),   CK_TABB, CL(I),   CK_TABF,  KC_UP,    CL(BSLS),
+        CL(TAB),  CL(Q),   CTRL_W,  KC_END,  CL(R),   TD_CTLT, KC_LEFT,        KC_RGHT, CL(Y),   CK_TABB, CL(I),   CK_TABF,  KC_UP,    CL(BSLS),
 LSFT_T(CL(LPRN)), KC_HOME, CL(F),   KC_DEL,  KC_RGHT, CK_CTLG, _______,        _______, KC_BSPC, TGL_SHF, CK_KILL, KC_PGUP,  CL(SCLN), RSFT_T(CL(RPRN)),
         CL(LCBR), CL(Z),   TO_CTLX, CK_COPY, KC_PGDN, KC_LEFT,                                   KC_DOWN, CL(M),   CL(COMM), CL(DOT),  CK_UNDO, CL(RCBR),
 
@@ -116,8 +116,8 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
     [LR_OUTLOOK] = ML_LAYOUT(
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______,   _______, _______, TO_SFTY,
         _______, _______, _______, SLK_UP,  _______, _______, _______,           _______, CL(U),   CL(Q),   CL(COMMA), OL_RLD,  _______, _______,
-        _______, _______, _______, SLK_DWN, _______, _______, _______,           _______, KC_DEL,  CL(1),   CL(DOT),   CL(2),   _______, _______,
-        _______, _______, _______, SLK_JMP, _______, _______,                             _______, CL(U),   _______,   CL(M),   _______, _______,
+        _______, _______, _______, SLK_DWN, SLK_JMP, _______, _______,           _______, KC_DEL,  CL(1),   CL(DOT),   CL(2),   _______, _______,
+        _______, _______, _______, _______, _______, _______,                             OL_TDAY, CL(U),   _______,   CL(M),   _______, _______,
 
                                                                       BOTTOM_ROW,
 
@@ -126,7 +126,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_ONE_HAND] = ML_LAYOUT(
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______, _______, _______, TO_SFTY,
-       KC_TAB,   KC_BSPC, CL(W),   TD_STAB, TD_ATAB, CL(T),   _______,           _______, CL(W),   TD_STAB, TD_ATAB, CL(T),   KC_BSPC, KC_TAB,
+       KC_TAB,   KC_BSPC, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, _______,           _______, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, KC_BSPC, KC_TAB,
        KC_ENTER, WS_LEFT, CL(R),   CK_TABB, CK_TABF, WS_RGHT, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, CL(R),   WS_RGHT, KC_ENTER,
         _______, CK_WWWB, CK_WWWF, OH_COPY, OH_PSTE, _______,                             _______, OH_COPY, OH_PSTE, CK_WWWB, CK_WWWF, _______,
 

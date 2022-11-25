@@ -61,7 +61,7 @@ DEFINE_SONG(leep_dud, SONG(LEEP_DUD));
 #    define SNG_REC_2_PLAY LEEP_PLAY_SONG(zelda_discovery_song, false)
 #    define SNG_EYE_START LEEP_PLAY_SONG(mario_uw_1, false)
 #    define SNG_EYE_END LEEP_PLAY_SONG(mario_uw_2, false)
-#    define SNG_LOW_BEEP LEEP_PLAY_SONG(leep_low_beep, false)
+#    define SNG_LOW_BEEP LEEP_PLAY_SONG(leep_low_beep, true)
 #    define SNG_DUD LEEP_PLAY_SONG(leep_dud, true)
 
 void _mute_2(bool pressed) {
