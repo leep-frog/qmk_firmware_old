@@ -54,11 +54,9 @@ bool _ctrl_w_new(void) {
     return false;
 }
 
-bool played_startup_song = false;
-
 void _leep_keyboard_off(bool pressed) {
     if (pressed) {
-        LEEP_SOLID_COLOR(OFF);
+        LEEP_SOLID_COLOR(OFF, false);
         played_startup_song = false;
     }
 }
@@ -112,11 +110,11 @@ void _eye_care(bool pressed) {
         // The color change takes effect after the keycode is processed, so we can't
         // change the color twice in the _eye_care function.
         // Instead we set the first color on key down.
-        LEEP_SOLID_COLOR(RED);
+        LEEP_SOLID_COLOR(RED, false);
         SNG_EYE_START;
     } else {
         wait_ms(20 * 1000);
-        LEEP_SOLID_COLOR(GREEN);
+        LEEP_SOLID_COLOR(GREEN, false);
         SNG_EYE_END;
     }
 }
@@ -256,7 +254,7 @@ bool layers_status[NUM_LAYERS] = {
     case (kc):            \
         return fn();
 
-#define LEEP_STARTUP_COLOR_MODE() LEEP_COLOR_MODE(GREEN, RGB_MATRIX_RAINDROPS)
+#define LEEP_STARTUP_COLOR_MODE() LEEP_COLOR_MODE(GREEN, RGB_MATRIX_RAINDROPS, true)
 
 void keyboard_post_init_user(void) {
     if (!played_startup_song) {
@@ -279,13 +277,13 @@ bool leep_startup_mode(uint16_t keycode, keyrecord_t* record) {
         case KC_F:
             SNG_STARTUP;
             played_startup_song = true;
-            LEEP_LAYER_COLOR(LR_BASE);
+            LEEP_LAYER_COLOR(LR_BASE, false);
             break;
         case KC_K:
         case KC_D:
             _leep_mute          = true;
             played_startup_song = true;
-            LEEP_LAYER_COLOR(LR_BASE);
+            LEEP_LAYER_COLOR(LR_BASE, false);
             break;
         default:
             LEEP_STARTUP_COLOR_MODE();
@@ -396,9 +394,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         }
     }
 
-    if (!recording && !shift_toggled && played_startup_song) {
-        LEEP_LAYER_COLOR(get_highest_layer(state));
-    }
+    LEEP_LAYER_COLOR(get_highest_layer(state), false);
 
     return state;
 }

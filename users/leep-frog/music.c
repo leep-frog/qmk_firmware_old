@@ -71,9 +71,9 @@ void _mute_2(bool pressed) {
 
     if (_leep_mute) {
         _leep_mute = false;
-        LEEP_SOLID_COLOR(GREEN);
+        LEEP_SOLID_COLOR(GREEN, false);
     } else {
-        LEEP_SOLID_COLOR(ORANGE);
+        LEEP_SOLID_COLOR(ORANGE, false);
         _leep_mute = true;
     }
 }

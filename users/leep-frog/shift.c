@@ -1,16 +1,14 @@
 #ifndef LEEP_SHIFT
 #define LEEP_SHIFT
 
-bool shift_toggled;
-
 void ToggleShift(void) {
     if (shift_toggled) {
         // Turn off shift.
         SEND_STRING(SS_UP(X_RSFT));
-        LEEP_LAYER_COLOR(LR_CTRL);
+        LEEP_LAYER_COLOR(LR_CTRL, true);
     } else {
         // Turn on shift.
-        LEEP_COLOR_MODE(RED, RGB_MATRIX_RAINBOW_PINWHEELS);
+        LEEP_COLOR_MODE(RED, RGB_MATRIX_RAINBOW_PINWHEELS, true);
         SEND_STRING(SS_DOWN(X_RSFT));
     }
     shift_toggled = !shift_toggled;

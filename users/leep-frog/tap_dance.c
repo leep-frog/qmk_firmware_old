@@ -68,7 +68,7 @@ void shift_each_press(qk_tap_dance_state_t *state, void *user_data) {
     switch (++shift_press_count) {
         case 1:
             SEND_STRING(SS_DOWN(X_RSFT));
-            LEEP_SOLID_COLOR(BLUE);
+            LEEP_SOLID_COLOR(BLUE, false);
             break;
         case 2:
             layer_on(LR_ONE_HAND);
@@ -88,7 +88,7 @@ void shift_each_unpress(void) {
     switch (shift_press_count) {
         case 1:
             SEND_STRING(SS_UP(X_RSFT));
-            LEEP_LAYER_COLOR(LR_BASE);
+            LEEP_LAYER_COLOR(LR_BASE, false);
             break;
         case 2:
             layer_off(LR_ONE_HAND);
@@ -387,7 +387,7 @@ void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
-    LEEP_SOLID_COLOR(RED);
+    LEEP_SOLID_COLOR(RED, true);
     if (cur_dance(state, true) == SINGLE_TAP) {
         SNG_RESET;
         while (is_playing_notes()) {

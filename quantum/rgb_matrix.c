@@ -117,7 +117,6 @@ __attribute__((weak)) RGB rgb_matrix_hsv_to_rgb(HSV hsv) { return hsv_to_rgb(hsv
 #    define RGB_MATRIX_STARTUP_SPD UINT8_MAX / 2
 #endif
 
-
 // globals
 bool         g_suspend_state = false;
 rgb_config_t rgb_matrix_config;  // TODO: would like to prefix this with g_ for global consistancy, do this in another pr

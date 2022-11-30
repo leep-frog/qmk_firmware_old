@@ -6,7 +6,7 @@ bool     blink_on = false;
 
 // Press twice, record
 // Press once, stop if recording, otherwise play
-bool recording        = false;
+// TODO: Settings object
 bool processing_macro = false;
 
 void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t start_action) {
@@ -40,7 +40,7 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
                         SNG_REC_2_END;
                     }
                 }
-                LEEP_SOLID_COLOR(GREEN);
+                LEEP_SOLID_COLOR(GREEN, true);
             }
             break;
         case DOUBLE_TAP:
@@ -49,7 +49,7 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
                 action    = start_action;
                 recording = true;
                 SNG_REC_START;
-                LEEP_COLOR_MODE(RED, RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+                LEEP_COLOR_MODE(RED, RGB_MATRIX_RAINBOW_MOVING_CHEVRON, true);
             }
             break;
         case DOUBLE_HOLD:
