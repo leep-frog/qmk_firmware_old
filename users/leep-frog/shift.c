@@ -32,22 +32,36 @@ void TDToggleShift(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // Runs emacs line kill (ctrl-k) if hit once, otherwise emulates behavior for regular text things.
-void TDKillLine(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        // Shift layer is already untoggle in main.c so no need to untoggle it here.
-        SEND_STRING(SS_RCTL("k"));
-        return;
-    }
+void TDKillLine_finished(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state, true)) {
+        case SINGLE_HOLD:
+            SEND_STRING(SS_RCTL("k"));
+            break;
+        case DOUBLE_TAP:
+            // Copy the rest of the line.
+            if (!shift_toggled) {
+                ToggleShift();
+            }
+            SEND_STRING(SS_TAP(X_END));
+            ToggleShift();
 
-    // Copy the rest of the line.
-    if (!shift_toggled) {
-        ToggleShift();
+            // Copy and delete it.
+            SEND_STRING(SS_RCTL("c") SS_TAP(X_DELETE));
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                SEND_STRING(SS_RCTL("k"));
+            }
+            break;
     }
-    SEND_STRING(SS_TAP(X_END));
-    ToggleShift();
+}
 
-    // Copy and delete it.
-    SEND_STRING(SS_RCTL("c") SS_TAP(X_DELETE));
+void TDKillLine_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state, true)) {
+        case SINGLE_HOLD:
+            SEND_STRING(SS_PASTE);
+            break;
+    }
 }
 
 void _ctrl_g_new(bool pressed) {

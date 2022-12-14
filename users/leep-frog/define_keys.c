@@ -32,4 +32,7 @@
 #define LGHT_ON RCTL(RALT(RSFT(KC_8)))
 #define LGHT_OF RCTL(RALT(RSFT(KC_9)))
 
+#define SS_PASTE SS_RSFT(SS_TAP(X_INSERT))
+#define SS_COPY SS_RCTL(SS_TAP(X_INSERT))
+
 #endif

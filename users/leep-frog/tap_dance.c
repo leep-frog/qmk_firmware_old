@@ -251,9 +251,6 @@ void salt_tab_reset(qk_tap_dance_state_t *state, void *user_data) { salt_tab_pre
 // ctrl+backspace to "backward-kill-word" (found with `bind -P | grep word`)
 char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE));
 
-#define SS_PASTE SS_RSFT(SS_TAP(X_INSERT))
-#define SS_COPY SS_RCTL(SS_TAP(X_INSERT))
-
 void TDMarkdownPaste(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         SEND_STRING("]");
@@ -353,8 +350,11 @@ void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycod
             SNG_LOW_BEEP;
             break;
         case DOUBLE_HOLD:
-        case TRIPLE_TAP:
             URL_PASTE();
+            break;
+        case TRIPLE_TAP:
+            // Paste without formatting
+            SEND_STRING(SS_RCTL(SS_RSFT("v")));
             break;
         default:
             for (int i = 0; i < state->count; i++) {
@@ -407,7 +407,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     // Shift toggle
     [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift),
     // Kill line
-    [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN(TDKillLine),
+    [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, TDKillLine_finished, TDKillLine_reset),
     // Record 1
     [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1),
     // Record 2
