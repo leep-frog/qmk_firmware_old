@@ -10,7 +10,7 @@ bool played_startup_song = false;
 #ifdef ENABLE_LEEP_COLOR
 
 void leep_change_color(uint16_t a, uint8_t b, uint8_t c, uint8_t mode, bool force) {
-    if ((!recording && !shift_toggled) || force) {
+    if ((!recording && !shift_toggled && played_startup_song) || force) {
         rgb_matrix_sethsv_noeeprom(a, b, c);
         rgb_matrix_mode_noeeprom(mode);
     }
