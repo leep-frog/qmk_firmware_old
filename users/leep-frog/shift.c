@@ -31,10 +31,13 @@ void TDToggleShift(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+bool kill_line_hold = false;
+
 // Runs emacs line kill (ctrl-k) if hit once, otherwise emulates behavior for regular text things.
 void TDKillLine_finished(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
+            kill_line_hold = true;
             SEND_STRING(SS_RCTL("k"));
             break;
         case DOUBLE_TAP:
@@ -57,10 +60,10 @@ void TDKillLine_finished(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void TDKillLine_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state, true)) {
-        case SINGLE_HOLD:
-            SEND_STRING(SS_PASTE);
-            break;
+    // Using cur_dance doesn't work here (maybe the code thinks there's an interrupt when not?)
+    if (kill_line_hold) {
+        kill_line_hold = false;
+        SEND_STRING(SS_PASTE);
     }
 }
 
