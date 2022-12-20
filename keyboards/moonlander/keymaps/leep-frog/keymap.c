@@ -19,7 +19,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LR_BASE] = ML_LAYOUT(
         CK_LOCK, KC_1, KC_2, KC_3, KC_4, KC_5, WS_LEFT,       CK_ESC,  KC_6, KC_7, KC_8,    KC_9,   KC_0,    TO_SFTY,
         _______, KC_Q, KC_W, KC_E, KC_R, KC_T, LGHT_ON,       LGHT_OF, TD_Y, TD_U, KC_I,    KC_O,   KC_P,    _______,
-        KC_LSPO, TD_A, TD_S, KC_D, KC_F, KC_G, WS_LEFT,       WS_RGHT, KC_H, KC_J, KC_K,    KC_L,   TO_OTLK, KC_RSPC,
+        KC_LSPO, TD_A, KC_S, KC_D, KC_F, KC_G, WS_LEFT,       WS_RGHT, KC_H, KC_J, KC_K,    KC_L,   TO_OTLK, KC_RSPC,
         KC_LCBR, KC_Z, KC_X, TD_C, TD_V, KC_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
                                                      BOTTOM_ROW,
 
@@ -124,15 +124,26 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
                                             _______, _______, _______,           _______, OL_LEFT, OL_RGHT
     ),
 
-    [LR_ONE_HAND] = ML_LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______, _______, _______, _______, TO_SFTY,
-       KC_TAB,   KC_BSPC, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, _______,           _______, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, KC_BSPC, KC_TAB,
-       KC_ENTER, WS_LEFT, CL(R),   CK_TABB, CK_TABF, WS_RGHT, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, CL(R),   WS_RGHT, KC_ENTER,
-        _______, CK_WWWB, CK_WWWF, OH_COPY, OH_PSTE, _______,                             _______, OH_COPY, OH_PSTE, CK_WWWB, CK_WWWF, _______,
+    [LR_ONE_HAND_LEFT] = ML_LAYOUT(
+        _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______,  _______, _______, _______, TO_SFTY,
+       KC_TAB,   KC_BSPC, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, _______,           _______, KC_WH_U, URL_COPY, KC_MS_U, _______, _______, _______,
+       KC_ENTER, WS_LEFT, CL(R),   CK_TABB, CK_TABF, WS_RGHT, _______,           _______, KC_WH_D, KC_MS_L,  KC_MS_D, KC_MS_R, KC_RCTL, _______,
+        _______, CK_WWWB, CK_WWWF, OH_COPY, OH_PSTE, _______,                             _______, KC_BTN1,  KC_BTN3, KC_BTN2, _______, _______,
 
                                                                       BOTTOM_ROW,
 
-                    THUMB_ROW(TG(LR_ONE_HAND), TG(LR_ONE_HAND),           TG(LR_ONE_HAND), TG(LR_ONE_HAND))
+                                            _______, _______, _______,           CK_ACL, CK_ACL, CK_ACL
+    ),
+
+    [LR_ONE_HAND_RIGHT] = ML_LAYOUT(
+        _______, _______, _______, _______, _______,  _______, _______,           _______, _______, _______, _______, _______, _______, TO_SFTY,
+        _______, _______, _______, KC_MS_U, URL_COPY, KC_WH_U, _______,           _______, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, KC_BSPC, KC_TAB,
+        _______, KC_RCTL, KC_MS_L, KC_MS_D, KC_MS_R,  KC_WH_D, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, CL(R),   WS_RGHT, KC_ENTER,
+        _______, _______, KC_BTN2, KC_BTN3, KC_BTN1,  _______,                             _______, OH_COPY, OH_PSTE, CK_WWWB, CK_WWWF, _______,
+
+                                                                      BOTTOM_ROW,
+
+                                                CK_ACL, CK_ACL, CK_ACL,           _______, _______, _______
     ),
 
     /*

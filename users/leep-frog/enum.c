@@ -12,7 +12,8 @@ enum layers {  // prefix LR
     LR_SAFE,
     LR_OUTLOOK,
     LR_CTRL_ALT,
-    LR_ONE_HAND,
+    LR_ONE_HAND_LEFT,
+    LR_ONE_HAND_RIGHT,
 
     NUM_LAYERS,
 };
@@ -80,6 +81,8 @@ LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
           CK_CL, CK_MOMA, )
 
 LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END, CK_CTLG, CK_ALTT, CK_MUT1, CK_MUT2, MS_CTRL, CK_EYE, TO_ALT, CK_LOCK, KB_OFF,
+          // Switches mouse acceleration
+          CK_ACL,
           // Useful for waiting during macro recording/playback.
           CK_WAIT, )
 
@@ -88,7 +91,6 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END, CK_CTLG, CK_ALTT, CK_MUT1, CK_MUT2, 
 #define TO_SFTY TO(LR_SAFE)
 #define TO_OTLK LT(LR_OUTLOOK, KC_SCLN)
 #define TO_SHCT LT(LR_SHORTCUTS, KC_NO)
-#define TD_S LT(LR_SHORTCUTS, KC_S)
 #define TO_CTL LT(LR_CTRL, KC_TAB)
 #define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
 #define TO_CTAL MO(LR_CTRL_ALT)

@@ -71,7 +71,7 @@ void shift_each_press(qk_tap_dance_state_t *state, void *user_data) {
             LEEP_SOLID_COLOR(BLUE, false);
             break;
         case 2:
-            layer_on(LR_ONE_HAND);
+            layer_on(LR_ONE_HAND_LEFT);
             break;
         case 3:
             SEND_STRING(SS_TAP(X_ENTER) SS_TAP(X_ENTER));
@@ -91,7 +91,7 @@ void shift_each_unpress(void) {
             LEEP_LAYER_COLOR(LR_BASE, false);
             break;
         case 2:
-            layer_off(LR_ONE_HAND);
+            layer_off(LR_ONE_HAND_LEFT);
             break;
         default:
             SEND_STRING(SS_UP(X_ENTER));
@@ -122,7 +122,7 @@ void symb_each_press(qk_tap_dance_state_t *state, void *user_data) {
             layer_on(LR_SYMB);
             break;
         case 2:
-            layer_on(LR_ONE_HAND);
+            layer_on(LR_ONE_HAND_RIGHT);
             break;
         case 3:
             SEND_STRING(SS_TAP(X_SPACE) SS_TAP(X_SPACE));
@@ -140,7 +140,7 @@ void symb_each_unpress(void) {
             layer_off(LR_SYMB);
             break;
         case 2:
-            layer_off(LR_ONE_HAND);
+            layer_off(LR_ONE_HAND_RIGHT);
             break;
         default:
             SEND_STRING(SS_UP(X_SPACE));

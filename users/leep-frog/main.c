@@ -74,6 +74,22 @@ void _leep_wait(bool pressed) {
     }
 }
 
+static int leep_acl = 0;
+
+void _change_mouse_speed(bool pressed) {
+    if (pressed) {
+        // Default speed is fast, then medium, then slow (and reset on layer change)
+        if (leep_acl == 0) {
+            tap_code16(KC_ACL1);
+        } else if (leep_acl == 1) {
+            tap_code16(KC_ACL0);
+        } else if (leep_acl == 2) {
+            tap_code16(KC_ACL2);
+        }
+        leep_acl = (leep_acl + 1) % 3;
+    }
+}
+
 void _alt_t_new(bool pressed) {
     if (!pressed) {
         return;
@@ -176,6 +192,7 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_VALUE8(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE7(start, __VA_ARGS__)
 #define PROCESSOR_VALUE9(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE8(start, __VA_ARGS__)
 #define PROCESSOR_VALUE10(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE9(start, __VA_ARGS__)
+#define PROCESSOR_VALUE11(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE10(start, __VA_ARGS__)
 
 #define OPTIONAL_PROCESSOR_MACRO(_type_, sz, num_provided, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix##_processors[sz] suffix = {[0 ... sz - 1] = dflt, PROCESSOR_VALUE##num_provided(e_start, __VA_ARGS__)};
 
@@ -196,7 +213,7 @@ PROCESSOR_MACRO(char, 2, CU_ENUM_START, cu, [MAX_STRING_LEN + 1], "", URL_COPY, 
 
 PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN + 1], "", URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER), CK_CL, "cl/" SS_TAP(X_ENTER), CK_MOMA, "moma " SS_TAP(X_ENTER))
 
-PROCESSOR_MACRO(processor_action_t, 10, CK_ENUM_START, ck, , NULL,
+PROCESSOR_MACRO(processor_action_t, 11, CK_ENUM_START, ck, , NULL,
                 // Ctrl g
                 CK_CTLG, &_ctrl_g_new,
                 // Mute 1
@@ -215,6 +232,8 @@ PROCESSOR_MACRO(processor_action_t, 10, CK_ENUM_START, ck, , NULL,
                 TO_ALT, &_to_alt_fn,
                 // Lock the keyboard
                 CK_LOCK, &_leep_lock,
+                // Change the mouse speed
+                CK_ACL, &_change_mouse_speed,
                 // Wait for some milliseconds (useful for record).
                 CK_WAIT, &_leep_wait)
 
@@ -222,6 +241,14 @@ void deactivate_alt(bool activated) {
     if (!activated) {
         leep_toggling_alt = false;
         SEND_STRING(SS_UP(X_RALT));
+    }
+}
+
+void one_hand_layer_change(bool activated) {
+    deactivate_alt(activated);
+    if (activated) {
+        leep_acl = 0;
+        tap_code16(KC_ACL2);
     }
 }
 
@@ -241,9 +268,19 @@ void ctrl_alt_layer(bool activated) {
 
 #define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
 
-OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 6, -1, layer, , NULL, LR_CTRL_X, &ctrl_x_layer,
+OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 7, -1, layer, , NULL, LR_CTRL_X, &ctrl_x_layer,
                          // Needed to undo SS_DOWN from [shift+]alt+tab logic (TD_ATAB/TD_STAB).
-                         LR_ALT, &deactivate_alt, LR_NAVIGATION, &deactivate_alt, LR_ONE_HAND, &deactivate_alt, LR_CTRL_ALT, &ctrl_alt_layer, LR_SAFE, &_safe_layer)
+                         LR_ALT, &deactivate_alt,
+                         // Deactivate alt when exiting navigation layer.
+                         LR_NAVIGATION, &deactivate_alt,
+                         // Left one-hand layer changes.
+                         LR_ONE_HAND_LEFT, &one_hand_layer_change,
+                         // Right one-hand layer changes.
+                         LR_ONE_HAND_RIGHT, &one_hand_layer_change,
+                         // Start/end ctrl-alt layer on layer on/off.
+                         LR_CTRL_ALT, &ctrl_alt_layer,
+                         // Deactivate everything when going to safe layer.
+                         LR_SAFE, &_safe_layer)
 
 bool layers_status[NUM_LAYERS] = {
     [0]                    = true,

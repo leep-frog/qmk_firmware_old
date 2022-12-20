@@ -93,7 +93,7 @@
 #undef MOUSEKEY_TIME_TO_MAX
 
 #define MK_3_SPEED
-#define MK_MOMENTARY_ACCEL
+// #define MK_MOMENTARY_ACCEL // Leaving this out uses tap-to-select mode
 
 // Delay between pressing a movement key and cursor movement
 #define MOUSEKEY_DELAY 0
@@ -105,3 +105,9 @@
 #define MOUSEKEY_MAX_SPEED 10
 // Time until maximum cursor speed is reached
 #define MOUSEKEY_TIME_TO_MAX 0
+
+// #define MK_C_INTERVAL_0 6  // Default value is 32
+// #define MK_C_INTERVAL_1 4  // Default value is 16
+#define MK_C_OFFSET_0 2  // Default is 1
+#define MK_C_OFFSET_1 5  // Default is 4
+#define MK_C_OFFSET_2 10
