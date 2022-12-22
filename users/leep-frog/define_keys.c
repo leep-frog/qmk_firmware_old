@@ -23,6 +23,9 @@
 
 #define CK_NEW RCTL(RSFT(KC_N))
 
+// Windows snip (screenshot)
+#define CK_SNIP RGUI(RSFT(KC_S))
+
 // Copy with ctrl+c (instead of ctrl+<insert>) so ctrl+c functionality
 // still works (like cancelling in bash terminal).
 #define CK_COPY RCTL(KC_C)
