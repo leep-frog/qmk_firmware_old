@@ -15,6 +15,7 @@ void URLWait(void) { wait_ms(50); }
     SEND_STRING("c" SS_UP(X_RCTL))
 #define URL_PASTE() \
     NEW_TAB();      \
+    URLWait();      \
     SEND_STRING(SS_PASTE SS_TAP(X_ENTER));
 
 #endif
