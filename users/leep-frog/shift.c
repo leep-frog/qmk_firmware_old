@@ -64,6 +64,8 @@ void TDKillLine_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (kill_line_hold) {
         kill_line_hold = false;
         SEND_STRING(SS_PASTE);
+        wait_ms(500);
+        tap_code16(KC_ENTER);
     }
 }
 

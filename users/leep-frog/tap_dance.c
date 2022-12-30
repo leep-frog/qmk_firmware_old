@@ -294,6 +294,20 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void tdb(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state, true)) {
+        case SINGLE_HOLD:
+            // Bulleted list
+            SEND_STRING(SS_RCTL(SS_RSFT("8")));
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(KC_B);
+            }
+            break;
+    }
+}
+
 void tdc(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
@@ -333,6 +347,7 @@ void tdu(qk_tap_dance_state_t *state, void *user_data) {
         case SINGLE_HOLD:
         case DOUBLE_TAP:
             URL_COPY();
+            SNG_LOW_BEEP;
             break;
         default:
             for (int i = 0; i < state->count; i++) {
@@ -420,6 +435,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset),
     // 'A' tap dance
     [TDK_A] = ACTION_TAP_DANCE_FN(tda),
+    // 'B' tap dance
+    [TDK_B] = ACTION_TAP_DANCE_FN(tdb),
     // 'C' tap dance
     [TDK_C] = ACTION_TAP_DANCE_FN(tdc),
     // 'U' tap dance
@@ -454,6 +471,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define OL_RGHT KC_F6
 #define TD_RST TD(TDK_RESET)
 #define TD_A TD(TDK_A)
+#define TD_B TD(TDK_B)
 #define TD_C TD(TDK_C)
 #define TD_U TD(TDK_U)
 #define TD_V TD(TDK_V)
