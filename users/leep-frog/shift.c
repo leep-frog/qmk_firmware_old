@@ -60,12 +60,11 @@ void TDKillLine_finished(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void TDKillLine_reset(qk_tap_dance_state_t *state, void *user_data) {
-    // Using cur_dance doesn't work here (maybe the code thinks there's an interrupt when not?)
+    // Using cur_dance doesn't work here (maybe the code thinks there's an interrupt when not?),
+    // hence why we maintain and use our own kill_line_hold variable here instead.
     if (kill_line_hold) {
         kill_line_hold = false;
         SEND_STRING(SS_PASTE);
-        wait_ms(500);
-        tap_code16(KC_ENTER);
     }
 }
 
