@@ -200,7 +200,7 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_MACRO(_type_, num, e_start, prefix, suffix, dflt, ...) OPTIONAL_PROCESSOR_MACRO(_type_, num, num, e_start, prefix, suffix, dflt, __VA_ARGS__)
 
 // Be sure to end each with "\0" character (string end character).
-PROCESSOR_MACRO(char, 3, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "",
+PROCESSOR_MACRO(char, 3, CS_ENUM_START, cs, [16], "",
                 // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
                 // Maybe it's something to do with KC_GESC overlapping or something?
                 // Who knows why, but we do need this custom keycode regardless to get around that.
@@ -210,7 +210,7 @@ PROCESSOR_MACRO(char, 3, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "",
                 // Universal backspace
                 CK_UNBS, SS_RCTL(SS_TAP(X_BSPACE)) "\0")
 
-PROCESSOR_MACRO(char, 3, CU_ENUM_START, cu, [MAX_STRING_LEN + 35], "",
+PROCESSOR_MACRO(char, 3, CU_ENUM_START, cu, [46], "",
                 // Copy URL
                 URL_COPY, "c",
                 // Copy URL ID
@@ -218,7 +218,13 @@ PROCESSOR_MACRO(char, 3, CU_ENUM_START, cu, [MAX_STRING_LEN + 35], "",
                 // Copy URL CR ID
                 URL_CRI, NTH_URL_ID(6))
 
-PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN + 1], "", URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER), CK_CL, "cl/" SS_TAP(X_ENTER), CK_MOMA, "moma " SS_TAP(X_ENTER))
+PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [12], "",
+                // Paste clipboard contents into the URL bar
+                URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER),
+                // Open CL
+                CK_CL, "cl/" SS_TAP(X_ENTER),
+                // Open Moma
+                CK_MOMA, "moma " SS_TAP(X_ENTER))
 
 PROCESSOR_MACRO(processor_action_t, 11, CK_ENUM_START, ck, , NULL,
                 // Ctrl g
