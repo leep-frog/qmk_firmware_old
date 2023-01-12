@@ -245,6 +245,23 @@ void salt_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 void salt_tab_reset(qk_tap_dance_state_t *state, void *user_data) { salt_tab_press_count = 0; }
 
+// Ctrl-t tap dance
+void td_ctrl_t(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state, true)) {
+        case SINGLE_TAP:
+            SEND_STRING(SS_RCTL("t"));
+            break;
+        case DOUBLE_TAP:
+            SEND_STRING(SS_RCTL(SS_RSFT(SS_TAP(X_T))));
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                SEND_STRING(SS_RCTL("t"));
+            }
+            break;
+    }
+}
+
 // char *universal_backspace = SS_RCTL(SS_TAP(X_BSPACE) SS_RALT(SS_TAP(X_H)));
 // Removed ctrl+alt+h. That was used for bash backspace, but realized
 // that we can use 'bind' or 'bindkey' in bash environments to bind
@@ -288,11 +305,13 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_A);
+                register_code16(KC_A);
             }
             break;
     }
 }
+
+void un_tda(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC_A); }
 
 void tdb(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
@@ -302,11 +321,13 @@ void tdb(qk_tap_dance_state_t *state, void *user_data) {
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_B);
+                register_code16(KC_B);
             }
             break;
     }
 }
+
+void un_tdb(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC_B); }
 
 void tdc(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
@@ -320,11 +341,13 @@ void tdc(qk_tap_dance_state_t *state, void *user_data) {
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_C);
+                register_code16(KC_C);
             }
             break;
     }
 }
+
+void un_tdc(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC_C); }
 
 void tdi(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
@@ -333,27 +356,13 @@ void tdi(qk_tap_dance_state_t *state, void *user_data) {
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_I);
+                register_code16(KC_I);
             }
             break;
     }
 }
 
-void td_ctrl_t(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state, true)) {
-        case SINGLE_TAP:
-            SEND_STRING(SS_RCTL("t"));
-            break;
-        case DOUBLE_TAP:
-            SEND_STRING(SS_RCTL(SS_RSFT(SS_TAP(X_T))));
-            break;
-        default:
-            for (int i = 0; i < state->count; i++) {
-                SEND_STRING(SS_RCTL("t"));
-            }
-            break;
-    }
-}
+void un_tdi(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC_I); }
 
 void tdu(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
@@ -364,11 +373,13 @@ void tdu(qk_tap_dance_state_t *state, void *user_data) {
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(KC_U);
+                register_code16(KC_U);
             }
             break;
     }
 }
+
+void un_tdu(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC_U); }
 
 void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycode) {
     switch (cur_dance(state, true)) {
@@ -386,7 +397,7 @@ void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycod
             break;
         default:
             for (int i = 0; i < state->count; i++) {
-                tap_code16(keycode);
+                register_code16(keycode);
             }
             break;
     }
@@ -394,7 +405,11 @@ void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycod
 
 void tdv(qk_tap_dance_state_t *state, void *user_data) { paste_or_type(state, user_data, KC_V); }
 
+void un_tdv(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC_V); }
+
 void tdy(qk_tap_dance_state_t *state, void *user_data) { paste_or_type(state, user_data, KC_Y); }
+
+void un_tdy(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC_Y); }
 
 void oh_copy(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
@@ -453,19 +468,19 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     // Reset keyboard
     [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset),
     // 'A' tap dance
-    [TDK_A] = ACTION_TAP_DANCE_FN(tda),
+    [TDK_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tda, un_tda),
     // 'B' tap dance
-    [TDK_B] = ACTION_TAP_DANCE_FN(tdb),
+    [TDK_B] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdb, un_tdb),
     // 'C' tap dance
-    [TDK_C] = ACTION_TAP_DANCE_FN(tdc),
+    [TDK_C] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdc, un_tdc),
     // 'I' tap dance
-    [TDK_I] = ACTION_TAP_DANCE_FN(tdi),
+    [TDK_I] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdi, un_tdi),
     // 'U' tap dance
-    [TDK_U] = ACTION_TAP_DANCE_FN(tdu),
+    [TDK_U] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdu, un_tdu),
     // 'V' tap dance
-    [TDK_V] = ACTION_TAP_DANCE_FN(tdv),
+    [TDK_V] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdv, un_tdv),
     // 'Y' tap dance
-    [TDK_Y] = ACTION_TAP_DANCE_FN(tdy),
+    [TDK_Y] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdy, un_tdy),
     // Ctrl-t tap dance
     [TDK_CTL_T] = ACTION_TAP_DANCE_FN(td_ctrl_t),
     // One hand copy
