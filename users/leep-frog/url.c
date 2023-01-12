@@ -18,4 +18,11 @@ void URLWait(void) { wait_ms(50); }
     URLWait();      \
     SEND_STRING(SS_PASTE SS_TAP(X_ENTER));
 
+// URL_ID gets the k-th word in the URL
+#define URL_ID(k)              \
+    SEND_STRING(SS_RCTL("l")); \
+    URLWait();                 \
+    SEND_STRING(SS_RCTL(SS_TAP(X_LEFT) REPEAT_##k(SS_TAP(X_RIGHT)) SS_RSFT(SS_TAP(X_RIGHT)) "c"));
+
+#define CR_ID() URL_ID(6)
 #endif

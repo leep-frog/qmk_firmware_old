@@ -18,6 +18,7 @@
 
 #define COMBO_VARIABLE_LEN
 
+#define FE_0(M, X)
 #define FE_1(M, X) M(X)
 #define FE_2(M, X, ...) M(X), FE_1(M, __VA_ARGS__)
 #define FE_3(M, X, ...) M(X), FE_2(M, __VA_ARGS__)
@@ -30,6 +31,19 @@
 #define FE_10(M, X, ...) M(X), FE_9(M, __VA_ARGS__)
 #define FE_11(M, X, ...) M(X), FE_10(M, __VA_ARGS__)
 #define FE_12(M, X, ...) M(X), FE_11(M, __VA_ARGS__)
+
+// Note: REPEAT_K does not separate with a comma, whereas FE does
+#define REPEAT_0(X)
+#define REPEAT_1(X) X
+#define REPEAT_2(X) X REPEAT_1(X)
+#define REPEAT_3(X) X REPEAT_2(X)
+#define REPEAT_4(X) X REPEAT_3(X)
+#define REPEAT_5(X) X REPEAT_4(X)
+#define REPEAT_6(X) X REPEAT_5(X)
+#define REPEAT_7(X) X REPEAT_6(X)
+#define REPEAT_8(X) X REPEAT_7(X)
+#define REPEAT_9(X) X REPEAT_8(X)
+#define REPEAT_10(X) X REPEAT_9(X)
 
 // Override built-ins:
 // https://github.com/qmk/qmk_firmware/blob/master/docs/feature_audio.md#songs
