@@ -2,14 +2,17 @@
 #define LEEP_ENUMS
 
 enum layers {  // prefix LR
-    LR_BASE,   // default layeqr
+    // Default layer
+    LR_BASE,
+    // The safe layer needs to stay in this position because this is the layer
+    // from which we define combos (see 'COMBO_ONLY_FROM_LAYER 1' in config.h).
+    LR_SAFE,
     LR_CTRL,
     LR_ALT,
     LR_SYMB,        // symbols
     LR_CTRL_X,      // layer activated temporarily after hitting x in the CTRL layer.
     LR_SHORTCUTS,   // command for combination keystrokes.
     LR_NAVIGATION,  // command for changing workspaces.
-    LR_SAFE,
     LR_OUTLOOK,
     LR_CTRL_ALT,
     LR_ONE_HAND_LEFT,
