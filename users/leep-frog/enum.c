@@ -40,6 +40,7 @@ enum td_keys {  // prefix TDK
     TDK_A,
     TDK_B,
     TDK_C,
+    TDK_I,
     TDK_U,
     TDK_V,
     TDK_Y,
@@ -70,7 +71,10 @@ LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
           // Outlook today
           OL_TDAY,
           // Escape
-          CK_ESC, )
+          CK_ESC,
+          // Trailing comma: linter moves close paren to end of previous line;
+          // these lines prevent that and act as trailing comma for better diffs.
+)
 
 LEEP_ENUM(custom_url_strings, CU, CS_ENUM_END,
           // Copy URL from a Chrome browser
@@ -78,13 +82,19 @@ LEEP_ENUM(custom_url_strings, CU, CS_ENUM_END,
           // Copy URL ID
           URL_ICP,
           // Get the CR ID from the URL
-          URL_CRI, )
+          URL_CRI,
+          // Trailing comma
+)
 
 LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
           // Paste URL
           URL_PST,
-
-          CK_CL, CK_MOMA, )
+          // Open critique
+          CK_CL,
+          // Open moma
+          CK_MOMA,
+          // Trailing comma
+)
 
 LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
           // Ctrl+g
@@ -104,7 +114,9 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
           // Switches mouse acceleration
           CK_ACL,
           // Useful for waiting during macro recording/playback.
-          CK_WAIT, )
+          CK_WAIT,
+          // Trailing comma
+)
 
 // Layer toggling
 // Defined here because needed by combo.c

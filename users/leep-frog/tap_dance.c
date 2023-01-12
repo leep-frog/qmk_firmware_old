@@ -326,6 +326,19 @@ void tdc(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void tdi(qk_tap_dance_state_t *state, void *user_data) {
+    switch (cur_dance(state, true)) {
+        case SINGLE_HOLD:
+            CR_ID();
+            break;
+        default:
+            for (int i = 0; i < state->count; i++) {
+                tap_code16(KC_I);
+            }
+            break;
+    }
+}
+
 void td_ctrl_t(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
         case SINGLE_TAP:
@@ -403,12 +416,18 @@ void oh_paste(qk_tap_dance_state_t *state, void *user_data) {
 
 void TDReset(qk_tap_dance_state_t *state, void *user_data) {
     LEEP_SOLID_COLOR(RED, true);
-    if (cur_dance(state, true) == SINGLE_TAP) {
-        SNG_RESET;
-        while (is_playing_notes()) {
-            wait_ms(75);
-        }
+    switch (cur_dance(state, true)) {
+        case SINGLE_TAP:
+            SNG_RESET;
+            while (is_playing_notes()) {
+                wait_ms(75);
+            }
+            break;
+        case SINGLE_HOLD:
+            SEND_STRING("moonlander_leep-frog.bin" SS_TAP(X_ENTER));
+            break;
     }
+
     reset_keyboard();
 }
 
@@ -439,6 +458,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_B] = ACTION_TAP_DANCE_FN(tdb),
     // 'C' tap dance
     [TDK_C] = ACTION_TAP_DANCE_FN(tdc),
+    // 'I' tap dance
+    [TDK_I] = ACTION_TAP_DANCE_FN(tdi),
     // 'U' tap dance
     [TDK_U] = ACTION_TAP_DANCE_FN(tdu),
     // 'V' tap dance
@@ -473,6 +494,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define TD_A TD(TDK_A)
 #define TD_B TD(TDK_B)
 #define TD_C TD(TDK_C)
+#define TD_I TD(TDK_I)
 #define TD_U TD(TDK_U)
 #define TD_V TD(TDK_V)
 #define TD_Y TD(TDK_Y)
