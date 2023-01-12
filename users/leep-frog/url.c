@@ -24,5 +24,7 @@ void URLWait(void) { wait_ms(50); }
     URLWait();                 \
     SEND_STRING(SS_RCTL(SS_TAP(X_LEFT) REPEAT_##k(SS_TAP(X_RIGHT)) SS_RSFT(SS_TAP(X_RIGHT)) "c"));
 
+#define NTH_URL_ID(k) SS_TAP(X_LEFT) REPEAT_##k(SS_TAP(X_RIGHT)) SS_RSFT(SS_TAP(X_RIGHT)) SS_UP(X_RCTL) SS_RSFT(SS_TAP(X_LEFT)) SS_DOWN(X_RCTL) "c"
+
 #define CR_ID() URL_ID(6)
 #endif

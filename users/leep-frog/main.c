@@ -178,6 +178,7 @@ typedef void (*processor_action_t)(bool activated);
 
 #define PRC_ACTION(user_fn) user_fn
 
+// TODO: Remove max string and set value on a per-PROCESSOR_MACRO basis
 #define MAX_STRING_LEN 15
 
 #define C__OFFSET(C__START, v) v - C__START - 1
@@ -209,7 +210,13 @@ PROCESSOR_MACRO(char, 3, CS_ENUM_START, cs, [MAX_STRING_LEN + 1], "",
                 // Universal backspace
                 CK_UNBS, SS_RCTL(SS_TAP(X_BSPACE)) "\0")
 
-PROCESSOR_MACRO(char, 2, CU_ENUM_START, cu, [MAX_STRING_LEN + 1], "", URL_COPY, "c", URL_ICP, SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c")
+PROCESSOR_MACRO(char, 3, CU_ENUM_START, cu, [MAX_STRING_LEN + 35], "",
+                // Copy URL
+                URL_COPY, "c",
+                // Copy URL ID
+                URL_ICP, SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c",
+                // Copy URL CR ID
+                URL_CRI, NTH_URL_ID(6))
 
 PROCESSOR_MACRO(char, 3, CN_ENUM_START, cn, [MAX_STRING_LEN + 1], "", URL_PST, SS_RSFT(SS_TAP(X_INSERT)) SS_TAP(X_ENTER), CK_CL, "cl/" SS_TAP(X_ENTER), CK_MOMA, "moma " SS_TAP(X_ENTER))
 

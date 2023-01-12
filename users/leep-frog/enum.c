@@ -73,7 +73,9 @@ LEEP_ENUM(custom_url_strings, CU, CS_ENUM_END,
           // Copy URL from a Chrome browser
           URL_COPY,
           // Copy URL ID
-          URL_ICP, )
+          URL_ICP,
+          // Get the CR ID from the URL
+          URL_CRI, )
 
 LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
           // Paste URL
@@ -81,7 +83,21 @@ LEEP_ENUM(custom_new_tab_strings, CN, CU_ENUM_END,
 
           CK_CL, CK_MOMA, )
 
-LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END, CK_CTLG, CK_ALTT, CK_MUT1, CK_MUT2, MS_CTRL, CK_EYE, TO_ALT, CK_LOCK, KB_OFF,
+LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
+          // Ctrl+g
+          CK_CTLG,
+          // Alt tab
+          CK_ALTT,
+          // Mute codes
+          CK_MUT1, CK_MUT2,
+          // Mouse control click
+          MS_CTRL,
+          // Eye care
+          CK_EYE,
+          // To alt layer
+          TO_ALT,
+          // Lock keyboard and keyboard off
+          CK_LOCK, KB_OFF,
           // Switches mouse acceleration
           CK_ACL,
           // Useful for waiting during macro recording/playback.
