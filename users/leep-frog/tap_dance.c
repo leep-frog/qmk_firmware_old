@@ -300,6 +300,10 @@ void TDOutlookReload(qk_tap_dance_state_t *state, void *user_data) {
 void tda(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
+            // Select all
+            SEND_STRING(SS_RCTL("a"));
+            break;
+        case DOUBLE_HOLD:
             // Select all and copy
             SEND_STRING(SS_RCTL("ac"));
             break;
