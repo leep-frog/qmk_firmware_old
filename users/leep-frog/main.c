@@ -3,9 +3,17 @@
 
 bool leep_toggling_alt = false;
 
+void print_int(int k) {
+    char c[10];
+    itoa(k, c, 10);
+    send_string(c);
+}
+#define PRINT_INT(i) print_int(i);
+
 #include <stdio.h>
 #include "interface.c"
 #include "enum.c"
+#include "./features/features.c"
 #include "define_keys.c"
 #include "color.c"
 #include "music.c"
@@ -26,18 +34,9 @@ bool leep_toggling_alt = false;
 
 #    define LEBUG(s, ...) uprintf(s, ##__VA_ARGS__);
 
-void print_int(int k) {
-    char c[10];
-    itoa(k, c, 10);
-    send_string(c);
-}
-
-#    define PRINT_INT(i) print_int(i);
-
 #else
 
 #    define LEBUG(s, ...)
-#    define PRINT_INT(i)
 
 #endif
 
@@ -348,6 +347,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
     if (keycode != TO_ALT) {
         leep_alt_interrupted = true;
+    }
+
+    if (SymbolLayerOverlap_handled(keycode, record)) {
+        return false;
     }
 
     // Return if this is being run on key un-pressed.
