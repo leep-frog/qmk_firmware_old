@@ -92,4 +92,12 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     }
 }
 
+void activate_base_layer_combo(bool activated) {
+    if (activated) {
+        combo_enable();
+    } else {
+        combo_disable();
+    }
+}
+
 #endif

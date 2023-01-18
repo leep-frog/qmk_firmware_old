@@ -274,11 +274,13 @@ void ctrl_alt_layer(bool activated) {
     }
 }
 
-#define MAKE_LAYER_PROCESSOR(key, func_name) [key] = PRC_ACTION(func_name)
-
-OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 7, -1, layer, , NULL, LR_CTRL_X, &ctrl_x_layer,
+OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 8, -1, layer, , NULL, LR_CTRL_X, &ctrl_x_layer,
                          // Needed to undo SS_DOWN from [shift+]alt+tab logic (TD_ATAB/TD_STAB).
                          LR_ALT, &AltTab_deactivate,
+                         // Only want combos to be enabled in the base layer (even though we
+                         // define "COMBO_ONLY_FROM_LAYER 1", but we do that only so we can use the
+                         // simple keycodes defined in the safe layer).
+                         LR_BASE, &activate_base_layer_combo,
                          // Deactivate alt when exiting navigation layer.
                          LR_NAVIGATION, &AltTab_deactivate,
                          // Left one-hand layer changes.
