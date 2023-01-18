@@ -1,5 +1,5 @@
 
-static bool leep_toggling_alt = true;
+static bool leep_toggling_alt = false;
 
 #define ALT_DOWN() SEND_STRING(SS_DOWN(X_RALT))
 #define ALT_UP() SEND_STRING(SS_UP(X_RALT))
