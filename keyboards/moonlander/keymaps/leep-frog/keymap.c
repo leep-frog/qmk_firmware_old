@@ -61,7 +61,7 @@ LSFT_T(CL(LPRN)), KC_HOME, CL(F),   KC_DEL,  KC_RGHT, CK_CTLG, _______,        _
 
     [LR_ALT] = ML_LAYOUT(
         AL(EQL),  AL(1), AL(2),  AL(3),   AL(4),     AL(5),   RALT(WS_LEFT),        RALT(CK_ESC),  AL(6),   AL(7),   AL(8),    AL(9),   AL(0),    TO_SFTY,
-        AL(TAB),  AL(Q), AL(F4), AL(E),   AL(R),     CK_ALTT, KC_LEFT,              KC_RIGHT,      CK_PSTE, TD_STAB, AL(I),    TD_ATAB, AL(P),    AL(BSLS),
+        AL(TAB),  AL(Q), AL(F4), AL(E),   AL(R),     CK_ALTT, KC_LEFT,              KC_RIGHT,      CK_PSTE, CK_SATB, AL(I),    CK_ATB,  AL(P),    AL(BSLS),
 LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),        RALT(WS_RGHT), CK_UNBS, AL(J),   AL(K),    KC_WH_U, AL(SCLN), RSFT_T(AL(RPRN)),
         AL(LCBR), AL(Z), AL(X),  AL(C),   KC_WH_D,   CL(LEFT),                                     AL(N),   AL(M),   AL(COMM), AL(DOT), AL(SLSH), AL(RCBR),
 
@@ -95,7 +95,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_NAVIGATION] = ML_LAYOUT(
         _______, _______, _______, _______, _______,  _______,     _______,           _______, _______,  _______, _______, _______, _______, TO_SFTY,
-        _______, _______, CK_WWWB, _______, TD_RST,   RCTL(AL(T)), _______,           _______, SLK_UP,   SLK_UP,  URL_CRI, CK_TABF, GU(UP),  TD_ATAB,
+        _______, _______, CK_WWWB, _______, TD_RST,   RCTL(AL(T)), _______,           _______, SLK_UP,   SLK_UP,  URL_CRI, CK_TABF, GU(UP),  CK_ATB,
         _______, _______, CK_SNIP, _______, GU(RGHT), _______,     _______,           _______, SLK_DWN,  SLK_DWN, SLK_JMP, WS_RGHT, MISC_WS, _______,
         _______, _______, _______, _______, _______,  GU(LEFT),                                GU(DOWN), _______, WS_UP,   WS_DOWN, _______, _______,
 
@@ -126,7 +126,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_ONE_HAND_LEFT] = ML_LAYOUT(
         _______, _______, _______, _______, _______, _______, _______,           _______, _______, _______,  _______, _______, _______, TO_SFTY,
-       KC_TAB,   KC_BSPC, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, _______,           _______, KC_WH_U, URL_COPY, KC_MS_U, _______, _______, _______,
+       KC_TAB,   KC_BSPC, CL(W),   CK_SATB, CK_ATB,  TD_CTLT, _______,           _______, KC_WH_U, URL_COPY, KC_MS_U, _______, _______, _______,
        KC_ENTER, WS_LEFT, CL(R),   CK_TABB, CK_TABF, WS_RGHT, _______,           _______, KC_WH_D, KC_MS_L,  KC_MS_D, KC_MS_R, KC_RCTL, _______,
         _______, CK_WWWB, CK_WWWF, OH_COPY, OH_PSTE, _______,                             _______, KC_BTN1,  KC_BTN3, KC_BTN2, _______, _______,
 
@@ -137,7 +137,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
 
     [LR_ONE_HAND_RIGHT] = ML_LAYOUT(
         _______, _______, _______, _______, _______,  _______, _______,           _______, _______, _______, _______, _______, _______, TO_SFTY,
-        _______, _______, _______, KC_MS_U, URL_COPY, KC_WH_U, _______,           _______, CL(W),   TD_STAB, TD_ATAB, TD_CTLT, KC_BSPC, KC_TAB,
+        _______, _______, _______, KC_MS_U, URL_COPY, KC_WH_U, _______,           _______, CL(W),   CK_SATB, CK_ATB,  TD_CTLT, KC_BSPC, KC_TAB,
         _______, KC_RCTL, KC_MS_L, KC_MS_D, KC_MS_R,  KC_WH_D, _______,           _______, WS_LEFT, CK_TABB, CK_TABF, CL(R),   WS_RGHT, KC_ENTER,
         _______, _______, KC_BTN2, KC_BTN3, KC_BTN1,  _______,                             _______, OH_COPY, OH_PSTE, CK_WWWB, CK_WWWF, _______,
 

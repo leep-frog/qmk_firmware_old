@@ -163,109 +163,6 @@ void symb_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 void symb_reset(qk_tap_dance_state_t *state, void *user_data) { symb_press_count = 0; }
 
-// TODO: do this with macros?
-// ALT_TAB TAP DANCE
-int alt_tab_press_count = 0;
-int alt_tabs_sent       = 0;
-
-void alt_tab_each_press(qk_tap_dance_state_t *state, void *user_data) {
-    alt_tab_press_count++;
-    if (leep_toggling_alt) {
-        alt_tabs_sent++;
-        SEND_STRING(SS_TAP(X_TAB));
-        return;
-    }
-
-    if (alt_tab_press_count == 1) {
-        return;
-    }
-
-    leep_toggling_alt = true;
-    SEND_STRING(SS_DOWN(X_RALT));
-    if (alt_tab_press_count == 2) {
-        // Press an extra one for the first press.
-        alt_tabs_sent++;
-        SEND_STRING(SS_TAP(X_TAB));
-    }
-    alt_tabs_sent++;
-    SEND_STRING(SS_TAP(X_TAB));
-}
-
-void alt_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state, false)) {
-        case SINGLE_TAP:
-            if (!leep_toggling_alt && alt_tabs_sent == 0) {
-                SEND_STRING(SS_RALT(SS_TAP(X_TAB)));
-            }
-            break;
-        case SINGLE_HOLD:
-            if (!leep_toggling_alt) {
-                leep_toggling_alt = true;
-                SEND_STRING(SS_DOWN(X_RALT));
-                if (alt_tabs_sent == 0) {
-                    SEND_STRING(SS_TAP(X_TAB));
-                }
-            }
-            break;
-    }
-}
-
-void alt_tab_reset(qk_tap_dance_state_t *state, void *user_data) {
-    alt_tab_press_count = 0;
-    alt_tabs_sent       = 0;
-}
-
-// SALT_TAB TAP DANCE
-int salt_tab_press_count = 0;
-int salt_tabs_sent       = 0;
-
-void salt_tab_each_press(qk_tap_dance_state_t *state, void *user_data) {
-    salt_tab_press_count++;
-    if (leep_toggling_alt) {
-        salt_tabs_sent++;
-        SEND_STRING(SS_RSFT(SS_TAP(X_TAB)));
-        return;
-    }
-
-    if (salt_tab_press_count == 1) {
-        return;
-    }
-
-    leep_toggling_alt = true;
-    SEND_STRING(SS_DOWN(X_RALT));
-    if (salt_tab_press_count == 2) {
-        // Press an extra one for the first press.
-        salt_tabs_sent++;
-        SEND_STRING(SS_RSFT(SS_TAP(X_TAB)));
-    }
-    salt_tabs_sent++;
-    SEND_STRING(SS_RSFT(SS_TAP(X_TAB)));
-}
-
-void salt_tab_finished(qk_tap_dance_state_t *state, void *user_data) {
-    switch (cur_dance(state, false)) {
-        case SINGLE_TAP:
-            if (!leep_toggling_alt && salt_tabs_sent == 0) {
-                SEND_STRING(SS_RALT(SS_RSFT(SS_TAP(X_TAB))));
-            }
-            break;
-        case SINGLE_HOLD:
-            if (!leep_toggling_alt) {
-                leep_toggling_alt = true;
-                SEND_STRING(SS_DOWN(X_RALT));
-                if (salt_tabs_sent == 0) {
-                    SEND_STRING(SS_RSFT(SS_TAP(X_TAB)));
-                }
-            }
-            break;
-    }
-}
-
-void salt_tab_reset(qk_tap_dance_state_t *state, void *user_data) {
-    salt_tab_press_count = 0;
-    salt_tabs_sent       = 0;
-}
-
 // Ctrl-t tap dance
 void td_ctrl_t(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
@@ -474,10 +371,6 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
     // Symbol layer
     [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset),
-    // Alt tab
-    [TDK_ALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(alt_tab_each_press, alt_tab_finished, alt_tab_reset),
-    // Shift alt tab
-    [TDK_SALT_TAB] = ACTION_TAP_DANCE_FN_ADVANCED(salt_tab_each_press, salt_tab_finished, salt_tab_reset),
     // Shift toggle
     [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift),
     // Kill line
@@ -541,9 +434,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define TD_CTLT TD(TDK_CTL_T)
 #define OH_COPY TD(TDK_OH_COPY)
 #define OH_PSTE TD(TDK_OH_PASTE)
-
-#define TD_ATAB TD(TDK_ALT_TAB)
-#define TD_STAB TD(TDK_SALT_TAB)
 
 #define TO_SFT TD(TDK_SHIFT_LAYER)
 #define TO_SYMB TD(TDK_SYMB_LAYER)

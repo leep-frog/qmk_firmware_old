@@ -1,8 +1,6 @@
 #ifndef LEEP_MAIN
 #define LEEP_MAIN
 
-bool leep_toggling_alt = false;
-
 void print_int(int k) {
     char c[10];
     itoa(k, c, 10);
@@ -190,6 +188,8 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_VALUE9(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE8(start, __VA_ARGS__)
 #define PROCESSOR_VALUE10(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE9(start, __VA_ARGS__)
 #define PROCESSOR_VALUE11(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE10(start, __VA_ARGS__)
+#define PROCESSOR_VALUE12(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE11(start, __VA_ARGS__)
+#define PROCESSOR_VALUE13(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE12(start, __VA_ARGS__)
 
 #define OPTIONAL_PROCESSOR_MACRO(_type_, sz, num_provided, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix##_processors[sz] suffix = {[0 ... sz - 1] = dflt, PROCESSOR_VALUE##num_provided(e_start, __VA_ARGS__)};
 
@@ -224,7 +224,7 @@ PROCESSOR_MACRO_STRING(3, CN_ENUM_START, cn, 12, "",
                        // Open Moma
                        CK_MOMA, "moma " SS_TAP(X_ENTER))
 
-PROCESSOR_MACRO(processor_action_t, 11, CK_ENUM_START, ck, , NULL,
+PROCESSOR_MACRO(processor_action_t, 13, CK_ENUM_START, ck, , NULL,
                 // Ctrl g
                 CK_CTLG, &_ctrl_g_new,
                 // Mute 1
@@ -245,18 +245,15 @@ PROCESSOR_MACRO(processor_action_t, 11, CK_ENUM_START, ck, , NULL,
                 CK_LOCK, &_leep_lock,
                 // Change the mouse speed
                 CK_ACL, &_change_mouse_speed,
+                // alt+tab
+                CK_ATB, &AltTab_run,
+                // shift+alt+tab
+                CK_SATB, &AltTab_runShift,
                 // Wait for some milliseconds (useful for record).
                 CK_WAIT, &_leep_wait)
 
-void deactivate_alt(bool activated) {
-    if (!activated) {
-        leep_toggling_alt = false;
-        SEND_STRING(SS_UP(X_RALT));
-    }
-}
-
 void one_hand_layer_change(bool activated) {
-    deactivate_alt(activated);
+    AltTab_deactivate(activated);
     if (activated) {
         leep_acl = 0;
         tap_code16(KC_ACL2);
@@ -281,9 +278,9 @@ void ctrl_alt_layer(bool activated) {
 
 OPTIONAL_PROCESSOR_MACRO(processor_action_t, NUM_LAYERS, 7, -1, layer, , NULL, LR_CTRL_X, &ctrl_x_layer,
                          // Needed to undo SS_DOWN from [shift+]alt+tab logic (TD_ATAB/TD_STAB).
-                         LR_ALT, &deactivate_alt,
+                         LR_ALT, &AltTab_deactivate,
                          // Deactivate alt when exiting navigation layer.
-                         LR_NAVIGATION, &deactivate_alt,
+                         LR_NAVIGATION, &AltTab_deactivate,
                          // Left one-hand layer changes.
                          LR_ONE_HAND_LEFT, &one_hand_layer_change,
                          // Right one-hand layer changes.
@@ -349,7 +346,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         leep_alt_interrupted = true;
     }
 
-    if (SymbolLayerOverlap_handled(keycode, record)) {
+    if (SymbolLayerOverlap_handled(keycode, record) || AltTab_handled(keycode, record)) {
         return false;
     }
 
@@ -371,15 +368,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         }
 
         return true;
-    }
-
-    // TODO: move all local variables into a single, static setting object
-    bool td_alt_key_pressed = (keycode == TD_ATAB) || (keycode == TD_STAB);
-    // End alt layer if any key other than alt togglers.
-    if (leep_toggling_alt && !td_alt_key_pressed) {
-        leep_toggling_alt = false;
-        SEND_STRING(SS_UP(X_RALT));
-        return false;
     }
 
     // Untoggle shift the layer for all non-movement keys

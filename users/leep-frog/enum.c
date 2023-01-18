@@ -49,8 +49,6 @@ enum td_keys {  // prefix TDK
     // One hand keys
     TDK_OH_COPY,
     TDK_OH_PASTE,
-    TDK_ALT_TAB,
-    TDK_SALT_TAB,
     TDK_CTL_T,
 };
 
@@ -115,6 +113,10 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
           CK_ACL,
           // Useful for waiting during macro recording/playback.
           CK_WAIT,
+          // alt+tab
+          CK_ATB,
+          // shift+alt+tab
+          CK_SATB,
           // Trailing comma
 )
 
