@@ -16,6 +16,9 @@ This feature file implements a fix for this issue.
 Test cases:
 1. See above sequence
 2. Press a key in the symbol layer
+3. Symbol key press, press 1, press 2, press 3, unpress 1, unpress 2, unpress 3, unpress symbol key.
+   This tests the issue where we resolve the first_symb_press due to another key being pressed (as
+   opposed to unpressing the first_symb_press).
 */
 
 // Logic for stuff
@@ -36,31 +39,34 @@ bool SymbolLayerOverlap_handled(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
-    if (IS_LAYER_ON(LR_SYMB)) {
-        // Record the first key press in the symbol layer, but don't actually press it.
-        if (!first_symb_press && record->event.pressed) {
-            first_symb_press          = true;
-            first_symb_press_key      = ((keypos_t){
-                     .col = record->event.key.col,
-                     .row = record->event.key.row,
-            });
-            resolved_first_symb_press = false;
-            return true;
-        } else if (first_symb_press && !record->event.pressed && !resolved_first_symb_press) {
-            // We're unpressing the key while still in the symbol layer
-            resolved_first_symb_press = true;
-            tap_code16(keymap_key_to_keycode(get_highest_layer(layer_state), first_symb_press_key));
-            return true;
-        }
-    } else {
-        if (!record->event.pressed && !resolved_first_symb_press) {
-            // We're unpressing the key in a different layer. Need to send space,
-            // since the symb/space key will have only registered as symbol layer key
-            // and not the space key.
-            resolved_first_symb_press = true;
+    bool symb_layer = IS_LAYER_ON(LR_SYMB);
+
+    if (!resolved_first_symb_press) {
+        resolved_first_symb_press = true;
+        // If we're not in the symbol layer, then the following happened:
+        // - Press symb key
+        // - Press other key
+        // - Unpress symb key
+        // - Unpress other key
+        // and we meant to just "type" the symb key as a space key.
+        if (!symb_layer) {
             SEND_STRING(" ");
-            tap_code16(keymap_key_to_keycode(get_highest_layer(layer_state), first_symb_press_key));
         }
+        // Send the key we didn't press yet.
+        tap_code16(keymap_key_to_keycode(get_highest_layer(layer_state), first_symb_press_key));
+        // We don't want to
+        return (first_symb_press_key.col == record->event.key.col && first_symb_press_key.row == record->event.key.row);
+    }
+
+    // Record the first key press in the symbol layer, but don't actually press it.
+    if (symb_layer && !first_symb_press && record->event.pressed) {
+        first_symb_press          = true;
+        first_symb_press_key      = ((keypos_t){
+                 .col = record->event.key.col,
+                 .row = record->event.key.row,
+        });
+        resolved_first_symb_press = false;
+        return true;
     }
     return false;
 }
