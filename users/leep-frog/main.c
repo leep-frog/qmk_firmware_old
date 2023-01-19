@@ -183,7 +183,7 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_MACRO_STRING(num, e_start, prefix, max_string_size, dflt, ...) PROCESSOR_MACRO(char, num, e_start, prefix, [max_string_size], dflt, __VA_ARGS__)
 
 // Be sure to end each with "\0" character (string end character).
-PROCESSOR_MACRO_STRING(3, CS_ENUM_START, cs, 16, "",
+PROCESSOR_MACRO_STRING(4, CS_ENUM_START, cs, 26, "",
                        // KC_ESC actually sends a "`" (KC_GRAVE) character for some reason.
                        // Maybe it's something to do with KC_GESC overlapping or something?
                        // Who knows why, but we do need this custom keycode regardless to get around that.
@@ -191,7 +191,11 @@ PROCESSOR_MACRO_STRING(3, CS_ENUM_START, cs, 16, "",
                        // Outlook today
                        OL_TDAY, SS_RALT(SS_TAP(X_H)) SS_TAP(X_O) SS_TAP(X_D) "\0",
                        // Universal backspace
-                       CK_UNBS, SS_RCTL(SS_TAP(X_BSPACE)) "\0")
+                       CK_UNBS, SS_RCTL(SS_TAP(X_BSPACE)) "\0",
+                       // Log filter text
+                       CK_LOGS, SS_TAP(X_ENTER) " | sort @timestamp asc\0"
+                       // Trailing comma
+)
 
 PROCESSOR_MACRO_STRING(3, CU_ENUM_START, cu, 46, "",
                        // Copy URL
@@ -199,7 +203,9 @@ PROCESSOR_MACRO_STRING(3, CU_ENUM_START, cu, 46, "",
                        // Copy URL ID
                        URL_ICP, SS_TAP(X_RIGHT) SS_RSFT(SS_TAP(X_LEFT)) "c",
                        // Copy URL CR ID
-                       URL_CRI, NTH_URL_ID(6))
+                       URL_CRI, NTH_URL_ID(6)
+                       // Trailing comma
+)
 
 PROCESSOR_MACRO_STRING(3, CN_ENUM_START, cn, 12, "",
                        // Paste clipboard contents into the URL bar
@@ -207,7 +213,9 @@ PROCESSOR_MACRO_STRING(3, CN_ENUM_START, cn, 12, "",
                        // Open CL
                        CK_CL, "cl/" SS_TAP(X_ENTER),
                        // Open Moma
-                       CK_MOMA, "moma " SS_TAP(X_ENTER))
+                       CK_MOMA, "moma " SS_TAP(X_ENTER)
+                       // Trailing comma
+)
 
 PROCESSOR_MACRO(processor_action_t, 14, CK_ENUM_START, ck, , NULL,
                 // Ctrl g
@@ -237,7 +245,9 @@ PROCESSOR_MACRO(processor_action_t, 14, CK_ENUM_START, ck, , NULL,
                 // shift+alt+tab
                 CK_SATB, &AltTab_runShift,
                 // Wait for some milliseconds (useful for record).
-                CK_WAIT, &_leep_wait)
+                CK_WAIT, &_leep_wait
+                // Trailing comma
+)
 
 void one_hand_layer_change(bool activated) {
     AltTab_deactivate(activated);

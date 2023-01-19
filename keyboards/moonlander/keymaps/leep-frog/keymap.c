@@ -85,7 +85,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
    [LR_SHORTCUTS] = ML_LAYOUT(
         _______,  _______, _______, _______, _______, _______, _______,           _______, _______, _______,  _______, _______, _______, TO_SFTY,
         _______,  _______, CK_WWWB, MS_MID,  CK_WWWF, _______, _______,           _______, KC_WH_U, URL_COPY, KC_MS_U, CK_MOMA, CK_CL,   _______,
-        KC_ENTER, KC_ACL2, _______, KC_ACL1, KC_ACL0, _______, _______,           _______, KC_WH_D, KC_MS_L,  KC_MS_D, KC_MS_R, KC_RCTL, _______,
+        KC_ENTER, _______, CK_LOGS, KC_ACL1, KC_ACL0, _______, _______,           _______, KC_WH_D, KC_MS_L,  KC_MS_D, KC_MS_R, KC_RCTL, _______,
         _______,  _______, _______, MS_CTRL, _______, GD_BULT,                             CK_NEW,  GD_HD_1,  GD_HD_2, GD_HD_3, _______, _______,
 
                                                                      BOTTOM_ROW,
@@ -96,7 +96,7 @@ LSFT_T(AL(LPRN)), AL(A), AL(S),  CL(DEL), CL(RIGHT), AL(G),   RALT(WS_LEFT),    
     [LR_NAVIGATION] = ML_LAYOUT(
         _______, _______, _______, _______, _______,  _______,     _______,           _______, _______,  _______, _______, _______, _______, TO_SFTY,
         _______, _______, CK_WWWB, _______, TD_RST,   RCTL(AL(T)), _______,           _______, SLK_UP,   SLK_UP,  URL_CRI, CK_TABF, GU(UP),  CK_ATB,
-        _______, _______, CK_SNIP, _______, GU(RGHT), _______,     _______,           _______, SLK_DWN,  SLK_DWN, SLK_JMP, WS_RGHT, MISC_WS, _______,
+        _______, _______, CK_SNIP, _______, GU(RGHT), _______,     _______,           _______, SLK_DWN,  SLK_DWN, SLK_JMP, CK_LOGS, MISC_WS, _______,
         _______, _______, _______, _______, _______,  GU(LEFT),                                GU(DOWN), _______, WS_UP,   WS_DOWN, _______, _______,
 
                                                                       BOTTOM_ROW,

@@ -70,6 +70,8 @@ LEEP_ENUM(custom_strings, CS, LEEP_SAFE_RANGE + 1,
           OL_TDAY,
           // Escape
           CK_ESC,
+          // Log filter text
+          CK_LOGS,
           // Trailing comma: linter moves close paren to end of previous line;
           // these lines prevent that and act as trailing comma for better diffs.
 )
