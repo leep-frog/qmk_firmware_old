@@ -17,6 +17,7 @@ enum layers {  // prefix LR
     LR_CTRL_ALT,
     LR_ONE_HAND_LEFT,
     LR_ONE_HAND_RIGHT,
+    LR_SCROLL,
 
     NUM_LAYERS,
 };
@@ -132,5 +133,7 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
 #define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
 #define TO_CTAL MO(LR_CTRL_ALT)
 #define TO_CTLX OSL(LR_CTRL_X)
+#define TO_SCRL LT(LR_SCROLL, WS_LEFT)
+#define TO_SCRR LT(LR_SCROLL, WS_RGHT)
 
 #endif
