@@ -369,8 +369,6 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    // Symbol layer
-    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset),
     // Shift toggle
     [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift),
     // Kill line
@@ -405,6 +403,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TDK_OH_COPY] = ACTION_TAP_DANCE_FN(oh_copy),
     // One hand paste
     [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
+    // Symbol layer
+    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset),
     // Shift layer
     [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_finished, shift_reset),
 };

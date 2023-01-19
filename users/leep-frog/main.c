@@ -142,22 +142,6 @@ void _ck_timer(bool pressed) {
     }
 }
 
-static uint16_t alt_timer;
-bool            leep_alt_interrupted = false;
-
-void _to_alt_fn(bool pressed) {
-    if (pressed) {
-        leep_alt_interrupted = false;
-        alt_timer            = timer_read();
-        layer_on(LR_ALT);
-    } else {
-        layer_off(LR_ALT);
-        if (!leep_alt_interrupted && timer_elapsed(alt_timer) < TAPPING_TERM) {
-            tap_code16(KC_ENTER);
-        }
-    }
-}
-
 void _safe_layer(bool activated) {
     if (!activated) {
         return;
@@ -190,6 +174,7 @@ typedef void (*processor_action_t)(bool activated);
 #define PROCESSOR_VALUE11(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE10(start, __VA_ARGS__)
 #define PROCESSOR_VALUE12(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE11(start, __VA_ARGS__)
 #define PROCESSOR_VALUE13(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE12(start, __VA_ARGS__)
+#define PROCESSOR_VALUE14(start, key, value, ...) PROCESSOR_VALUE1(start, key, value) PROCESSOR_VALUE13(start, __VA_ARGS__)
 
 #define OPTIONAL_PROCESSOR_MACRO(_type_, sz, num_provided, e_start, prefix, suffix, dflt, ...) const _type_ PROGMEM prefix##_processors[sz] suffix = {[0 ... sz - 1] = dflt, PROCESSOR_VALUE##num_provided(e_start, __VA_ARGS__)};
 
@@ -224,7 +209,7 @@ PROCESSOR_MACRO_STRING(3, CN_ENUM_START, cn, 12, "",
                        // Open Moma
                        CK_MOMA, "moma " SS_TAP(X_ENTER))
 
-PROCESSOR_MACRO(processor_action_t, 13, CK_ENUM_START, ck, , NULL,
+PROCESSOR_MACRO(processor_action_t, 14, CK_ENUM_START, ck, , NULL,
                 // Ctrl g
                 CK_CTLG, &_ctrl_g_new,
                 // Mute 1
@@ -240,7 +225,9 @@ PROCESSOR_MACRO(processor_action_t, 13, CK_ENUM_START, ck, , NULL,
                 // Keyboard off
                 KB_OFF, &_leep_keyboard_off,
                 // To the alt layer
-                TO_ALT, &_to_alt_fn,
+                TO_ALT, &ToAlt_run,
+                // To the ctrl layer
+                TO_CTRL, &ToCtrl_run,
                 // Lock the keyboard
                 CK_LOCK, &_leep_lock,
                 // Change the mouse speed
@@ -340,13 +327,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         return false;
     }
 
-    if (keycode != TO_ALT) {
-        leep_alt_interrupted = true;
-    }
-
     if (SymbolLayerOverlap_handled(keycode, record) || AltTab_handled(keycode, record)) {
         return false;
     }
+    ToAlt_handled(keycode);
+    ToCtrl_handled(keycode);
 
     // Return if this is being run on key un-pressed.
     if (!record->event.pressed) {
@@ -373,12 +358,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (keycode >= CK_ENUM_START && keycode <= CK_ENUM_END) {
         switch (keycode) {
             case TO_ALT:
+            case TO_CTRL:
             case CK_CTLG:
                 break;
             default:
                 untoggle_shift = true;
         }
-    } else if (keycode != TO_CTL) {
+    } else {
         switch (keycode & QK_BASIC_MAX) {
             case KC_HOME ... KC_UP:
                 break;

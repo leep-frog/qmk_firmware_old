@@ -107,6 +107,8 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
           CK_EYE,
           // To alt layer
           TO_ALT,
+          // To ctrl layer
+          TO_CTRL,
           // Lock keyboard and keyboard off
           CK_LOCK, KB_OFF,
           // Switches mouse acceleration
@@ -125,7 +127,6 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
 #define TO_SFTY TO(LR_SAFE)
 #define TO_OTLK LT(LR_OUTLOOK, KC_SCLN)
 #define TO_SHCT LT(LR_SHORTCUTS, KC_NO)
-#define TO_CTL LT(LR_CTRL, KC_TAB)
 #define TO_NAV LT(LR_NAVIGATION, KC_LGUI)
 #define TO_CTAL MO(LR_CTRL_ALT)
 #define TO_CTLX OSL(LR_CTRL_X)

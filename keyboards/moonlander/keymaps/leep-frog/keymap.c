@@ -23,7 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCBR, KC_Z, KC_X, TD_C, TD_V, TD_B,                         KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RCBR,
                                                      BOTTOM_ROW,
 
-                              THUMB_ROW(TO_ALT, TO_SHCT,       TO_NAV, TO_CTL)
+                              THUMB_ROW(TO_ALT, TO_SHCT,       TO_NAV, TO_CTRL)
     ),
 
     [LR_SAFE] = ML_LAYOUT(
@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
                                                      BOTTOM_ROW,
 
-                                THUMB_ROW(TO_ALT, TO_SHCT,   TO_NAV, TO_CTL)
+                                THUMB_ROW(TO_ALT, TO_SHCT,   TO_NAV, TO_CTRL)
     ),
 
     [LR_CTRL] = ML_LAYOUT(
