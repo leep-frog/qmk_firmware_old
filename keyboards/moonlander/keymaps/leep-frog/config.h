@@ -11,6 +11,7 @@
 // Allows us to define tapping term per key. See link for more details:
 // https://github.com/qmk/qmk_firmware/blob/master/docs/tap_hold.md#tapping-term
 #define TAPPING_TERM_PER_KEY
+#define LEEP_DANCE_EACH_RELEASE
 
 // Combo setup
 // #define FORCE_NKRO

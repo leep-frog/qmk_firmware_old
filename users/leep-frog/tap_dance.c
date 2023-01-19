@@ -84,7 +84,7 @@ void shift_each_press(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void shift_each_unpress(void) {
+void shift_each_unpress(qk_tap_dance_state_t *state, void *user_data) {
     switch (shift_press_count) {
         case 1:
             SEND_STRING(SS_UP(X_RSFT));
@@ -135,7 +135,7 @@ void symb_each_press(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void symb_each_unpress(void) {
+void symb_each_unpress(qk_tap_dance_state_t *state, void *user_data) {
     switch (symb_press_count) {
         case 1:
             layer_off(LR_SYMB);
@@ -372,7 +372,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     // Shift toggle
     [TDK_SHIFT_TOGGLE] = ACTION_TAP_DANCE_FN(TDToggleShift),
     // Kill line
-    [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, TDKillLine_finished, TDKillLine_reset),
+    [TDK_KILL_LINE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, TDKillLine_finished, TDKillLine_reset),
     // Record 1
     [TDK_MACRO_1] = ACTION_TAP_DANCE_FN(recorder_1),
     // Record 2
@@ -384,19 +384,19 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     // Reset keyboard
     [TDK_RESET] = ACTION_TAP_DANCE_FN(TDReset),
     // 'A' tap dance
-    [TDK_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tda, un_tda),
+    [TDK_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, tda, un_tda),
     // 'B' tap dance
-    [TDK_B] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdb, un_tdb),
+    [TDK_B] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, tdb, un_tdb),
     // 'C' tap dance
-    [TDK_C] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdc, un_tdc),
+    [TDK_C] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, tdc, un_tdc),
     // 'I' tap dance
-    [TDK_I] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdi, un_tdi),
+    [TDK_I] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, tdi, un_tdi),
     // 'U' tap dance
-    [TDK_U] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdu, un_tdu),
+    [TDK_U] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, tdu, un_tdu),
     // 'V' tap dance
-    [TDK_V] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdv, un_tdv),
+    [TDK_V] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, tdv, un_tdv),
     // 'Y' tap dance
-    [TDK_Y] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tdy, un_tdy),
+    [TDK_Y] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, tdy, un_tdy),
     // Ctrl-t tap dance
     [TDK_CTL_T] = ACTION_TAP_DANCE_FN(td_ctrl_t),
     // One hand copy
@@ -404,9 +404,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     // One hand paste
     [TDK_OH_PASTE] = ACTION_TAP_DANCE_FN(oh_paste),
     // Symbol layer
-    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_finished, symb_reset),
+    [TDK_SYMB_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(symb_each_press, symb_each_unpress, symb_finished, symb_reset),
     // Shift layer
-    [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_finished, shift_reset),
+    [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_each_unpress, shift_finished, shift_reset),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
