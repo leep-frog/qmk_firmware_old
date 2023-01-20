@@ -368,7 +368,27 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
     reset_keyboard();
 }
 
-void scroll_press(qk_tap_dance_state_t *state, void *user_data) { layer_on(LR_SCROLL); }
+void scroll_press_left(qk_tap_dance_state_t *state, void *user_data) {
+    layer_on(LR_SCROLL);
+    if (state->count == 1) {
+        return;
+    }
+    if (state->count == 2) {
+        SEND_STRING(SS_RCTL(SS_RGUI(SS_TAP(X_LEFT))));
+    }
+    SEND_STRING(SS_RCTL(SS_RGUI(SS_TAP(X_LEFT))));
+}
+
+void scroll_press_right(qk_tap_dance_state_t *state, void *user_data) {
+    layer_on(LR_SCROLL);
+    if (state->count == 1) {
+        return;
+    }
+    if (state->count == 2) {
+        SEND_STRING(SS_RCTL(SS_RGUI(SS_TAP(X_RIGHT))));
+    }
+    SEND_STRING(SS_RCTL(SS_RGUI(SS_TAP(X_RIGHT))));
+}
 
 void scroll_unpress(qk_tap_dance_state_t *state, void *user_data) { layer_off(LR_SCROLL); }
 
@@ -424,9 +444,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     // Shift layer
     [TDK_SHIFT_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED(shift_each_press, shift_each_unpress, shift_finished, shift_reset),
     // Scroll left layer
-    [TDK_SCROLL_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(scroll_press, scroll_unpress, scroll_left_finished, NULL),
+    [TDK_SCROLL_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(scroll_press_left, scroll_unpress, scroll_left_finished, NULL),
     // Scroll right layer
-    [TDK_SCROLL_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(scroll_press, scroll_unpress, scroll_right_finished, NULL),
+    [TDK_SCROLL_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(scroll_press_right, scroll_unpress, scroll_right_finished, NULL),
 };
 
 #define TGL_SHF TD(TDK_SHIFT_TOGGLE)
