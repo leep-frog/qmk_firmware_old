@@ -105,7 +105,7 @@ LEEP_ENUM(custom_keycodes, CK, CN_ENUM_END,
           // Alt tab
           CK_ALTT,
           // Mute codes
-          CK_MUT1, CK_MUT2,
+          CK_MUT, CK_MUTS,
           // Mouse control click
           MS_CTRL,
           // Eye care

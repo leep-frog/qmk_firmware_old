@@ -13,7 +13,7 @@
         float   var_name##_song[][2] = sound; \
         uint8_t var_name##_tempo     = TEMPO_DEFAULT;
 
-bool _leep_mute = false;
+static bool _leep_mute = false;
 
 #    define LEEP_PLAY_SONG(sng, force) \
         if (!_leep_mute || force) {    \
@@ -64,36 +64,48 @@ DEFINE_SONG(leep_dud, SONG(LEEP_DUD));
 #    define SNG_LOW_BEEP LEEP_PLAY_SONG(leep_low_beep, true)
 #    define SNG_DUD LEEP_PLAY_SONG(leep_dud, true)
 
-void _mute_2(bool pressed) {
+static bool _mute_just_colored = false;
+
+static void mute_sound(bool pressed, bool with_sound) {
     if (!pressed) {
         return;
     }
 
+    _mute_just_colored = true;
     if (_leep_mute) {
         _leep_mute = false;
         LEEP_SOLID_COLOR(GREEN, false);
+        if (with_sound) {
+            SNG_UNMUTE;
+        }
     } else {
+        if (with_sound) {
+            SNG_MUTE;
+        }
         LEEP_SOLID_COLOR(ORANGE, false);
         _leep_mute = true;
     }
 }
 
-void _mute_1(bool pressed) {
-    // We want to update light color here too.
-    _mute_2(pressed);
-
-    if (!pressed) {
+void Mute_handled(keyrecord_t* record) {
+    // Unpressing mute key
+    if (!record->event.pressed) {
         return;
     }
 
-    if (_leep_mute) {
-        _leep_mute = false;
-        SNG_UNMUTE;
-    } else {
-        SNG_MUTE;
-        _leep_mute = true;
+    if (_mute_just_colored) {
+        LEEP_LAYER_COLOR(LR_BASE, false);
+        _mute_just_colored = false;
     }
 }
+
+bool IsMuted(void) { return _leep_mute; }
+
+void LeepMute(void) { _leep_mute = true; }
+
+void MuteWithoutSound(bool pressed) { mute_sound(pressed, false); }
+
+void MuteWithSound(bool pressed) { mute_sound(pressed, true); }
 
 #else  // ifdef ENABLE_LEEP_MUSIC
 

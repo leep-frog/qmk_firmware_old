@@ -31,7 +31,7 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
                 action           = DYN_REC_STOP;
                 kr.event.pressed = true;
                 recording        = false;
-                if (_leep_mute) {
+                if (IsMuted()) {
                     SNG_LOW_BEEP;
                 } else {
                     if (macro_1) {
@@ -55,7 +55,7 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
         case DOUBLE_HOLD:
             if (!recording) {
                 valid = true;
-                if (_leep_mute) {
+                if (IsMuted()) {
                     SNG_LOW_BEEP;
                 } else {
                     if (macro_1) {

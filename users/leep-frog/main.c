@@ -220,10 +220,10 @@ PROCESSOR_MACRO_STRING(3, CN_ENUM_START, cn, 12, "",
 PROCESSOR_MACRO(processor_action_t, 14, CK_ENUM_START, ck, , NULL,
                 // Ctrl g
                 CK_CTLG, &_ctrl_g_new,
-                // Mute 1
-                CK_MUT1, &_mute_1,
-                // Mute 2
-                CK_MUT2, &_mute_2,
+                // Mute
+                CK_MUT, &MuteWithoutSound,
+                // Mute with Sound
+                CK_MUTS, &MuteWithSound,
                 // Alt-tab
                 CK_ALTT, &_alt_t_new,
                 // Ctrl-click
@@ -321,7 +321,7 @@ bool leep_startup_mode(uint16_t keycode, keyrecord_t* record) {
             break;
         case KC_K:
         case KC_D:
-            _leep_mute          = true;
+            LeepMute();
             played_startup_song = true;
             LEEP_LAYER_COLOR(LR_BASE, false);
             break;
@@ -337,6 +337,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         return false;
     }
 
+    Mute_handled(record);
     if (SymbolLayerOverlap_handled(keycode, record) || AltTab_handled(keycode, record)) {
         return false;
     }
