@@ -53,7 +53,7 @@ bool _ctrl_w_new(void) {
 
 void _leep_keyboard_off(bool pressed) {
     if (pressed) {
-        LEEP_SOLID_COLOR(OFF, false);
+        LEEP_SOLID_COLOR(OFF, true);
         played_startup_song = false;
     }
 }

@@ -224,6 +224,7 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
         case DOUBLE_HOLD:
             // Select all and copy
             SEND_STRING(SS_RCTL("ac"));
+            SNG_LOW_BEEP;
             break;
         default:
             for (int i = 0; i < state->count; i++) {
