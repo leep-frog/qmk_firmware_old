@@ -224,7 +224,7 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
         case DOUBLE_HOLD:
             // Select all and copy
             SEND_STRING(SS_RCTL("ac"));
-            SNG_LOW_BEEP;
+            SNG_COPY()
             break;
         default:
             for (int i = 0; i < state->count; i++) {
@@ -257,7 +257,7 @@ void tdc(qk_tap_dance_state_t *state, void *user_data) {
         case SINGLE_HOLD:
             // Copy
             SEND_STRING(SS_RCTL("c"));
-            SNG_LOW_BEEP;
+            SNG_COPY();
             break;
         case DOUBLE_HOLD:
             URL_COPY();
@@ -292,7 +292,7 @@ void tdu(qk_tap_dance_state_t *state, void *user_data) {
         case SINGLE_HOLD:
         case DOUBLE_TAP:
             URL_COPY();
-            SNG_LOW_BEEP;
+            SNG_COPY()
             break;
         default:
             for (int i = 0; i < state->count; i++) {
@@ -309,7 +309,7 @@ void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycod
         case SINGLE_HOLD:
         case DOUBLE_TAP:
             SEND_STRING(SS_PASTE);
-            SNG_LOW_BEEP;
+            SNG_PASTE();
             break;
         case DOUBLE_HOLD:
             URL_PASTE();
@@ -356,7 +356,7 @@ void TDReset(qk_tap_dance_state_t *state, void *user_data) {
     LEEP_SOLID_COLOR(RED, true);
     switch (cur_dance(state, true)) {
         case SINGLE_TAP:
-            SNG_RESET;
+            SNG_RESET();
             while (is_playing_notes()) {
                 wait_ms(75);
             }

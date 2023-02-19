@@ -124,11 +124,11 @@ void _eye_care(bool pressed) {
         // change the color twice in the _eye_care function.
         // Instead we set the first color on key down.
         LEEP_SOLID_COLOR(RED, false);
-        SNG_EYE_START;
+        SNG_EYE_START();
     } else {
         wait_ms(20 * 1000);
         LEEP_SOLID_COLOR(GREEN, false);
-        SNG_EYE_END;
+        SNG_EYE_END();
     }
 }
 
@@ -315,7 +315,7 @@ bool leep_startup_mode(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
         case KC_J:
         case KC_F:
-            SNG_STARTUP;
+            SNG_STARTUP();
             played_startup_song = true;
             LEEP_LAYER_COLOR(LR_BASE, false);
             break;

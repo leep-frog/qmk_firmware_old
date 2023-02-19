@@ -11,8 +11,8 @@
 #define ZELDA_SPIRIT_ORB /* Intro arpeggion */ FE_7(E__NOTE, _A5, _B5, _CS6, _D6, _E6, _FS6, _GS6), /* mid part */ W__NOTE(_A6), H__NOTE(_REST), Q__NOTE(_A6), Q__NOTE(_REST), H__NOTE(_A6), H__NOTE(_G6), BD_NOTE(_A6), /* Outro arpeggio // FE_9(E__NOTE, _E5, _A5, _CS6, _E6, _A6, _E7, _A7, _B7, _E8), */
 #define ZELDA_GUARDIAN_BATTLE FE_12(QD_NOTE, _B7, _REST, _A6, _B6, _FS7, _AS6, _E7, _C7, _A7, _A6, _FS7, _B6), FE_12(QD_NOTE, _B7, _AS6, _FS7, _C7, _E7, _A6, _A7, _B6, _A6, _B6, _C7, _B7),
 
-#define REC_START_SNG FE_2(H__NOTE, _C5, _G5)
-#define REC_END_SNG FE_2(H__NOTE, _G5, _C5)
+#define LEEP_START_SNG FE_2(H__NOTE, _C5, _G5)
+#define LEEP_END_SNG FE_2(H__NOTE, _G5, _C6)
 
 #define MARIO_1_UP FE_6(H__NOTE, _E6, _G6, _E7, _C7, _D7, _G7),
 #define MARIO_GAME_OVER WD_NOTE(_C6), HD_NOTE(_REST), WD_NOTE(_G5), HD_NOTE(_REST), WD_NOTE(_E5), W__NOTE(_A5), W__NOTE(_B5), W__NOTE(_A5), W__NOTE(_AF5), W__NOTE(_BF5), W__NOTE(_AF5), BD_NOTE(_G5)
@@ -21,8 +21,8 @@
 #define MARIO_UNDERWORLD_1 FE_6(HD_NOTE, _C5, _C6, _A4, _A5, _AS4, _AS5)
 #define MARIO_UNDERWORLD_2 FE_6(HD_NOTE, _F4, _F5, _D4, _D5, _DS4, _DS5)
 
-#define LEEP_LOW_BEEP FE_1(Q__NOTE, _C4)
-#define LEEP_DUD FE_3(H__NOTE, _A4, _C5, _E5)
+#define LEEP_DUD FE_1(Q__NOTE, _C4)
+#define LEEP_SUCCESS FE_1(Q__NOTE, _C6)
 
 // other built-ins:
 // MUSIC_ON_SOUND

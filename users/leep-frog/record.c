@@ -31,14 +31,10 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
                 action           = DYN_REC_STOP;
                 kr.event.pressed = true;
                 recording        = false;
-                if (IsMuted()) {
-                    SNG_LOW_BEEP;
+                if (macro_1) {
+                    SNG_REC_1_END();
                 } else {
-                    if (macro_1) {
-                        SNG_REC_1_END;
-                    } else {
-                        SNG_REC_2_END;
-                    }
+                    SNG_REC_2_END();
                 }
                 LEEP_SOLID_COLOR(GREEN, true);
             }
@@ -48,27 +44,23 @@ void recorder_base(qk_tap_dance_state_t *state, uint16_t play_action, uint16_t s
                 valid     = true;
                 action    = start_action;
                 recording = true;
-                SNG_REC_START;
+                SNG_REC_START();
                 LEEP_COLOR_MODE(RED, RGB_MATRIX_RAINBOW_MOVING_CHEVRON, true);
             }
             break;
         case DOUBLE_HOLD:
             if (!recording) {
                 valid = true;
-                if (IsMuted()) {
-                    SNG_LOW_BEEP;
+                if (macro_1) {
+                    SNG_REC_1_PLAY();
                 } else {
-                    if (macro_1) {
-                        SNG_REC_1_PLAY;
-                    } else {
-                        SNG_REC_2_PLAY;
-                    }
+                    SNG_REC_2_PLAY();
                 }
             }
     }
 
     if (!valid) {
-        SNG_DUD;
+        SNG_DUD();
     } else {
         processing_macro = true;
         process_dynamic_macro(action, &kr);
