@@ -1,5 +1,4 @@
-#ifndef LEEP_HELPER
-#define LEEP_HELPER
+#pragma once
 
 // URLWait waits a short amount of time to allow the
 // internet browser to run actions (like opening a new tab).
@@ -12,7 +11,9 @@ void URLWait(void) { wait_ms(80); }
 #define URL_COPY()                    \
     SEND_STRING(SS_DOWN(X_RCTL) "l"); \
     URLWait();                        \
+    SNG_COPY();                       \
     SEND_STRING("c" SS_UP(X_RCTL))
+
 #define URL_PASTE() \
     NEW_TAB();      \
     URLWait();      \
@@ -27,4 +28,3 @@ void URLWait(void) { wait_ms(80); }
     SEND_STRING(SS_DOWN(X_RCTL) NTH_URL_ID(k) SS_RCTL("c"));
 
 #define CR_ID() URL_ID(6)
-#endif

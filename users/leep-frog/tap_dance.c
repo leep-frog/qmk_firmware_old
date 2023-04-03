@@ -1,5 +1,4 @@
-#ifndef LEEP_TAP_DANCES
-#define LEEP_TAP_DANCES
+#pragma once
 
 // See below link for following functions
 // https://github.com/samhocevar-forks/qmk-firmware/blob/master/docs/feature_tap_dance.md#setup
@@ -224,7 +223,7 @@ void tda(qk_tap_dance_state_t *state, void *user_data) {
         case DOUBLE_HOLD:
             // Select all and copy
             SEND_STRING(SS_RCTL("ac"));
-            SNG_COPY()
+            SNG_COPY();
             break;
         default:
             for (int i = 0; i < state->count; i++) {
@@ -290,9 +289,7 @@ void un_tdi(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC
 void tdu(qk_tap_dance_state_t *state, void *user_data) {
     switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
-        case DOUBLE_TAP:
             URL_COPY();
-            SNG_COPY()
             break;
         default:
             for (int i = 0; i < state->count; i++) {
@@ -307,9 +304,7 @@ void un_tdu(qk_tap_dance_state_t *state, void *user_data) { unregister_code16(KC
 void paste_or_type(qk_tap_dance_state_t *state, void *user_data, uint16_t keycode) {
     switch (cur_dance(state, true)) {
         case SINGLE_HOLD:
-        case DOUBLE_TAP:
             SEND_STRING(SS_PASTE);
-            SNG_PASTE();
             break;
         case DOUBLE_HOLD:
             URL_PASTE();
@@ -493,5 +488,3 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
     return TAPPING_TERM;
 }
-
-#endif

@@ -52,6 +52,7 @@ DEFINE_SONG(mario_uw_2, SONG(MARIO_UNDERWORLD_2));
 DEFINE_SONG(leep_dud, SONG(LEEP_DUD));
 
 DEFINE_SONG(leep_silence, SONG());
+DEFINE_SONG(leep_success, SONG(LEEP_SUCCESS));
 
 // We define our own start-up song (instead of using STARTUP_SONG)
 // so we can add logic that disables the custom startup song.
@@ -62,13 +63,13 @@ DEFINE_SONG(leep_silence, SONG());
 #    define SNG_REC_START() LEEP_PLAY_SONG(leep_start, leep_start)
 #    define SNG_REC_1_END() LEEP_PLAY_SONG(zelda_item_found, leep_end)
 #    define SNG_REC_2_END() LEEP_PLAY_SONG(mario_1_up, leep_end)
-#    define SNG_REC_1_PLAY() LEEP_PLAY_SONG(zelda_spirit_orb, leep_silence)
-#    define SNG_REC_2_PLAY() LEEP_PLAY_SONG(zelda_discover, leep_silence)
-#    define SNG_EYE_START() LEEP_PLAY_SONG(mario_uw_1, leep_silence)
-#    define SNG_EYE_END() LEEP_PLAY_SONG(mario_uw_2, leep_silence)
+#    define SNG_REC_1_PLAY() LEEP_PLAY_SONG(zelda_spirit_orb, leep_success)
+#    define SNG_REC_2_PLAY() LEEP_PLAY_SONG(zelda_discover, leep_success)
+#    define SNG_EYE_START() LEEP_PLAY_SONG(mario_uw_1, leep_success)
+#    define SNG_EYE_END() LEEP_PLAY_SONG(mario_uw_2, leep_success)
 #    define SNG_COPY() LEEP_PLAY_SONG(leep_start, leep_start)
 #    define SNG_PASTE() LEEP_PLAY_SONG(leep_end, leep_end)
-#    define SNG_DUD() LEEP_PLAY_SONG(leep_dud, leep_silence)
+#    define SNG_DUD() LEEP_PLAY_SONG(leep_dud, leep_dud)
 
 static bool _mute_just_colored = false;
 
